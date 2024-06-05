@@ -12,6 +12,7 @@ jobs:
       - run:
           name: Run tests
           command: echo '' 
+
   build:
     docker:
       - image: cimg/base:stable
