@@ -35,7 +35,6 @@ jobs:
 workflows:
   example:
     jobs:
-      - run
       - test
       - build:
           requires:
