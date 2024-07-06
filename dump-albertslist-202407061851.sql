@@ -89,6 +89,7 @@ CREATE TABLE `partners` (
   `Address` varchar(100) NOT NULL,
   `State` char(2) NOT NULL,
   `ZIP` varchar(10) NOT NULL,
+  `AboutUs` text,
   PRIMARY KEY (`pID`),
   UNIQUE KEY `Partners_unique` (`uID`),
   CONSTRAINT `Partners_users_FK` FOREIGN KEY (`uID`) REFERENCES `users` (`uID`)
@@ -102,6 +103,34 @@ CREATE TABLE `partners` (
 LOCK TABLES `partners` WRITE;
 /*!40000 ALTER TABLE `partners` DISABLE KEYS */;
 /*!40000 ALTER TABLE `partners` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reviews`
+--
+
+DROP TABLE IF EXISTS `reviews`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reviews` (
+  `uID` bigint NOT NULL,
+  `pID` bigint NOT NULL,
+  `ReviewText` text,
+  `Score` int NOT NULL,
+  KEY `Reviews_users_FK` (`uID`),
+  KEY `Reviews_partners_FK` (`pID`),
+  CONSTRAINT `Reviews_partners_FK` FOREIGN KEY (`pID`) REFERENCES `partners` (`pID`),
+  CONSTRAINT `Reviews_users_FK` FOREIGN KEY (`uID`) REFERENCES `users` (`uID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reviews`
+--
+
+LOCK TABLES `reviews` WRITE;
+/*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -176,4 +205,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-06 18:51:36
+-- Dump completed on 2024-07-06 19:25:00
