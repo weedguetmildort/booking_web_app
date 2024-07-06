@@ -16,6 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Current Database: `albertslist`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `albertslist` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+USE `albertslist`;
+
+--
 -- Table structure for table `bookings`
 --
 
@@ -39,15 +47,6 @@ CREATE TABLE `bookings` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `bookings`
---
-
-LOCK TABLES `bookings` WRITE;
-/*!40000 ALTER TABLE `bookings` DISABLE KEYS */;
-/*!40000 ALTER TABLE `bookings` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `hoursofoperation`
 --
 
@@ -63,15 +62,6 @@ CREATE TABLE `hoursofoperation` (
   CONSTRAINT `HoursOfOperation_partners_FK` FOREIGN KEY (`pID`) REFERENCES `partners` (`pID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `hoursofoperation`
---
-
-LOCK TABLES `hoursofoperation` WRITE;
-/*!40000 ALTER TABLE `hoursofoperation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `hoursofoperation` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `partners`
@@ -97,15 +87,6 @@ CREATE TABLE `partners` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `partners`
---
-
-LOCK TABLES `partners` WRITE;
-/*!40000 ALTER TABLE `partners` DISABLE KEYS */;
-/*!40000 ALTER TABLE `partners` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `reviews`
 --
 
@@ -123,15 +104,6 @@ CREATE TABLE `reviews` (
   CONSTRAINT `Reviews_users_FK` FOREIGN KEY (`uID`) REFERENCES `users` (`uID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `reviews`
---
-
-LOCK TABLES `reviews` WRITE;
-/*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
-/*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `services`
@@ -152,15 +124,6 @@ CREATE TABLE `services` (
   CONSTRAINT `Services_partners_FK` FOREIGN KEY (`pID`) REFERENCES `partners` (`pID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `services`
---
-
-LOCK TABLES `services` WRITE;
-/*!40000 ALTER TABLE `services` DISABLE KEYS */;
-/*!40000 ALTER TABLE `services` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -184,15 +147,6 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Dumping routines for database 'albertslist'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -205,4 +159,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-06 19:25:00
+-- Dump completed on 2024-07-06 19:49:03
