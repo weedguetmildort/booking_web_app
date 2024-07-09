@@ -1,7 +1,21 @@
+import Banner from "components/Banner";
+import Footer from "components/Footer";
+import UserSignUp from "components/UserSignUp";
 import React from "react";
 
-function Signup() {
-  return <div>Signup</div>;
+function SignUp() {
+  return (
+    <div>
+      <Banner />
+      <body className="body">
+        <h1 className="flex items-center justify-center pt-3">User Sign Up</h1>
+        <div className="flex items-center justify-center pt-3">
+          <UserSignUp />
+        </div>
+      </body>
+      <Footer />
+    </div>
+  );
 }
 
-export default Signup;
+export default SignUp;

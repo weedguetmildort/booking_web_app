@@ -30,3 +30,11 @@
   );
   color: azure;
 }
+
+.custom-border {
+  border-width: 2px;
+  border-color: #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  color: #000000;
+}
