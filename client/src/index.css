@@ -20,7 +20,7 @@
   justify-content: center;
 }
 
-.body {
+body {
   background: linear-gradient(
     180deg,
     #03072c 7%,
@@ -29,6 +29,9 @@
     #6ab4f0 93%
   );
   color: azure;
+  min-height: 100vh; /* Equivalent to min-h-screen */
+  display: flex; /* Equivalent to flex */
+  flex-direction: column; /* Equivalent to flex-col */
 }
 
 .custom-border {
@@ -37,4 +40,27 @@
   padding: 0.5rem;
   border-radius: 0.375rem;
   color: #000000;
+}
+
+.center {
+  display: flex; /* Equivalent to flex */
+  align-items: center; /* Equivalent to items-center */
+  justify-content: center; /* Equivalent to justify-center */
+  padding-top: 0.75rem; /* Equivalent to pt-3 */
+}
+
+.field {
+  padding-right: 1rem;
+}
+
+#wrapper {
+  width: 500px;
+  overflow: hidden; /* add this to contain floated children */
+}
+#first {
+  width: 300px;
+  float: left; /* add this */
+}
+#second {
+  float: left; /* add this */
 }

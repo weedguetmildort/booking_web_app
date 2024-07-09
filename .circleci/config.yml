@@ -3,7 +3,7 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 jobs:
-  test:
+  run:
     docker:
       - image: cimg/base:stable
     steps:
@@ -36,10 +36,9 @@ workflows:
   example:
     jobs:
       - run
-      - test
       - build:
           requires:
-            - test
+            - run
       - deploy:
           requires:
-            - test
+            - run
