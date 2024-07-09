@@ -90,8 +90,8 @@ const UserSignUp = () => {
             ) : null}
           </div>
 
-          <div>
-            <div>
+          <div id="wrapper">
+            <div id="first">
               <div>
                 <input
                   id="password"
@@ -103,7 +103,8 @@ const UserSignUp = () => {
                 {formik.touched.password && formik.errors.password ? (
                   <div>{formik.errors.password}</div>
                 ) : null}
-
+              </div>
+              <div>
                 <input
                   id="retypePassword "
                   type="retypePassword "
@@ -117,7 +118,16 @@ const UserSignUp = () => {
                 ) : null}
               </div>
             </div>
-            <div>This is how password is</div>
+            <div id="second">
+              <ul>One letter (a-z)</ul>
+              <ul>One number (0-9)</ul>
+              <ul>One special character</ul>
+              <ul>One special character</ul>
+              <ul>A minimum of 8 characters</ul>
+              <ul>No more than 2 repeated </ul>
+              <ul>characters in a row </ul>
+              <ul>('aa' works but not 'aaa')</ul>
+            </div>
           </div>
 
           <div className="flex items-center justify-center pt-3">
