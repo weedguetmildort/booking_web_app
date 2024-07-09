@@ -40,7 +40,7 @@ const UserSignUp = () => {
     >
       {(formik) => (
         <form onSubmit={formik.handleSubmit}>
-          <div>
+          <div className="field">
             <input
               id="firstName"
               type="text"
@@ -64,7 +64,7 @@ const UserSignUp = () => {
             ) : null}
           </div>
 
-          <div>
+          <div className="field">
             <input
               id="zipCode"
               type="text"
@@ -77,7 +77,7 @@ const UserSignUp = () => {
             ) : null}
           </div>
 
-          <div>
+          <div className="field">
             <input
               id="email"
               type="email"
@@ -90,7 +90,7 @@ const UserSignUp = () => {
             ) : null}
           </div>
 
-          <div id="wrapper">
+          <div id="wrapper" className="field">
             <div id="first">
               <div>
                 <input
