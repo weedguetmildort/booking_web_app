@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
+import UserLogin from "components/UserLogin";
 
 function Login() {
   return (
@@ -12,15 +13,11 @@ function Login() {
 
         <div></div>
       </div>
-      <body className="body">
+      <body className="body center">
         <div>User Sign In</div>
         <div>
-          <input type="text" placeholder="Username" className="custom-border" />
+          <UserLogin />
         </div>
-        <div>
-          <input type="text" placeholder="Password" className="custom-border" />
-        </div>
-        <div>Forgot password?</div>
       </body>
     </div>
   );

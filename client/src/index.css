@@ -48,6 +48,13 @@ body {
   color: #000000;
 }
 
+.center {
+  display: flex; /* Equivalent to flex */
+  align-items: center; /* Equivalent to items-center */
+  justify-content: center; /* Equivalent to justify-center */
+  padding-top: 0.75rem; /* Equivalent to pt-3 */
+}
+
 #wrapper {
   width: 500px;
   overflow: hidden; /* add this to contain floated children */
