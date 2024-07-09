@@ -1,23 +1,19 @@
-import logo from "./logo.svg";
-import "./App.css";
-import Homepage from "./pages/Homepage";
-import Aboutpage from "./pages/Aboutpage";
+import HomePage from "./pages/Home";
+import AboutPage from "./pages/About";
+import ContactPage from "./pages/Contact";
+import LoginPage from "./pages/Login";
+import SignUpPage from "./pages/Signup";
 import { Routes, Route, Link } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <nav>
-        <Link to="/" className="nav-item">
-          Homepage
-        </Link>
-        <Link to="/about" className="nav-item">
-          About Albert's List
-        </Link>
-      </nav>
+    <div>
       <Routes>
-        <Route path="/" element={<Homepage />}></Route>
-        <Route path="/about" element={<Aboutpage />}></Route>
+        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/about" element={<AboutPage />}></Route>
+        <Route path="/contact" element={<ContactPage />}></Route>
+        <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/signup" element={<SignUpPage />}></Route>
       </Routes>
     </div>
   );
