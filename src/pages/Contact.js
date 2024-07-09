@@ -8,7 +8,7 @@ function Contact() {
     <div>
       <Banner />
       <Navbar />
-      Contact
+      Contact Albert's List
       <Footer />
     </div>
   );
