@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.nav {
+  background-color: #03072c;
+  color: azure;
+  justify-content: center;
+}
+
+.banner {
+  background-color: #03072c;
+  color: azure;
+  justify-content: center;
+}
+
+.footer {
+  background-color: #6ab4f0;
+  color: #000000;
+  justify-content: center;
+}
+
+.body {
+  background: linear-gradient(
+    180deg,
+    #03072c 7%,
+    #060f5f 22%,
+    #081378 41%,
+    #6ab4f0 93%
+  );
+  color: azure;
+}
+
+.custom-border {
+  border-width: 2px;
+  border-color: #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  color: #000000;
+}
