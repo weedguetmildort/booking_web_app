@@ -13,7 +13,7 @@ function Login() {
 
         <div></div>
       </div>
-      <body className="body center">
+      <body className="center">
         <div>User Sign In</div>
         <div>
           <UserLogin />

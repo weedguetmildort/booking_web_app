@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  margin: 0;
-  height: 100%;
-}
-
 .nav {
   background-color: #03072c;
   color: azure;
@@ -26,7 +20,7 @@ body {
   justify-content: center;
 }
 
-.body {
+body {
   background: linear-gradient(
     180deg,
     #03072c 7%,

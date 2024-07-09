@@ -7,7 +7,7 @@ function SignUp() {
   return (
     <div>
       <Banner />
-      <body className="body center">
+      <body className="center">
         <h1>User Sign Up</h1>
         <div>
           <UserSignUp />
