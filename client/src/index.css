@@ -15,7 +15,18 @@
 }
 
 .footer {
-  background-color: #000000;
-  color: azure;
+  background-color: #6ab4f0;
+  color: #000000;
   justify-content: center;
+}
+
+.body {
+  background: linear-gradient(
+    180deg,
+    #03072c 7%,
+    #060f5f 22%,
+    #081378 41%,
+    #6ab4f0 93%
+  );
+  color: azure;
 }
