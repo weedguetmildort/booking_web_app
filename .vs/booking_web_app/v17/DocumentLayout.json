@@ -1,0 +1,158 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bdrum\\source\\repos\\booking_web_app\\Server\\server.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Server\\server.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bdrum\\source\\repos\\booking_web_app\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:client\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\components\\UserSignUp.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:client\\src\\components\\UserSignUp.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:client\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\pages\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:client\\src\\pages\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\pages\\SignUp.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:client\\src\\pages\\SignUp.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\bdrum\\source\\repos\\booking_web_app\\Server\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Server\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "App.js",
+              "DocumentMoniker": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\src\\App.js",
+              "RelativeDocumentMoniker": "src\\App.js",
+              "ToolTip": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\src\\App.js",
+              "RelativeToolTip": "src\\App.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-07-10T13:56:28.097Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "App.js",
+              "DocumentMoniker": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\App.js",
+              "RelativeDocumentMoniker": "client\\src\\App.js",
+              "ToolTip": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\App.js",
+              "RelativeToolTip": "client\\src\\App.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-07-10T05:29:03.231Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserSignUp.jsx",
+              "DocumentMoniker": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\components\\UserSignUp.jsx",
+              "RelativeDocumentMoniker": "client\\src\\components\\UserSignUp.jsx",
+              "ToolTip": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\components\\UserSignUp.jsx",
+              "RelativeToolTip": "client\\src\\components\\UserSignUp.jsx",
+              "ViewState": "AQIAAFoAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-07-10T05:26:21.264Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Login.jsx",
+              "DocumentMoniker": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\pages\\Login.jsx",
+              "RelativeDocumentMoniker": "client\\src\\pages\\Login.jsx",
+              "ToolTip": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\pages\\Login.jsx",
+              "RelativeToolTip": "client\\src\\pages\\Login.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-07-10T05:22:32.774Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SignUp.jsx",
+              "DocumentMoniker": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\pages\\SignUp.jsx",
+              "RelativeDocumentMoniker": "client\\src\\pages\\SignUp.jsx",
+              "ToolTip": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\src\\pages\\SignUp.jsx",
+              "RelativeToolTip": "client\\src\\pages\\SignUp.jsx",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2024-07-10T05:20:48.296Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\package.json",
+              "RelativeDocumentMoniker": "client\\package.json",
+              "ToolTip": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\client\\package.json",
+              "RelativeToolTip": "client\\package.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-07-10T03:24:29.486Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "server.js",
+              "DocumentMoniker": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\Server\\server.js",
+              "RelativeDocumentMoniker": "Server\\server.js",
+              "ToolTip": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\Server\\server.js",
+              "RelativeToolTip": "Server\\server.js",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAD0AAABGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2024-07-10T03:22:53.814Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\Server\\package.json",
+              "RelativeDocumentMoniker": "Server\\package.json",
+              "ToolTip": "C:\\Users\\bdrum\\source\\repos\\booking_web_app\\Server\\package.json",
+              "RelativeToolTip": "Server\\package.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-07-10T03:21:28.828Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
