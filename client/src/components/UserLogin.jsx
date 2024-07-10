@@ -1,14 +1,15 @@
-import React from "react";
+import { Button } from "@mui/material";
+import { React, useState } from "react";
 
 function UserLogin() {
+
   return (
     <div>
-      <div>
-        <input type="text" placeholder="Username" className="custom-border" />
-      </div>
-      <div>
-        <input type="text" placeholder="Password" className="custom-border" />
-      </div>
+      <form>
+        <input type="text" name="email" placeholder="Email" className="custom-border" /> <br/>
+        <input type="text" name="password" placeholder="Password" className="custom-border" /> <br/>
+        <Button>Submit</Button>
+      </form>
       <div>Forgot password?</div>
     </div>
   );
