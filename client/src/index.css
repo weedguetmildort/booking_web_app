@@ -6,12 +6,17 @@
   background-color: #03072c;
   color: azure;
   justify-content: center;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 .banner {
   background-color: #03072c;
   color: azure;
   justify-content: center;
+}
+
+.logo {
 }
 
 .footer {

@@ -1,4 +1,5 @@
 # Environment files
+/.vs
 /.vscode
 !.vscode/extensions.json
 .idea
