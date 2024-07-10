@@ -24,3 +24,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+/.vs/booking_web_app/FileContentIndex/22326ea9-9dac-4e09-9acf-1a658c63e31e.vsidx
+/.vs/booking_web_app/FileContentIndex/2759b4ef-faa0-4f59-ab8f-66e7491f04a7.vsidx
+/.vs/booking_web_app/FileContentIndex/9953b1c2-b289-4a78-a06c-18024f8adcb0.vsidx
+/.vs/booking_web_app/FileContentIndex/36ba8052-33c1-4741-835f-8e91b029c1d0.vsidx
+*.vsidx
