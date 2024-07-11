@@ -5,6 +5,7 @@ import LoginPage from "./pages/Login";
 import SignUpPage from "./pages/SignUp";
 import PartnerLogin from "pages/PartnerLogin";
 import PartnerSignUp from "pages/PartnerSignUp";
+import Profile from "components/ProfileInfo";
 import { Routes, Route, Link } from "react-router-dom";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/partner-login" element={<PartnerLogin />}></Route>
         <Route path="/partner-signup" element={<PartnerSignUp />}></Route>
+        <Route path="/profile" element={<Profile />}></Route>
       </Routes>
     </div>
   );

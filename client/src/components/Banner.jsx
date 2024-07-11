@@ -11,7 +11,7 @@ function Banner() {
       <Link to="/">
         <img height={5} src={logo} alt="Logo" />
       </Link>
-
+      <Link to="/profile">PROFILE</Link>
       <SignUpButton />
       <LoginButton />
       <LogoutButton />
