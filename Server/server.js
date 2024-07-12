@@ -4,7 +4,9 @@ const mysql = require("mysql");
 // AUTH0 REQUIRED IMPORTS
 const axios = require("axios");
 const querystring = require("querystring");
+const session = require("express-session");
 const { auth, requiredScopes } = require("express-oauth2-jwt-bearer");
+const routes = require("./routes");
 
 const app = express();
 const PORT = 5002;
@@ -132,16 +134,16 @@ app.use(
     cookie: { secure: true }, // Set to true in production
   })
 );
+
 // MAIN LOGIN LOGIC -- NEEDS TO BE TESTED
 app.use(routes);
-//
 
 //
 const connection = mysql.createConnection({
   host: "localhost",
-  port: "55816",
+  port: "3306",
   user: "dev",
-  password: "dev",
+  password: "password",
   database: "albertslist",
 });
 
