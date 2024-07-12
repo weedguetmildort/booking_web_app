@@ -3,8 +3,11 @@ import AboutPage from "./pages/About";
 import ContactPage from "./pages/Contact";
 import LoginPage from "./pages/Login";
 import SignUpPage from "./pages/SignUp";
+import ProfilePage from "pages/Profile";
 import PartnerLogin from "pages/PartnerLogin";
 import PartnerSignUp from "pages/PartnerSignUp";
+import PartnerProfilePage from "pages/PartnerProfile";
+import SearchPage from "pages/Search";
 import { Routes, Route, Link } from "react-router-dom";
 
 function App() {
@@ -16,8 +19,11 @@ function App() {
         <Route path="/contact" element={<ContactPage />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/signup" element={<SignUpPage />}></Route>
+        <Route path="/profile" element={<ProfilePage />}></Route>
         <Route path="/partner-login" element={<PartnerLogin />}></Route>
         <Route path="/partner-signup" element={<PartnerSignUp />}></Route>
+        <Route path="/partner-profile" element={<PartnerProfilePage />}></Route>
+        <Route path="/search" element={<SearchPage />}></Route>
       </Routes>
     </div>
   );
