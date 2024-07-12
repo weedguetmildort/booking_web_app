@@ -2,12 +2,43 @@ require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const querystring = require("querystring");
+const { requiredScopes } = require("express-oauth2-jwt-bearer");
 const {
+  checkJwt,
   generateState,
   validateState,
 } = require("../middlewares/stateValidation");
 
 const router = express.Router();
+
+// EXAMPLES
+// This route doesn't need authentication
+router.get("/api/public", (req, res) => {
+  res.json({
+    message:
+      "Hello from a public endpoint! You don't need to be authenticated to see this.",
+  });
+});
+
+// This route needs authentication
+router.get("/api/private", checkJwt, (req, res) => {
+  res.json({
+    message:
+      "Hello from a private endpoint! You need to be authenticated to see this.",
+  });
+});
+
+router.get(
+  "/api/private-scoped",
+  checkJwt,
+  requiredScopes("read:messages"),
+  (req, res) => {
+    res.json({
+      message:
+        "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.",
+    });
+  }
+);
 
 router.get("/login", generateState, (req, res) => {
   const authUrl =

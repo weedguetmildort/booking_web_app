@@ -1,15 +1,14 @@
+require("dotenv").config();
 const express = require("express");
 const mysql = require("mysql");
 
 // AUTH0 REQUIRED IMPORTS
-const axios = require("axios");
-const querystring = require("querystring");
 const session = require("express-session");
-const { auth, requiredScopes } = require("express-oauth2-jwt-bearer");
 const routes = require("./routes");
 
 const app = express();
 const PORT = 5002;
+// const port = process.env.PORT || 8080;
 
 // For parsing application/json
 app.use(express.json());
@@ -17,44 +16,28 @@ app.use(express.json());
 // For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// AUTH0
-// Authorization middleware. When used, the Access Token must
-// exist and be verified against the Auth0 JSON Web Key Set.
-const checkJwt = auth({
-  audience: "https://booking-api/",
-  issuerBaseURL: `https://dev-gh4kxlfpg0ce2ig2.us.auth0.com`,
-});
-
-// EXAMPLES
-// This route doesn't need authentication
-app.get("/api/public", function (req, res) {
-  res.json({
-    message:
-      "Hello from a public endpoint! You don't need to be authenticated to see this.",
-  });
-});
-
-// This route needs authentication
-app.get("/api/private", checkJwt, function (req, res) {
-  res.json({
-    message:
-      "Hello from a private endpoint! You need to be authenticated to see this.",
-  });
-});
-
-app.get(
-  "/api/private-scoped",
-  checkJwt,
-  requiredScopes("read:messages"),
-  function (req, res) {
-    res.json({
-      message:
-        "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.",
-    });
-  }
+// AUTH0 - Transitioning to modularity structure
+// LOGIN - Setup session middleware
+app.use(
+  session({
+    secret: "app_session_secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }, // Set to true in production
+  })
 );
 
-// END OF EXAMPLES
+// MAIN LOGIN LOGIC -- NEEDS TO BE TESTED
+app.use(routes);
+
+//
+const connection = mysql.createConnection({
+  host: "localhost",
+  port: "3306",
+  user: "dev",
+  password: "password",
+  database: "albertslist",
+});
 
 // NEW API CALLS
 // Sign Up -- Might move to modular auth file after testing
@@ -122,29 +105,6 @@ app.post("/api/signup", async (req, res) => {
       });
     }
   }
-});
-
-// LOGIN
-// Setup session middleware
-app.use(
-  session({
-    secret: "app_session_secret",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }, // Set to true in production
-  })
-);
-
-// MAIN LOGIN LOGIC -- NEEDS TO BE TESTED
-app.use(routes);
-
-//
-const connection = mysql.createConnection({
-  host: "localhost",
-  port: "3306",
-  user: "dev",
-  password: "password",
-  database: "albertslist",
 });
 
 // Test API call

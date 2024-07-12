@@ -1,4 +1,12 @@
 const crypto = require("crypto");
+const { auth } = require("express-oauth2-jwt-bearer");
+
+// Middleware to check JWT
+const checkJwt = auth({
+  audience: "https://booking-web-app-api/",
+  issuerBaseURL: "https://dev-o5ogeizt5ue5oi0r.us.auth0.com/",
+  tokenSigningAlg: "RS256",
+});
 
 function generateState(req, res, next) {
   const state = crypto.randomBytes(16).toString("hex");
@@ -17,6 +25,7 @@ function validateState(req, res, next) {
 }
 
 module.exports = {
+  checkJwt,
   generateState,
   validateState,
 };
