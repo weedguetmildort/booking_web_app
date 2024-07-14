@@ -8,7 +8,8 @@ import PartnerLogin from "pages/PartnerLogin";
 import PartnerSignUp from "pages/PartnerSignUp";
 import PartnerProfilePage from "pages/PartnerProfile";
 import SearchPage from "pages/Search";
-import { Routes, Route, Link } from "react-router-dom";
+import CallBackPage from "pages/Callback";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/partner-signup" element={<PartnerSignUp />}></Route>
         <Route path="/partner-profile" element={<PartnerProfilePage />}></Route>
         <Route path="/search" element={<SearchPage />}></Route>
+        <Route path="/callback" element={<CallBackPage />}></Route>
       </Routes>
     </div>
   );
