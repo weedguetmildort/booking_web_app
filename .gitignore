@@ -1,4 +1,6 @@
 # Environment files
+.env
+/.vs
 /.vscode
 !.vscode/extensions.json
 .idea
@@ -23,3 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+*.vsidx
+Server/.env
