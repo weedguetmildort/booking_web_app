@@ -1,23 +1,32 @@
-import logo from "./logo.svg";
-import "./App.css";
+import HomePage from "./pages/Home";
+import AboutPage from "./pages/About";
+import ContactPage from "./pages/Contact";
+import LoginPage from "./pages/Login";
+import SignUpPage from "./pages/SignUp";
+import ProfilePage from "pages/Profile";
+import PartnerLogin from "pages/PartnerLogin";
+import PartnerSignUp from "pages/PartnerSignUp";
+import PartnerProfilePage from "pages/PartnerProfile";
+import SearchPage from "pages/Search";
+import CallBackPage from "pages/Callback";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React on the fly
-        </a>
-      </header>
+    <div>
+      <Routes>
+        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/about" element={<AboutPage />}></Route>
+        <Route path="/contact" element={<ContactPage />}></Route>
+        <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/signup" element={<SignUpPage />}></Route>
+        <Route path="/profile" element={<ProfilePage />}></Route>
+        <Route path="/partner-login" element={<PartnerLogin />}></Route>
+        <Route path="/partner-signup" element={<PartnerSignUp />}></Route>
+        <Route path="/partner-profile" element={<PartnerProfilePage />}></Route>
+        <Route path="/search" element={<SearchPage />}></Route>
+        <Route path="/callback" element={<CallBackPage />}></Route>
+      </Routes>
     </div>
   );
 }
