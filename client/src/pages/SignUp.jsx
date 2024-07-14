@@ -7,9 +7,9 @@ function SignUp() {
   return (
     <div>
       <Banner />
-      <body className="body">
-        <h1 className="flex items-center justify-center pt-3">User Sign Up</h1>
-        <div className="flex items-center justify-center pt-3">
+      <body className="center">
+        <h1>User Sign Up</h1>
+        <div>
           <UserSignUp />
         </div>
       </body>

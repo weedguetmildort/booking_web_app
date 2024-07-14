@@ -10,7 +10,7 @@ function Home() {
       <div>
         <Banner />
         <Navbar />
-        <body className="body">
+        <body className="center">
           <div>Find services in your area.</div>
           <div>Popular services</div>
           <div>
