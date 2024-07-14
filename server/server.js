@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const mysql = require("mysql");
 const https = require("node:https");
 
 // AUTH0 REQUIRED IMPORTS
