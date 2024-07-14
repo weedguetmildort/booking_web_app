@@ -1,8 +1,8 @@
 const express = require("express");
 const mysql = require("mysql");
 
-const dotenv = require("dotenv");
-dotenv.config();
+const dotenv = require("dotenv")
+dotenv.config()
 
 // const connection = mysql.createConnection({
 //   host: process.env.MYSQL_HOST,
@@ -19,6 +19,7 @@ dotenv.config();
 // })
 
 const https = require("node:https");
+
 
 // AUTH0 REQUIRED IMPORTS
 const session = require("express-session");
@@ -50,6 +51,8 @@ app.use(
 
 // MAIN LOGIN LOGIC -- NEEDS TO BE TESTED
 app.use(routes);
+
+
 
 // NEW API CALLS
 // Sign Up -- Might move to modular auth file after testing
@@ -122,50 +125,54 @@ app.post("/api/signup", async (req, res) => {
 // User and Partner Info API Calls
 //
 //
-//
+// 
 // Fetch user by UID
 app.get("/api/getUserByUid/:uid", (req, res) => {
-  var uid = req.params.uid;
-  const db = dbService.getDbServiceInstance();
-  const result = db.getUserById(uid);
+  var uid = req.params.uid
+  const db = dbService.getDbServiceInstance()
+  const result = db.getUserById(uid)
 
   result
-    .then((data) => res.json({ data: data }))
-    .catch((err) => console.log(err));
-});
+  .then(data => res.json({data : data}))
+  .catch(err => console.log(err))
+
+})
 
 // Fetch user by authID
 app.post("/api/getUserByAuthId", (req, res) => {
-  var authid = req.body.authid;
-  const db = dbService.getDbServiceInstance();
-  const result = db.getUserByAuthId(authid);
+  var authid = req.body.authid
+  const db = dbService.getDbServiceInstance()
+  const result = db.getUserByAuthId(authid)
 
   result
-    .then((data) => res.json({ data: data }))
-    .catch((err) => console.log(err));
-});
+  .then(data => res.json({data : data}))
+  .catch(err => console.log(err))
+
+})
 
 // Is this user a partner by uid
 app.get("/api/isPartner/:uid", (req, res) => {
-  var uid = req.params.uid;
-  const db = dbService.getDbServiceInstance();
-  const result = db.isPartner(uid);
+  var uid = req.params.uid
+  const db = dbService.getDbServiceInstance()
+  const result = db.isPartner(uid)
 
   result
-    .then((data) => res.json({ data: data }))
-    .catch((err) => console.log(err));
-});
+  .then(data => res.json({data : data}))
+  .catch(err => console.log(err))
+
+})
 
 // Get partner info by uid
 app.get("/api/getPartnerByUid/:uid", (req, res) => {
-  var uid = req.params.uid;
-  const db = dbService.getDbServiceInstance();
-  const result = db.getPartnerByUid(uid);
+  var uid = req.params.uid
+  const db = dbService.getDbServiceInstance()
+  const result = db.getPartnerByUid(uid)
 
   result
-    .then((data) => res.json({ data: data }))
-    .catch((err) => console.log(err));
-});
+  .then(data => res.json({data : data}))
+  .catch(err => console.log(err))
+
+})
 
 // Insert User
 app.post("/api/insertuser", (req, res) => {
@@ -175,13 +182,15 @@ app.post("/api/insertuser", (req, res) => {
   var email = req.body.email;
   var zip = req.body.zip;
 
-  const db = dbService.getDbServiceInstance();
-  const result = db.insertUser(authID, firstName, lastName, email, zip);
+  const db = dbService.getDbServiceInstance()
+  const result = db.insertUser(authID, firstName, lastName, email, zip)
 
-  result
-    .then((data) => res.json({ data: data }))
-    .catch((err) => console.log(err));
-});
+   result
+   .then(data => res.json({data : data}))
+   .catch(err => console.log(err))
+  
+
+})
 
 // Insert Partner
 app.post("/api/insertpartner", (req, res) => {
@@ -193,35 +202,32 @@ app.post("/api/insertpartner", (req, res) => {
   var state = req.body.state;
   var zip = req.body.zip;
 
-  const db = dbService.getDbServiceInstance();
-  const result = db.insertPartner(
-    businessName,
-    category,
-    email,
-    address,
-    city,
-    state,
-    zip
-  );
 
-  result
-    .then((data) => res.json({ data: data }))
-    .catch((err) => console.log(err));
-});
+  const db = dbService.getDbServiceInstance()
+  const result = db.insertPartner(businessName, category, email, address, city, state, zip)
+
+   result
+   .then(data => res.json({data : data}))
+   .catch(err => console.log(err))
+  
+
+})
 
 // Classify a user as a partner account, either admin or employee
 app.post("/api/makeUserPartner", (req, res) => {
   var uid = req.body.uid;
   var pid = req.body.pid;
-  var isAdmin = req.body.isAdmin; // BOOL must be sent as 0 or 1 with no quotes in JSON e.g. "isAdmim" : 1 or "isAdmim" : 0
+  var isAdmin = req.body.isAdmin // BOOL must be sent as 0 or 1 with no quotes in JSON e.g. "isAdmim" : 1 or "isAdmim" : 0
 
-  const db = dbService.getDbServiceInstance();
-  const result = db.makeUserPartner(uid, pid, isAdmin);
+  const db = dbService.getDbServiceInstance()
+  const result = db.makeUserPartner(uid, pid, isAdmin)
 
-  result
-    .then((data) => res.json({ data: data }))
-    .catch((err) => console.log(err));
-});
+   result
+   .then(data => res.json({data : data}))
+   .catch(err => console.log(err))
+  
+
+})
 
 app.listen(PORT, (error) => {
   if (!error)
