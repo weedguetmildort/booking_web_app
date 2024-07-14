@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
+
 const dotenv = require("dotenv")
 dotenv.config()
 
@@ -16,6 +17,9 @@ dotenv.config()
 //       console.log(err.message)
 //   }
 // })
+
+const https = require("node:https");
+
 
 // AUTH0 REQUIRED IMPORTS
 const session = require("express-session");
@@ -47,6 +51,7 @@ app.use(
 
 // MAIN LOGIN LOGIC -- NEEDS TO BE TESTED
 app.use(routes);
+
 
 
 // NEW API CALLS
