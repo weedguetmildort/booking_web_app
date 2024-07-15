@@ -7,7 +7,7 @@ function Navbar() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
   return (
-    <FlexBetween class="mx-auto nav">
+    <FlexBetween className="mx-auto nav">
       <FlexBetween gap="1.75rem">
         <FlexBetween>Personal Care</FlexBetween>
         <FlexBetween>Landscaping</FlexBetween>
