@@ -47,6 +47,7 @@ const UserSignUp = () => {
               {...formik.getFieldProps("firstName")}
               className="custom-border"
               placeholder="First Name"
+              style={{ padding: "10px", margin: "5px" }}
             />
             {formik.touched.firstName && formik.errors.firstName ? (
               <div>{formik.errors.firstName}</div>
@@ -58,80 +59,105 @@ const UserSignUp = () => {
               {...formik.getFieldProps("lastName")}
               className="custom-border"
               placeholder="Last Name"
+              style={{ padding: "10px", margin: "5px" }}
             />
             {formik.touched.lastName && formik.errors.lastName ? (
               <div>{formik.errors.lastName}</div>
             ) : null}
           </div>
 
-          <div className="field">
-            <input
-              id="zipCode"
-              type="text"
-              {...formik.getFieldProps("zipCode")}
-              className="custom-border"
-              placeholder="Zip Code"
-            />
-            {formik.touched.zipCode && formik.errors.zipCode ? (
-              <div>{formik.errors.zipCode}</div>
-            ) : null}
-          </div>
-
-          <div className="field">
-            <input
-              id="email"
-              type="email"
-              {...formik.getFieldProps("email")}
-              className="custom-border"
-              placeholder="Email Address"
-            />
-            {formik.touched.email && formik.errors.email ? (
-              <div>{formik.errors.email}</div>
-            ) : null}
-          </div>
-
-          <div id="wrapper" className="field">
-            <div id="first">
-              <div>
+          <div className="container">
+            <div>
+              <div className="field">
                 <input
-                  id="password"
-                  type="password"
-                  {...formik.getFieldProps("password")}
+                  id="zipCode"
+                  type="text"
+                  {...formik.getFieldProps("zipCode")}
                   className="custom-border"
-                  placeholder="Password"
+                  placeholder="Zip Code"
+                  style={{ padding: "10px", margin: "5px" }}
                 />
-                {formik.touched.password && formik.errors.password ? (
-                  <div>{formik.errors.password}</div>
+                {formik.touched.zipCode && formik.errors.zipCode ? (
+                  <div>{formik.errors.zipCode}</div>
                 ) : null}
               </div>
-              <div>
+
+              <div className="field">
                 <input
-                  id="retypePassword "
-                  type="retypePassword "
-                  {...formik.getFieldProps("retypePassword ")}
+                  id="email"
+                  type="email"
+                  {...formik.getFieldProps("email")}
                   className="custom-border"
-                  placeholder="Retype Password"
+                  placeholder="Email Address"
+                  style={{ padding: "10px", margin: "5px" }}
                 />
-                {formik.touched.retypePassword &&
-                formik.errors.retypePassword ? (
-                  <div>{formik.errors.retypePassword}</div>
+                {formik.touched.email && formik.errors.email ? (
+                  <div>{formik.errors.email}</div>
                 ) : null}
               </div>
+
+              <div>
+                <div>
+                  <div>
+                    <input
+                      id="password"
+                      type="password"
+                      {...formik.getFieldProps("password")}
+                      className="custom-border"
+                      placeholder="Password"
+                      style={{ padding: "10px", margin: "5px" }}
+                    />
+                    {formik.touched.password && formik.errors.password ? (
+                      <div>{formik.errors.password}</div>
+                    ) : null}
+                  </div>
+                  <div>
+                    <input
+                      id="retypePassword "
+                      type="retypePassword "
+                      {...formik.getFieldProps("retypePassword ")}
+                      className="custom-border"
+                      placeholder="Retype Password"
+                      style={{ padding: "10px", margin: "5px" }}
+                    />
+                    {formik.touched.retypePassword &&
+                    formik.errors.retypePassword ? (
+                      <div>{formik.errors.retypePassword}</div>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div id="second">
-              <ul>One letter (a-z)</ul>
-              <ul>One number (0-9)</ul>
-              <ul>One special character</ul>
-              <ul>One special character</ul>
-              <ul>A minimum of 8 characters</ul>
-              <ul>No more than 2 repeated </ul>
-              <ul>characters in a row </ul>
-              <ul>('aa' works but not 'aaa')</ul>
+            <div>
+              <p>
+                - One letter (a-z)
+                <br />
+                - One number (0-9)
+                <br />
+                - One special character
+                <br />
+                - One special character
+                <br />
+                - A minimum of 8 characters
+                <br />
+                - No more than 2 repeated <br />
+                &nbsp; characters in a row <br />
+                &nbsp; ('aa' works but not 'aaa')
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center justify-center pt-3">
-            <button type="submit">Submit</button>
+          <div>
+            <button
+              type="submit"
+              style={{
+                padding: "10px",
+                margin: "5px",
+                cursor: "pointer",
+              }}
+            >
+              Submit
+            </button>
           </div>
         </form>
       )}

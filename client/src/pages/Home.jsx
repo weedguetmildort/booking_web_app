@@ -1,49 +1,102 @@
 import React from "react";
-
 import Navbar from "components/Navbar";
 import Banner from "components/Banner";
 import Footer from "components/Footer";
 import FlexBetween from "components/FlexBetween";
+import { useNavigate } from "react-router-dom";
 
 import { Box } from "@mui/material";
+import SearchBar from "components/SearchBar";
 
 function Home() {
+  const navigate = useNavigate();
+
   return (
     <div>
       <div>
         <div>
-          <Banner />
+          <FlexBetween>
+            <Banner />
+            <FlexBetween>
+              <h3
+                onClick={() => navigate("/Login")}
+                style={{
+                  paddingRight: "10px",
+                  cursor: "pointer",
+                }}
+              >
+                Login
+              </h3>
+              <h3
+                onClick={() => navigate("/SignUp")}
+                style={{
+                  paddingRight: "10px",
+                  cursor: "pointer",
+                }}
+              >
+                Signup
+              </h3>
+            </FlexBetween>
+          </FlexBetween>
+
           <Navbar />
         </div>
         <div>
           <div>
-            <div className="section">
+            <div
+              style={{
+                alignItems: "center",
+                alignContent: "center",
+                textAlign: "center",
+              }}
+            >
               <div>
                 <h1>Find services in your area.</h1>
               </div>
 
-              <div>Searchbar</div>
-              <div>Please enter a valid zip code.</div>
+              <div>
+                <SearchBar></SearchBar>
+              </div>
             </div>
-            <div className="section">
-              <h6> Popular services</h6>
+            <div className="seethru">
+              <h3
+                style={{
+                  paddingLeft: "10px",
+                  color: "black",
+                }}
+              >
+                Popular services
+              </h3>
             </div>
             <div className="section">
               <FlexBetween>
                 <div></div>
                 <div>
-                  <h3>Grow your business with us. Become a partner today.</h3>
+                  <h2>Grow your business with us. Become a partner today.</h2>
                   <div>Become a partner</div>
                 </div>
               </FlexBetween>
             </div>
 
-            <div className="section">
+            <div className="section seethru">
               <FlexBetween>
-                <h4>
+                <h2
+                  style={{
+                    color: "black",
+                  }}
+                >
                   Get free service cost information delivered to your inbox.
-                </h4>
-                <div>Sign Up</div>
+                </h2>
+                <h2
+                  onClick={() => navigate("/SignUp")}
+                  style={{
+                    paddingLeft: "10px",
+                    cursor: "pointer",
+                    color: "black",
+                  }}
+                >
+                  Signup
+                </h2>
               </FlexBetween>
             </div>
             <div className="spacer"></div>

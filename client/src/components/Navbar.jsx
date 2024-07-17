@@ -1,13 +1,17 @@
 import React from "react";
-import { Box, useMediaQuery } from "@mui/material";
-import { Routes, Route, Link } from "react-router-dom";
+import { useMediaQuery } from "@mui/material";
 import FlexBetween from "./FlexBetween";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
+  const navigate = useNavigate();
 
   return (
-    <FlexBetween className="mx-auto nav">
+    <div
+      className="navbar"
+      style={{ paddingRight: "120px", paddingLeft: "120px" }}
+    >
       <FlexBetween gap="1.75rem">
         <FlexBetween>Personal Care</FlexBetween>
         <FlexBetween>Landscaping</FlexBetween>
@@ -15,7 +19,7 @@ function Navbar() {
         <FlexBetween>Electrical</FlexBetween>
         <FlexBetween>More...</FlexBetween>
       </FlexBetween>
-    </FlexBetween>
+    </div>
   );
 }
 

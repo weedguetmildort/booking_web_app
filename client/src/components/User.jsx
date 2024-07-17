@@ -1,18 +1,12 @@
 import { React } from "react";
-import { Link } from "react-router-dom";
-import LoginButton from "./LoginButton";
-import LogoutButton from "./LogoutButton";
-import SignUpButton from "./SignUpButton";
+import { useNavigate } from "react-router-dom";
 
 function User() {
+  const navigate = useNavigate();
   return (
-    <div className="flex flex-row gap-3">
-      <Link to="/profile">PROFILE</Link>
-      <SignUpButton />
-      <LoginButton />
-      <LogoutButton />
-      <Link to="/login">Login</Link>
-      <Link to="/signup"> Sign Up</Link>
+    <div className="container">
+      <h4 onClick={() => navigate("/Login")}>Login</h4>
+      <h4 onClick={() => navigate("/SignUp")}>Sign Up</h4>
     </div>
   );
 }

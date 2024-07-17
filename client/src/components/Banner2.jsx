@@ -1,20 +1,22 @@
 import React from "react";
 import logo from "../assets/images/logo.png";
+import User from "./User";
+import { Link } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-function Banner() {
+function Banner2() {
   const navigate = useNavigate();
   return (
-    <FlexBetween>
+    <FlexBetween className="banner">
       <div className="container">
         <img
           src={logo}
           alt="Logo"
           onClick={() => navigate("/")}
           style={{
-            maxWidth: "7%",
+            maxWidth: "6.45%",
             height: "auto",
             display: "block",
             cursor: "pointer",
@@ -38,4 +40,4 @@ function Banner() {
   );
 }
 
-export default Banner;
+export default Banner2;
