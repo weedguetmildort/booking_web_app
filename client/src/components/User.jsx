@@ -7,6 +7,8 @@ function User() {
     <div className="flex flex-row gap-3">
       <Link to="/login">Login</Link>
       <Link to="/signup"> Sign Up</Link>
+        <Link to="/about"> About</Link>
+        <Link to="/contact"> Contact</Link>
       <FaRegUserCircle />
     </div>
   );
