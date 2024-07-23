@@ -10,6 +10,7 @@ import PartnerProfilePage from "pages/PartnerProfile";
 import SearchPage from "pages/Search";
 import CallBackPage from "pages/Callback";
 import { Routes, Route } from "react-router-dom";
+import Calendar from "pages/BookingCalendar";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/partner-profile" element={<PartnerProfilePage />}></Route>
         <Route path="/search" element={<SearchPage />}></Route>
         <Route path="/callback" element={<CallBackPage />}></Route>
+        <Route path="/calendar" element={<Calendar />}></Route>
       </Routes>
     </div>
   );
