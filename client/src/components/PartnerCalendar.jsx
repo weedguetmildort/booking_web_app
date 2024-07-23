@@ -14,7 +14,6 @@ function PartnerCalendar() {
     const hours = today.getHours();
     const openDaysOfOperation = open.days.indexOf(day) > -1;
     const openHoursOfOperation = open.hours.indexOf(hour) > -1;
-
     const message = (openDaysOfOperation && openHoursOfOperation) ? 'Open for Operations' : 'Closed for Operations';
 
     return (
