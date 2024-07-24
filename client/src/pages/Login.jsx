@@ -11,15 +11,17 @@ import Banner from "components/Banner";
 function Login() {
   const navigate = useNavigate();
   return (
-    <div>
+    <body>
       <Banner2 />
-      <body className="center">
+
+      <div className="center">
         <h1>User Sign In</h1>
-        <div>
-          <UserLogin />
-        </div>
-      </body>
-    </div>
+      </div>
+
+      <div className="center">
+        <UserLogin />
+      </div>
+    </body>
   );
 }
 

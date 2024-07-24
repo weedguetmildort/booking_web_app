@@ -105,7 +105,7 @@ h2 {
   display: flex; /* Equivalent to flex */
   align-items: center; /* Equivalent to items-center */
   justify-content: center; /* Equivalent to justify-center */
-  padding-top: 0.75rem; /* Equivalent to pt-3 */
+  padding-top: 1.75rem; /* Equivalent to pt-3 */
 }
 
 .field {

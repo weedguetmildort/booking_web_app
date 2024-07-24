@@ -8,6 +8,18 @@ const {
   generateState,
   validateState,
 } = require("../middlewares/stateValidation");
+const cors = require("cors");
+const CryptoJS = require("crypto-js");
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+};
+
+const decryptPassword = (encryptedPassword) => {
+  const secretkey = process.env.SECRET_KEY;
+  const bytes = CryptoJS.AES.decrypt(encryptedPassword, secretkey);
+  return bytes.toString(CryptoJS.enc.Utf8);
+};
 
 const router = express.Router();
 
@@ -109,7 +121,6 @@ router.post("/signup", async (req, res) => {
 });
 
 router.get("/login", generateState, (req, res) => {
-  console.log(process.env.AUTH0_DOMAIN);
   const authUrl =
     `https://${process.env.AUTH0_DOMAIN}/authorize?` +
     querystring.stringify({
@@ -161,10 +172,11 @@ router.get("/callback", validateState, async (req, res) => {
   }
 });
 
-router.post("/quick-login", async (req, res) => {
+router.post("/quick-login", cors(corsOptions), async (req, res) => {
   const { email, password } = req.body;
+  const decryptedPassword = decryptPassword(password);
 
-  if (!email || !password) {
+  if (!email || !decryptedPassword) {
     return res.status(400).json({ error: "Email and password are required" });
   }
 
@@ -174,7 +186,7 @@ router.post("/quick-login", async (req, res) => {
       {
         grant_type: "password",
         username: email,
-        password: password,
+        password: decryptedPassword,
         audience: process.env.AUTH0_AUDIENCE,
         scope: "openid profile email",
         client_id: process.env.AUTH0_CLIENT_ID,
