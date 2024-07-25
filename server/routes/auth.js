@@ -173,10 +173,12 @@ router.get("/callback", validateState, async (req, res) => {
 });
 
 router.post("/quick-login", cors(corsOptions), async (req, res) => {
-  const { email, password } = req.body;
-  const decryptedPassword = decryptPassword(password);
+  // const { email, password } = req.body;
+  // const decryptedPassword = decryptPassword(password);
 
-  if (!email || !decryptedPassword) {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
     return res.status(400).json({ error: "Email and password are required" });
   }
 
@@ -186,7 +188,7 @@ router.post("/quick-login", cors(corsOptions), async (req, res) => {
       {
         grant_type: "password",
         username: email,
-        password: decryptedPassword,
+        password: password,
         audience: process.env.AUTH0_AUDIENCE,
         scope: "openid profile email",
         client_id: process.env.AUTH0_CLIENT_ID,
