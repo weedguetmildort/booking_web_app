@@ -1,6 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
-
+const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -32,6 +32,7 @@ const PORT = 5002;
 // const port = process.env.PORT || 8080;
 
 // For parsing application/json
+app.use(cors());
 app.use(express.json());
 
 // For parsing application/x-www-form-urlencoded
@@ -134,12 +135,11 @@ app.get("/api/getUserByUid/:uid", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-// Fetch user by authID
-app.post("/api/getUserByAuthId", (req, res) => {
-  var authid = req.body.authid;
+// Fetch UID by Email
+app.post("/api/getUserByEmail", (req, res) => {
+  var email = req.body.email;
   const db = dbService.getDbServiceInstance();
-  const result = db.getUserByAuthId(authid);
-
+  const result = db.getUserByEmail(email);
   result
     .then((data) => res.json({ data: data }))
     .catch((err) => console.log(err));

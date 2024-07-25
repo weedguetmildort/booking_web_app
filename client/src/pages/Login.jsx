@@ -11,7 +11,7 @@ import Banner from "components/Banner";
 function Login() {
   const navigate = useNavigate();
   return (
-    <body>
+    <div>
       <Banner2 />
 
       <div className="center">
@@ -21,7 +21,7 @@ function Login() {
       <div className="center">
         <UserLogin />
       </div>
-    </body>
+    </div>
   );
 }
 

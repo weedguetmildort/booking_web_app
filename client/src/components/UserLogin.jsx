@@ -1,12 +1,34 @@
-import { React, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import CryptoJS from "crypto-js";
 
-import axios from "axios";
-
 function UserLogin() {
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const secretKey = process.env.REACT_APP_SECRET_KEY;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user and token are already stored
+
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("authToken");
+
+    if (storedUser && storedToken) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setToken(storedToken);
+        // Navigate to profile page if user is already logged in
+        navigate("/profile");
+      } catch (error) {
+        console.error("Failed to parse stored user data:", error);
+      }
+    }
+  }, [navigate]);
 
   return (
     <Formik
@@ -34,11 +56,27 @@ function UserLogin() {
             password: encryptedPassword,
           })
           .then((response) => {
+            const { access_token } = response.data;
+
+            // Save token and user information to local storage
+            localStorage.setItem("authToken", access_token);
+            localStorage.setItem("user", JSON.stringify(user));
+
+            // Update state
+            setToken(access_token);
+            setUser(values.email);
+
+            // Navigate to profile page after successful login
+            navigate("/profile");
+
+            // Log the response for debugging
             console.log("Response:", response);
           })
           .catch((error) => {
             console.error("Error:", error);
           });
+
+        setSubmitting(false);
 
         // setTimeout(() => {
         //   alert(JSON.stringify(encryptedPassword, null, 2));
