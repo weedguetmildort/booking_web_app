@@ -1,14 +1,16 @@
+import moment from "moment";
 class Booking {
-    bookingDate: String; // uses toDateString() format from Date
+    bookingDate: Date;
     bookingStartTime: Date;
     bookingEndTime: Date;
-    bookingDuration: number;
+    bookingDuration: number; // in minutes
 
-    constructor(bookingDate, bookingStartTime, bookingDuration) {
+    constructor(bookingStartTime: Date, bookingDuration: number) {
+        let bookingDate = bookingStartTime;
         this.bookingDate = bookingDate;
         this.bookingStartTime = bookingStartTime;
         this.bookingDuration = bookingDuration;
-        this.bookingEndTime = bookingStartTime + bookingDuration;
+        this.bookingEndTime = moment(bookingStartTime).add(bookingDuration, 'm').toDate();
     }
 
 }
