@@ -285,7 +285,7 @@ app.post("/api/updateHours", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-// Get days available for partner
+// Get days/hours available for partner
 app.get("/api/getHours/:pID", (req, res) => {
   var pID = req.params.pID;
   const db = dbService.getDbServiceInstance();
@@ -321,7 +321,6 @@ app.get("/api/getAllBookings/:pID", (req, res) => {
 
 
 // Search Businesses and Services
-// Get partner info by uid
 app.get("/api/getSearchResults/:criteria", (req, res) => {
   var criteria = req.params.criteria;
   const db = dbService.getDbServiceInstance();
