@@ -10,10 +10,10 @@ function About() {
       <div>
         <Banner />
         <Navbar />
-        <body className="center">
+        <div className="center">
           <div>Profile info</div>
           <ProfileInfo />
-        </body>
+        </div>
       </div>
       <Footer />
     </div>

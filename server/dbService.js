@@ -1,29 +1,29 @@
-const mysql = require("mysql")
-const dotenv = require("dotenv")
-const { response } = require("express")
-let instance = null
-dotenv.config()
+const mysql = require("mysql");
+const dotenv = require("dotenv");
+const { response } = require("express");
+let instance = null;
+dotenv.config();
 
-  const connection = mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    port: process.env.MYSQL_PORT,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-})
+const connection = mysql.createConnection({
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+});
 
 connection.connect((err) => {
-    if (err) {
-        console.log(err.message)
-    }
-})
+  if (err) {
+    console.log(err.message);
+  }
+});
 
-console.log('db' + connection.state)
+console.log("db" + connection.state);
 
 class DbService {
-    static getDbServiceInstance() {
-        return instance ? instance : new DbService()
-    }
+  static getDbServiceInstance() {
+    return instance ? instance : new DbService();
+  }
 
     async getUserById(uid) {
         try{
@@ -42,6 +42,7 @@ class DbService {
             console.log(error)
         }
     }
+  
 
     async getUserByEmail(email) {
         try{
@@ -60,6 +61,7 @@ class DbService {
             console.log(error)
         }
     }
+  
 
     async isPartner(uid) {
         try{
@@ -78,6 +80,7 @@ class DbService {
             console.log(error)
         }
     }
+  
 
     async getPartnerByUid(uid) {
         try{
@@ -99,6 +102,7 @@ class DbService {
             console.log(error)
         }
     }
+  
 
     async insertUser(firstName, lastName, email, zip, password) {
         try{
@@ -138,6 +142,7 @@ class DbService {
             return "success : false"
         }
     }
+  
 
     async insertPartner(businessName, category, email, address, city, state, zip) {
         try{
@@ -422,7 +427,3 @@ class DbService {
 }
 
 module.exports = DbService;
-
-
-
-  

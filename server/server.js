@@ -1,7 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
-
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -141,7 +140,6 @@ app.post("/api/getUserByEmail", (req, res) => {
   var email = req.body.email;
   const db = dbService.getDbServiceInstance();
   const result = db.getUserByEmail(email);
-
   result
     .then((data) => res.json({ data: data }))
     .catch((err) => console.log(err));
