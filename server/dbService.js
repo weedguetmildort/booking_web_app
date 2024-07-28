@@ -28,7 +28,9 @@ class DbService {
     async getUserById(uid) {
         try{
             const response = await new Promise((resolve, reject) => {
-                const query = "SELECT * FROM users WHERE uid = ?"
+                const query = "SELECT * \
+                FROM users \
+                WHERE uid = ?"
                 connection.query(query, [uid], (err, results) => {
                     if (err) reject(new Error(err.message))
                     resolve(results)
@@ -41,11 +43,13 @@ class DbService {
         }
     }
 
-    async getUserByAuthId(authid) {
+    async getUserByEmail(email) {
         try{
             const response = await new Promise((resolve, reject) => {
-                const query = "SELECT * FROM users WHERE authid = ?"
-                connection.query(query, [authid], (err, results) => {
+                const query = "SELECT uid \
+                FROM users \
+                WHERE email = ?"
+                connection.query(query, [email], (err, results) => {
                     if (err) reject(new Error(err.message))
                     resolve(results)
                 })
@@ -60,7 +64,9 @@ class DbService {
     async isPartner(uid) {
         try{
             const response = await new Promise((resolve, reject) => {
-                const query = "SELECT (EXISTS(SELECT * FROM ispartner WHERE uid = ?)) as IsPartner"
+                const query = "SELECT * \
+                        FROM ispartner \
+                        WHERE uid = ?"
                 connection.query(query, [uid], (err, results) => {
                     if (err) reject(new Error(err.message))
                     resolve(results)
@@ -76,7 +82,12 @@ class DbService {
     async getPartnerByUid(uid) {
         try{
             const response = await new Promise((resolve, reject) => {
-                const query = "select * from partners where pid = (select pid from ispartner where uid = " +uid+ ")"
+                const query = "SELECT * \
+                FROM partners \
+                WHERE pid = (\
+                    SELECT pid \
+                    FROM ispartner \
+                    WHERE uid = ?)"
                 connection.query(query, [uid], (err, results) => {
                     if (err) reject(new Error(err.message))
                     resolve(results)
@@ -89,22 +100,33 @@ class DbService {
         }
     }
 
-    async insertUser(authID, firstName, lastName, email, zip) {
+    async insertUser(firstName, lastName, email, zip, password) {
         try{
             const response = await new Promise((resolve, reject) => {
                 const query =
-                "INSERT INTO Users (authID, firstname, lastname, email, zip) VALUES('" +
-                authID +
-                "','" +    
-                firstName +
-                "','" +
-                lastName +
-                "','" +
-                email +
-                "','" +    
-                zip +
-                "')";
-                connection.query(query, [authID, firstName, lastName, email, zip], (err, results) => {
+                "INSERT INTO Users (firstname, lastname, email, zip, password) \
+                VALUES(?,?,?,?,?)";
+                connection.query(query, [firstName, lastName, email, zip, password], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return "success : true"
+        }catch(error) {            
+            console.log(error)
+            return "success : false"
+        }
+    }
+
+    async updateUser(uID, firstName, lastName, zip) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query =
+                "UPDATE Users \
+                SET firstname = ?, lastname = ?, zip = ? \
+                WHERE uID = ?";
+                connection.query(query, [firstName, lastName, zip, uID], (err, results) => {
                     if (err) reject(new Error(err.message))
                     resolve(results)
                 })
@@ -121,21 +143,8 @@ class DbService {
         try{
             const response = await new Promise((resolve, reject) => {
                 const query =
-                "INSERT INTO partners (businessName, category, email, address, city, state, zip) VALUES('" +
-                businessName +
-                "','" +
-                category +
-                "','" +
-                email +
-                "','" +    
-                address +
-                "','" +
-                city +
-                "','" +
-                state +
-                "','" +
-                zip +
-                "')";
+                "INSERT INTO partners (businessName, category, email, address, city, state, zip) \
+                VALUES(?,?,?,?,?,?,?)";
                 connection.query(query, [businessName, category, email, address, city, state, zip], (err, results) => {
                     if (err) reject(new Error(err.message))
                     resolve(results)
@@ -153,13 +162,8 @@ class DbService {
         try{
             const response = await new Promise((resolve, reject) => {
                 const query =
-                "INSERT INTO isPartner (uid, pid, isAdmin) VALUES('" +
-                uid +
-                "','" +
-                pid +
-                "','" +
-                isAdmin +
-                "')";
+                "INSERT INTO isPartner (uid, pid, isAdmin) \
+                VALUES(?,?,?)";
                 connection.query(query, [uid, pid, isAdmin], (err, results) => {
                     if (err) reject(new Error(err.message))
                     resolve(results)
@@ -170,6 +174,247 @@ class DbService {
         }catch(error) {            
             console.log(error)
             return "success : false"
+        }
+    }
+
+    async updatePartner(pID, businessName, address, city, state, zip) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query =
+                "UPDATE Partners \
+                SET businessname = ?, address = ?, city = ?, state = ?, zip = ? \
+                WHERE pID = ?";
+                connection.query(query, [businessName, address, city, state, zip, pID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return "success : true"
+        }catch(error) {            
+            console.log(error)
+            return "success : false"
+        }
+    }
+
+    // Search DB for business name or service name
+    
+    async getSearchResults(criteria) {
+        try{
+            var myReplace = "%"+criteria+"%";
+            const response = await new Promise((resolve, reject) => {                
+                const query = "\
+                SELECT p.pID, p.businessname, p.aboutus, p.address, p.state, p.zip, s.name as servicename \
+                FROM partners p JOIN services s on p.pID = s.pID \
+                WHERE p.businessname like ? or s.name like ?"
+                connection.query(query, [myReplace,myReplace], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return response
+        }catch(error) {            
+            console.log(error)
+        }
+    }
+
+    async insertHours(pID, day, open, close) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query =
+                "INSERT INTO hoursofoperation (pID, day, open, close) \
+                VALUES(?, ?, ?, ?)";
+                connection.query(query, [pID, day, open, close], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return "success : true"
+        }catch(error) {            
+            console.log(error)
+            return "success : false"
+        }
+    }
+
+    async updateHours(pID, day, open, close) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query =
+                "UPDATE hoursofoperation \
+                SET open = ?, close = ? \
+                WHERE day = ? AND pid = ?";
+                connection.query(query, [open, close, day, pID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return "success : true"
+        }catch(error) {            
+            console.log(error)
+            return "success : false"
+        }
+    }
+
+    async getHours(pID) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query = "SELECT day, open, close \
+                FROM hoursofoperation \
+                WHERE pid = ?"
+                connection.query(query, [pID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return response
+        }catch(error) {            
+            console.log(error)
+        }
+    }
+
+    async getFutureBookings(pID) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query = "\
+                SELECT b.starttime, s.duration \
+                FROM bookings b \
+                JOIN services s ON b.sid = s.sid \
+                WHERE pid = ? AND status in ('pending', 'approved') AND DATE(b.starttime) > DATE(sysdate);"
+                connection.query(query, [pID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return response
+        }catch(error) {            
+            console.log(error)
+        }
+    }
+
+    async getAllBookings(pID) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query = "\
+                SELECT b.starttime, s.duration, b.status \
+                FROM bookings b \
+                JOIN services s ON b.sid = s.sid \
+                WHERE pid = ?"
+                connection.query(query, [pID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return response
+        }catch(error) {            
+            console.log(error)
+        }
+    }
+
+    async insertUserReview(uID, pID, reviewText, score) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query =
+                "INSERT INTO reviews (uID, pID, reviewText, score) \
+                VALUES(?,?,?,?)";
+                connection.query(query, [uID, pID, reviewText, score], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return "success : true"
+        }catch(error) {            
+            console.log(error)
+            return "success : false"
+        }
+    }
+
+    async insertPartnerReviewResponse(uID, pID, responseText) {
+        try{
+            const response = await new Promise((resolve, reject) => {
+                const query =
+                "UPDATE reviews \
+                SET responseText = ? \
+                WHERE uid = ? and pid = ?";
+                connection.query(query, [responseText, uID, pID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return "success : true"
+        }catch(error) {            
+            console.log(error)
+            return "success : false"
+        }
+    }
+
+    async getPartnerReviews(pID) {
+        try{            
+            const response = await new Promise((resolve, reject) => {                
+                const query = "\
+                SELECT r.rID, p.businessname, r.score, r.reviewtext, u.firstname, u.lastname, r.addedat r.responsetext, r.responsedate \
+                FROM reviews r \
+                JOIN users u on r.uid = u.uid \
+                JOIN partners p on r.pid = p.pid \
+                where r.pid = ?"
+                connection.query(query, [pID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return response
+        }catch(error) {            
+            console.log(error)
+        }
+    }
+
+    async canUserAddReview(uID, pID) {
+        try{            
+            const response = await new Promise((resolve, reject) => {                
+                const query = "\
+                SELECT \
+                IF( \
+	            (select count(*) from reviews where uid = ? and pid = ?) = 0 \
+	            AND \
+	            (select count(*) from bookings where uid = ? and pid = ? and status = 'done') > 0, \
+	            1, 0) as CanReview;"
+                connection.query(query, [uID, pID, uID, pID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return response
+        }catch(error) {            
+            console.log(error)
+        }
+    }
+
+    async canPartnerAddResponse(rID) {
+        try{            
+            const response = await new Promise((resolve, reject) => {                
+                const query = "\
+                SELECT \
+                IF( \
+                (select responsetext from reviews where rid = ?) IS NULL, \
+                1,0) as CanRespond;"
+                connection.query(query, [rID], (err, results) => {
+                    if (err) reject(new Error(err.message))
+                    resolve(results)
+                })
+            })
+            console.log(response)
+            return response
+        }catch(error) {            
+            console.log(error)
         }
     }
 

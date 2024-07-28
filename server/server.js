@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
+const cors = require("cors");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -32,6 +33,7 @@ const PORT = 5002;
 // const port = process.env.PORT || 8080;
 
 // For parsing application/json
+app.use(cors());
 app.use(express.json());
 
 // For parsing application/x-www-form-urlencoded
@@ -135,10 +137,10 @@ app.get("/api/getUserByUid/:uid", (req, res) => {
 });
 
 // Fetch user by authID
-app.post("/api/getUserByAuthId", (req, res) => {
-  var authid = req.body.authid;
+app.post("/api/getUserByEmail", (req, res) => {
+  var email = req.body.email;
   const db = dbService.getDbServiceInstance();
-  const result = db.getUserByAuthId(authid);
+  const result = db.getUserByEmail(email);
 
   result
     .then((data) => res.json({ data: data }))
@@ -168,15 +170,30 @@ app.get("/api/getPartnerByUid/:uid", (req, res) => {
 });
 
 // Insert User
-app.post("/api/insertuser", (req, res) => {
-  var authID = req.body.authID;
+app.post("/api/insertuser", (req, res) => {  
   var firstName = req.body.firstName;
   var lastName = req.body.lastName;
   var email = req.body.email;
   var zip = req.body.zip;
+  var password = req.body.password;
 
   const db = dbService.getDbServiceInstance();
-  const result = db.insertUser(authID, firstName, lastName, email, zip);
+  const result = db.insertUser(firstName, lastName, email, zip, password);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Update User
+app.post("/api/updateuser", (req, res) => {  
+  var uID = req.body.uID;
+  var firstName = req.body.firstName;
+  var lastName = req.body.lastName;  
+  var zip = req.body.zip;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.updateUser(uID, firstName, lastName, zip);
 
   result
     .then((data) => res.json({ data: data }))
@@ -223,10 +240,168 @@ app.post("/api/makeUserPartner", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+// Update Partner
+app.post("/api/updatepartner", (req, res) => {  
+  var pID = req.body.pID;
+  var businessName = req.body.businessName;
+  var address = req.body.address;
+  var city = req.body.city;
+  var state = req.body.state;
+  var zip = req.body.zip;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.updatePartner(pID, businessName, address, city, state, zip);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Insert Hours
+app.post("/api/insertHours", (req, res) => {  
+  var pID = req.body.pID;
+  var day = req.body.day;
+  var open = req.body.open;
+  var close = req.body.close;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.insertHours(pID, day, open, close);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Update Hours
+app.post("/api/updateHours", (req, res) => {  
+  var pID = req.body.pID;
+  var day = req.body.day;
+  var open = req.body.open;
+  var close = req.body.close;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.updateHours(pID, day, open, close);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Get days available for partner
+app.get("/api/getHours/:pID", (req, res) => {
+  var pID = req.params.pID;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getHours(pID);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Get future bookings for calendar
+app.get("/api/getFutureBookings/:pID", (req, res) => {
+  var pID = req.params.pID;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getFutureBookings(pID);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Get all bookings for partner
+app.get("/api/getAllBookings/:pID", (req, res) => {
+  var pID = req.params.pID;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getAllBookings(pID);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+
+
+// Search Businesses and Services
+// Get partner info by uid
+app.get("/api/getSearchResults/:criteria", (req, res) => {
+  var criteria = req.params.criteria;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getSearchResults(criteria);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
 app.listen(PORT, (error) => {
   if (!error)
     console.log(
       "Server is Successfully Running, and App is listening on port " + PORT
     );
   else console.log("Error occurred, server can't start", error);
+});
+
+// Insert User Review
+app.post("/api/insertUserReview", (req, res) => {  
+  var uID = req.body.uID;
+  var pID = req.body.pID;
+  var reviewText = req.body.reviewText;
+  var score = req.body.score;
+ 
+  const db = dbService.getDbServiceInstance();
+  const result = db.insertUserReview(uID, pID, reviewText, score);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Insert Partner Review Response
+app.post("/api/insertPartnerReviewResponse", (req, res) => {  
+  var uID = req.body.uID;
+  var pID = req.body.pID;
+  var reviewText = req.body.responseText;
+  
+ 
+  const db = dbService.getDbServiceInstance();
+  const result = db.insertPartnerReviewResponse(uID, pID, responseText);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Get all reviews for a Partner
+app.get("/api/getPartnerReviews/:pID", (req, res) => {
+  var pID = req.params.pID;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getPartnerReviews(pID);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Check if user can leave review for partner, 1 for yes, 0 for no
+app.get("/api/canUserAddReview/:uID/:pID", (req, res) => {
+  var uID = req.params.uID;
+  var pID = req.params.pID;
+  const db = dbService.getDbServiceInstance();
+  const result = db.canUserAddReview(uID,pID);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Check if partner can add response to review, 1 for yes, 0 for no
+app.get("/api/canPartnerAddResponse/:rID", (req, res) => {
+  var rID = req.params.rID;
+  const db = dbService.getDbServiceInstance();
+  const result = db.canPartnerAddResponse(rID);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
 });
