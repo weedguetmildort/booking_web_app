@@ -3,6 +3,7 @@ import PartnerLogin from "components/PartnerLogin";
 import Banner from "components/Banner";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import UserPortalButton from "components/UserPortalButton";
 
 function LoginPartner() {
   const navigate = useNavigate();
@@ -23,8 +24,9 @@ function LoginPartner() {
             cursor: "pointer",
           }}
         >
-          PartnerSignup
+          Signup
         </h3>
+        <UserPortalButton />
       </FlexBetween>
 
       <div className="center">

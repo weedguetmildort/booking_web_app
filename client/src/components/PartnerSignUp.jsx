@@ -71,14 +71,15 @@ function PartnerSignUp() {
         ).toString();
 
         // Update the password value with the encrypted one
-        const encryptedValues = { ...values, password: encryptedPassword };
+        const encryptedValues = {
+          ...values,
+          password: encryptedPassword,
+          isPartner: "1",
+        };
 
         // Call to send the data to backend
         axios
-          .post(
-            "http://localhost:5002/auth/api/partner-signup",
-            encryptedValues
-          )
+          .post("http://localhost:5002/auth/api/user-signup", encryptedValues)
           .then((response) => {
             console.log("Response:", response.data);
             // Extract the token from the response data
@@ -90,7 +91,7 @@ function PartnerSignUp() {
             }
 
             // Redirect the user to profile page
-            navigate("/partnerprofile");
+            navigate("/partnerlogin");
           })
           .catch((error) => {
             console.error("Error during signup:", error);
