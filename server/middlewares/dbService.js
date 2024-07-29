@@ -4,7 +4,7 @@ const { response } = require("express");
 let instance = null;
 dotenv.config();
 
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
   host: process.env.MYSQL_HOST,
   port: process.env.MYSQL_PORT,
   user: process.env.MYSQL_USER,
