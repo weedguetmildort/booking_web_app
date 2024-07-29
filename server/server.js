@@ -1,55 +1,37 @@
+// REQUIRED IMPORTS
 const express = require("express");
-const mysql = require("mysql");
+const session = require("express-session");
 const cors = require("cors");
+
 const dotenv = require("dotenv");
+const routes = require("./routes");
+const app = express();
+const PORT = process.env.PORT || 8080;
+
+// REQUIRED CONFIGS
 dotenv.config();
 
-// const connection = mysql.createConnection({
-//   host: process.env.MYSQL_HOST,
-//   port: process.env.MYSQL_PORT,
-//   user: process.env.MYSQL_USER,
-//   password: process.env.MYSQL_PASSWORD,
-//   database: process.env.MYSQL_DATABASE,
-// })
+// Other Setup **In Progress**
 
-// connection.connect((err) => {
-//   if (err) {
-//       console.log(err.message)
-//   }
-// })
+// const db = require("./dbService.js");
+// const dbService = require("./dbService.js");
 
-const https = require("node:https");
-
-// AUTH0 REQUIRED IMPORTS
-const session = require("express-session");
-const routes = require("./routes");
-
-const db = require("./dbService.js");
-const dbService = require("./dbService.js");
-
-const app = express();
-const PORT = 5002;
-// const port = process.env.PORT || 8080;
-
-// For parsing application/json
+// PARSERS AND NETWORK CONFIGS
 app.use(cors());
 app.use(express.json());
-
-// For parsing application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-// AUTH0 - Transitioning to modularity structure
 // LOGIN - Setup session middleware
-app.use(
-  session({
-    secret: "app_session_secret",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }, // Set to true in production
-  })
-);
+// app.use(
+//   session({
+//     secret: "app_session_secret",
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: true }, // Set to true in production
+//   })
+// );
 
-// MAIN LOGIN LOGIC -- NEEDS TO BE TESTED
+// MAIN LOGIC
 app.use(routes);
 
 // NEW API CALLS
@@ -168,7 +150,7 @@ app.get("/api/getPartnerByUid/:uid", (req, res) => {
 });
 
 // Insert User
-app.post("/api/insertuser", (req, res) => {  
+app.post("/api/insertuser", (req, res) => {
   var firstName = req.body.firstName;
   var lastName = req.body.lastName;
   var email = req.body.email;
@@ -184,10 +166,10 @@ app.post("/api/insertuser", (req, res) => {
 });
 
 // Update User
-app.post("/api/updateuser", (req, res) => {  
+app.post("/api/updateuser", (req, res) => {
   var uID = req.body.uID;
   var firstName = req.body.firstName;
-  var lastName = req.body.lastName;  
+  var lastName = req.body.lastName;
   var zip = req.body.zip;
 
   const db = dbService.getDbServiceInstance();
@@ -239,7 +221,7 @@ app.post("/api/makeUserPartner", (req, res) => {
 });
 
 // Update Partner
-app.post("/api/updatepartner", (req, res) => {  
+app.post("/api/updatepartner", (req, res) => {
   var pID = req.body.pID;
   var businessName = req.body.businessName;
   var address = req.body.address;
@@ -256,7 +238,7 @@ app.post("/api/updatepartner", (req, res) => {
 });
 
 // Insert Hours
-app.post("/api/insertHours", (req, res) => {  
+app.post("/api/insertHours", (req, res) => {
   var pID = req.body.pID;
   var day = req.body.day;
   var open = req.body.open;
@@ -271,7 +253,7 @@ app.post("/api/insertHours", (req, res) => {
 });
 
 // Update Hours
-app.post("/api/updateHours", (req, res) => {  
+app.post("/api/updateHours", (req, res) => {
   var pID = req.body.pID;
   var day = req.body.day;
   var open = req.body.open;
@@ -318,8 +300,6 @@ app.get("/api/getAllBookings/:pID", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-
-
 // Search Businesses and Services
 app.get("/api/getSearchResults/:criteria", (req, res) => {
   var criteria = req.params.criteria;
@@ -340,12 +320,12 @@ app.listen(PORT, (error) => {
 });
 
 // Insert User Review
-app.post("/api/insertUserReview", (req, res) => {  
+app.post("/api/insertUserReview", (req, res) => {
   var uID = req.body.uID;
   var pID = req.body.pID;
   var reviewText = req.body.reviewText;
   var score = req.body.score;
- 
+
   const db = dbService.getDbServiceInstance();
   const result = db.insertUserReview(uID, pID, reviewText, score);
 
@@ -355,12 +335,11 @@ app.post("/api/insertUserReview", (req, res) => {
 });
 
 // Insert Partner Review Response
-app.post("/api/insertPartnerReviewResponse", (req, res) => {  
+app.post("/api/insertPartnerReviewResponse", (req, res) => {
   var uID = req.body.uID;
   var pID = req.body.pID;
   var reviewText = req.body.responseText;
-  
- 
+
   const db = dbService.getDbServiceInstance();
   const result = db.insertPartnerReviewResponse(uID, pID, responseText);
 
@@ -385,7 +364,7 @@ app.get("/api/canUserAddReview/:uID/:pID", (req, res) => {
   var uID = req.params.uID;
   var pID = req.params.pID;
   const db = dbService.getDbServiceInstance();
-  const result = db.canUserAddReview(uID,pID);
+  const result = db.canUserAddReview(uID, pID);
 
   result
     .then((data) => res.json({ data: data }))

@@ -1,43 +1,50 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Formik, Form } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import CryptoJS from "crypto-js";
+import { UserContext } from "../UserContext";
 
 function UserLogin() {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const secretKey = process.env.REACT_APP_SECRET_KEY;
+  const { login } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user and token are already stored
+    // Check if the user is already logged in
+    const token = localStorage.getItem("token");
 
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("authToken");
-
-    if (storedUser && storedToken) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        setToken(storedToken);
-        // Navigate to profile page if user is already logged in
-        navigate("/profile");
-      } catch (error) {
-        console.error("Failed to parse stored user data:", error);
-      }
+    if (token) {
+      fetch("http://localhost:5002/auth/api/check-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.valid) {
+            login(data.user); // Update the user state with the logged-in user
+            navigate("/profile"); // Redirect to the profile page
+          }
+        })
+        .catch((error) => {
+          console.error("Error verifying token:", error);
+        });
     }
-  }, [navigate]);
+  }, [login, navigate]);
 
   return (
     <Formik
       initialValues={{
-        email: "",
+        username: "",
         password: "",
       }}
       validationSchema={Yup.object({
-        email: Yup.string().email("Invalid email address").required("Required"),
+        username: Yup.string()
+          .max(15, "Must be 15 characters or less")
+          .required("Required"),
         password: Yup.string()
           .min(8, "Password must be at least 8 characters")
           .required("Password is required"),
@@ -46,42 +53,36 @@ function UserLogin() {
         // Encrypt the password
         const encryptedPassword = CryptoJS.AES.encrypt(
           values.password,
-          secretKey
+          process.env.REACT_APP_SECRET_KEY
         ).toString();
 
-        // Example axios request to send the data to your backend
+        // Update the password value with the encrypted one
+        const encryptedValues = { ...values, password: encryptedPassword };
+
+        // Request to send data to backend
         axios
-          .post("http://localhost:5002/auth/quick-login", {
-            email: values.email,
-            password: encryptedPassword,
-          })
+          .post("http://localhost:5002/auth/api/user-login", encryptedValues)
           .then((response) => {
-            const { access_token } = response.data;
+            // Extract token and user data from the response
+            if (response.data) {
+              const { token, user } = response.data;
+              //localStorage.setItem("token", token);
+              login(user, token);
 
-            // Save token and user information to local storage
-            localStorage.setItem("authToken", access_token);
-            localStorage.setItem("user", JSON.stringify(user));
-
-            // Update state
-            setToken(access_token);
-            setUser(values.email);
-
-            // Navigate to profile page after successful login
-            navigate("/profile");
-
-            // Log the response for debugging
-            console.log("Response:", response);
+              // Redirect to profile page
+              navigate("/Profile");
+            } else {
+              console.error("Invalid login response:");
+              // Handle invalid login response: TO BE IMPLEMENTED
+            }
           })
           .catch((error) => {
-            console.error("Error:", error);
+            console.error("Error during login:", error);
+            // Handle error: TO BE IMPLEMENTED
+          })
+          .finally(() => {
+            setSubmitting(false);
           });
-
-        setSubmitting(false);
-
-        // setTimeout(() => {
-        //   alert(JSON.stringify(encryptedPassword, null, 2));
-        //   setSubmitting(false);
-        // }, 400);
       }}
     >
       {(formik) => (
@@ -90,15 +91,15 @@ function UserLogin() {
             <div>
               <div className="field">
                 <input
-                  id="email"
-                  type="email"
-                  {...formik.getFieldProps("email")}
+                  id="username"
+                  type="username"
+                  {...formik.getFieldProps("username")}
                   className="custom-border"
-                  placeholder="Email Address"
+                  placeholder="Username"
                   style={{ padding: "10px", margin: "5px" }}
                 />
-                {formik.touched.email && formik.errors.email ? (
-                  <div>{formik.errors.email}</div>
+                {formik.touched.username && formik.errors.username ? (
+                  <div>{formik.errors.username}</div>
                 ) : null}
               </div>
 

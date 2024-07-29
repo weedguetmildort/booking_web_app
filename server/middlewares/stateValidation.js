@@ -1,12 +1,73 @@
 const crypto = require("crypto");
-const { auth } = require("express-oauth2-jwt-bearer");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 
-// Middleware to check JWT
-const checkJwt = auth({
-  audience: "https://booking-web-app-api/",
-  issuerBaseURL: "https://dev-o5ogeizt5ue5oi0r.us.auth0.com/",
-  tokenSigningAlg: "RS256",
-});
+const secretkey = process.env.JWT_SECRET;
+
+// TOKEN GENERATION
+function generateToken(user) {
+  // The user object could contain fields like id, email, etc.
+  const payload = {
+    id: user.id,
+    username: user.username,
+    role: user.role,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    zip: user.zip,
+  };
+
+  // Options for the token
+  const options = {
+    expiresIn: "1h", // Token expires in 1 hour
+  };
+
+  // Sign the token
+  const token = jwt.sign(payload, secretkey, options);
+  return token;
+}
+
+// Middleware to check token
+function verifyToken(requiredRole) {
+  return (req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    if (!authHeader) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, secretkey, (err, user) => {
+      if (err) {
+        return res
+          .status(403)
+          .json({ message: "Failed to authenticate token" });
+      }
+
+      if (user.role !== requiredRole) {
+        return res.status(403).json({ message: "Insufficient role" });
+      }
+
+      req.user = user;
+      next();
+    });
+  };
+}
+
+function checkToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  jwt.verify(token, secretkey, (err, user) => {
+    if (err) {
+      console.error("Token verification failed:", err);
+      return res.status(403).json({ message: "Failed to authenticate token" });
+    }
+    req.user = user;
+    next();
+  });
+}
 
 function generateState(req, res, next) {
   const state = crypto.randomBytes(16).toString("hex");
@@ -25,7 +86,9 @@ function validateState(req, res, next) {
 }
 
 module.exports = {
-  checkJwt,
+  generateToken,
+  verifyToken,
+  checkToken,
   generateState,
   validateState,
 };

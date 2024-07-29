@@ -1,17 +1,24 @@
-import React from "react";
-import { Formik, Form } from "formik";
+import React, { useContext, useState, useEffect } from "react";
+import { Formik } from "formik";
 import * as Yup from "yup";
+import CryptoJS from "crypto-js";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../UserContext";
+import axios from "axios";
 
 const UserSignUp = () => {
+  const { login } = useContext(UserContext);
+  const navigate = useNavigate();
+
   return (
     <Formik
       initialValues={{
         firstName: "",
         lastName: "",
         email: "",
+        username: "",
         zipCode: "",
         password: "",
-        retypePassword: "",
       }}
       validationSchema={Yup.object({
         firstName: Yup.string()
@@ -24,18 +31,46 @@ const UserSignUp = () => {
         zipCode: Yup.string()
           .matches(/^[0-9]{5}$/, "Must be a valid zip code")
           .required("Required"),
+        username: Yup.string()
+          .max(15, "Must be 15 characters or less")
+          .required("Required"),
         password: Yup.string()
           .min(8, "Password must be at least 8 characters")
           .required("Password is required"),
-        retypePassword: Yup.string()
-          .oneOf([Yup.ref("password"), null], "Passwords must match")
-          .required("Retype Password is required"),
       })}
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
+        // Encrypt the password
+        const encryptedPassword = CryptoJS.AES.encrypt(
+          values.password,
+          process.env.REACT_APP_SECRET_KEY
+        ).toString();
+
+        // Update the password value with the encrypted one
+        const encryptedValues = { ...values, password: encryptedPassword };
+
+        // Call to send the data to backend
+        axios
+          .post("http://localhost:5002/auth/api/user-signup", encryptedValues)
+          .then((response) => {
+            console.log("Response:", response.data);
+            // Extract the token from the response data
+            const { token } = response.data;
+
+            // Store token in local storage
+            if (token) {
+              localStorage.setItem("authToken", token);
+            }
+
+            // Redirect the user to profile page
+            navigate("/profile");
+          })
+          .catch((error) => {
+            console.error("Error during signup:", error);
+            // Handle error: TO BE IMPLEMENTED
+          })
+          .finally(() => {
+            setSubmitting(false);
+          });
       }}
     >
       {(formik) => (
@@ -96,6 +131,20 @@ const UserSignUp = () => {
                 ) : null}
               </div>
 
+              <div className="field">
+                <input
+                  id="username"
+                  type="username"
+                  {...formik.getFieldProps("username")}
+                  className="custom-border"
+                  placeholder="Username"
+                  style={{ padding: "10px", margin: "5px" }}
+                />
+                {formik.touched.username && formik.errors.username ? (
+                  <div>{formik.errors.username}</div>
+                ) : null}
+              </div>
+
               <div>
                 <div>
                   <div>
@@ -111,24 +160,11 @@ const UserSignUp = () => {
                       <div>{formik.errors.password}</div>
                     ) : null}
                   </div>
-                  <div>
-                    <input
-                      id="retypePassword "
-                      type="retypePassword "
-                      {...formik.getFieldProps("retypePassword ")}
-                      className="custom-border"
-                      placeholder="Retype Password"
-                      style={{ padding: "10px", margin: "5px" }}
-                    />
-                    {formik.touched.retypePassword &&
-                    formik.errors.retypePassword ? (
-                      <div>{formik.errors.retypePassword}</div>
-                    ) : null}
-                  </div>
                 </div>
               </div>
             </div>
             <div>
+              <h3>Password Requirements</h3>
               <p>
                 - One letter (a-z)
                 <br />

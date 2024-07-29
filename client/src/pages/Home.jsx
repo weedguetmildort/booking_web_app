@@ -4,9 +4,8 @@ import Banner from "components/Banner";
 import Footer from "components/Footer";
 import FlexBetween from "components/FlexBetween";
 import { useNavigate } from "react-router-dom";
-
-import { Box } from "@mui/material";
 import SearchBar from "components/SearchBar";
+import User from "components/User";
 
 function Home() {
   const navigate = useNavigate();
@@ -17,26 +16,7 @@ function Home() {
         <div>
           <FlexBetween>
             <Banner />
-            <FlexBetween>
-              <h3
-                onClick={() => navigate("/Login")}
-                style={{
-                  paddingRight: "10px",
-                  cursor: "pointer",
-                }}
-              >
-                Login
-              </h3>
-              <h3
-                onClick={() => navigate("/SignUp")}
-                style={{
-                  paddingRight: "10px",
-                  cursor: "pointer",
-                }}
-              >
-                Signup
-              </h3>
-            </FlexBetween>
+            <User />
           </FlexBetween>
 
           <Navbar />
@@ -55,7 +35,7 @@ function Home() {
               </div>
 
               <div>
-                <SearchBar></SearchBar>
+                <SearchBar />
               </div>
             </div>
             <div className="seethru">

@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, useMediaQuery } from "@mui/material";
 
-function PartnerSignUp() {
+function SignUpPartner() {
   const isSmallScreen = useMediaQuery("(max-width:600px)");
 
   return (
@@ -16,4 +16,4 @@ function PartnerSignUp() {
   );
 }
 
-export default PartnerSignUp;
+export default SignUpPartner;

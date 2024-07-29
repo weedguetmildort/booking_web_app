@@ -1,13 +1,32 @@
 import { React } from "react";
 import { useNavigate } from "react-router-dom";
+import FlexBetween from "components/FlexBetween";
+import Logout from "./Logout";
 
 function User() {
   const navigate = useNavigate();
   return (
-    <div className="container">
-      <h4 onClick={() => navigate("/Login")}>Login</h4>
-      <h4 onClick={() => navigate("/SignUp")}>Sign Up</h4>
-    </div>
+    <FlexBetween>
+      <h3
+        onClick={() => navigate("/Login")}
+        style={{
+          paddingRight: "10px",
+          cursor: "pointer",
+        }}
+      >
+        Login
+      </h3>
+      <h3
+        onClick={() => navigate("/SignUp")}
+        style={{
+          paddingRight: "10px",
+          cursor: "pointer",
+        }}
+      >
+        Signup
+      </h3>
+      <Logout />
+    </FlexBetween>
   );
 }
 

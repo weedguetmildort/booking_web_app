@@ -2,14 +2,19 @@ import React from "react";
 import Navbar from "components/Navbar";
 import Banner from "components/Banner";
 import Footer from "components/Footer";
+import FlexBetween from "components/FlexBetween";
+import User from "components/User";
 
 function About() {
   return (
     <div>
       <div>
-        <Banner />
+        <FlexBetween>
+          <Banner />
+          <User />
+        </FlexBetween>
         <Navbar />
-        <body
+        <div
           style={{
             textAlign: "center",
           }}
@@ -30,7 +35,7 @@ function About() {
             If you have any questions, feel free to contact one of our
             providers.
           </p>
-        </body>
+        </div>
       </div>
       <Footer />
     </div>

@@ -9,6 +9,7 @@ body,
   margin: 0;
   padding: 0;
   font-family: "Lato", sans-serif;
+  display: flex;
 }
 
 body {
@@ -28,15 +29,14 @@ body {
 
   color: azure;
   min-height: 100vh;
-  display: flex;
+
   flex-direction: column;
   font-family: "Lato", sans-serif;
   font-size: 12;
 }
 
-/* Optional: Center content within .app */
+/* Center content within .app */
 .app {
-  display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -70,27 +70,17 @@ body {
   color: black;
 }
 
-h1 {
-  font-family: "Lato", sans-serif;
-  font-size: 40;
-}
-
-h2 {
-  font-family: "Lato", sans-serif;
-  font-size: 36;
-}
-
 .seethru {
   background: rgba(255, 255, 255, 0.6);
-}
-
-.logo {
 }
 
 .footer {
   color: #000000;
   justify-content: center;
   background: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .custom-border {
@@ -102,24 +92,12 @@ h2 {
 }
 
 .center {
-  display: flex; /* Equivalent to flex */
-  align-items: center; /* Equivalent to items-center */
-  justify-content: center; /* Equivalent to justify-center */
-  padding-top: 1.75rem; /* Equivalent to pt-3 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1.75rem;
 }
 
 .field {
   padding-right: 1rem;
-}
-
-#wrapper {
-  width: 500px;
-  overflow: hidden; /* add this to contain floated children */
-}
-#first {
-  width: 300px;
-  float: left; /* add this */
-}
-#second {
-  float: left; /* add this */
 }
