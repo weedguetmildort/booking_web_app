@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import CryptoJS from "crypto-js";
@@ -9,6 +9,31 @@ import axios from "axios";
 function UserSignUp() {
   const { login } = useContext(UserContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the user is already logged in
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      fetch("http://localhost:5002/auth/api/check-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.valid) {
+            login(data.user, token); // Update the user state with the logged-in user
+            navigate("/profile"); // Redirect to the profile page
+          }
+        })
+        .catch((error) => {
+          console.error("Error verifying token:", error);
+        });
+    }
+  }, [login, navigate]);
 
   return (
     <Formik

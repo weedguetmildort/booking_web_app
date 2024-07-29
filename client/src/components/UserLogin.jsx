@@ -89,7 +89,7 @@ function UserLogin() {
         <form onSubmit={formik.handleSubmit}>
           <div className="container">
             <div>
-              <div className="field">
+              <div>
                 <input
                   id="username"
                   type="username"
@@ -104,26 +104,22 @@ function UserLogin() {
               </div>
 
               <div>
-                <div>
-                  <div>
-                    <input
-                      id="password"
-                      type="password"
-                      {...formik.getFieldProps("password")}
-                      className="custom-border"
-                      placeholder="Password"
-                      style={{ padding: "10px", margin: "5px" }}
-                    />
-                    {formik.touched.password && formik.errors.password ? (
-                      <div>{formik.errors.password}</div>
-                    ) : null}
-                  </div>
-                </div>
+                <input
+                  id="password"
+                  type="password"
+                  {...formik.getFieldProps("password")}
+                  className="custom-border"
+                  placeholder="Password"
+                  style={{ padding: "10px", margin: "5px" }}
+                />
+                {formik.touched.password && formik.errors.password ? (
+                  <div>{formik.errors.password}</div>
+                ) : null}
               </div>
             </div>
           </div>
 
-          <div>
+          <div className="center">
             <button
               type="submit"
               style={{
