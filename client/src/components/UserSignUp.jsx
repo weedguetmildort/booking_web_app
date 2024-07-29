@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 
-const UserSignUp = () => {
+function UserSignUp() {
   const { login } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -199,6 +199,6 @@ const UserSignUp = () => {
       )}
     </Formik>
   );
-};
+}
 
 export default UserSignUp;

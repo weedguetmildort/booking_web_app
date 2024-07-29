@@ -102,11 +102,6 @@ router.post("/api/user-login", async (req, res) => {
     const user = response.data.data[0];
     const storedPassword = user.password;
 
-    // Compare the provided password with the stored password
-    // const passwordMatch = await bcrypt.compare(
-    //   encryptedPassword,
-    //   storedPassword
-    // );
     if (encryptedPassword === storedPassword) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
@@ -132,58 +127,6 @@ router.post("/api/user-login", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "An error occurred during login" });
   }
-
-  // console.log(response.data);
-
-  // if (response.data) {
-  //   const { uID, username, password } = response.data;
-  //   console.log(password);
-  //   console.log(encryptedPassword);
-  //   if (password === encryptedPassword) {
-  //     console.log("3");
-  //     const currUser = {
-  //       username,
-  //       uID,
-  //     };
-
-  //     const token = generateToken(currUser);
-  //     return res.json({ token, currUser });
-  //   }
-  // } else {
-  //   console.error("Invalid login response");
-  //   // Handle invalid login response (e.g., show an error message)
-  // }
-
-  // console.log(response.data);
-
-  // res.status(401).json({ message: "Invalid credentials" });
-
-  // if (response.status === 200) {
-  //   const savedInfo = response.data;
-
-  //   console.log(response);
-  //   res.status(201).json({
-  //     message: "Success",
-  //   });
-
-  // Generate a token for the new user
-  // const token = generateToken(savedUser);
-
-  // res.status(201).json({
-  //   message: "User created successfully",
-  //   token,
-  //   user: {
-  //     id: savedUser.id,
-  //     email: savedUser.email,
-  //   },
-  // });
-  // } else {
-  //   res.status(response.status).json(response.data);
-  // }
-  // } catch (error) {
-  //   console.error("Error during signup:", error);
-  //   res.status(500).json({ message: "Internal Server Error" });
-  // }
 });
 
 // Check user token

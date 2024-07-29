@@ -25,7 +25,7 @@ function UserLogin() {
         .then((response) => response.json())
         .then((data) => {
           if (data.valid) {
-            login(data.user); // Update the user state with the logged-in user
+            login(data.user, token); // Update the user state with the logged-in user
             navigate("/profile"); // Redirect to the profile page
           }
         })
