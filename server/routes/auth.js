@@ -34,8 +34,15 @@ const router = express.Router();
 // Signup
 router.post("/api/user-signup", async (req, res) => {
   try {
-    const { email, password, firstName, lastName, username, zipCode } =
-      req.body;
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      username,
+      zipCode,
+      isPartner,
+    } = req.body;
 
     const decryptedPassword = decryptPassword(password);
     const encryptedPassword = encryptPassword(decryptedPassword);
@@ -47,7 +54,7 @@ router.post("/api/user-signup", async (req, res) => {
       firstName,
       lastName,
       email,
-      isPartner: "0",
+      isPartner,
       zipCode,
     };
 
@@ -130,7 +137,15 @@ router.post("/api/user-login", async (req, res) => {
 });
 
 // Check user token
-router.post("/api/check-token", checkToken, (req, res) => {
+router.post("/api/check-token-user", verifyToken("user"), (req, res) => {
+  res.json({
+    valid: true,
+    user: req.user,
+  });
+});
+
+// Check partner token
+router.post("/api/check-token-partner", verifyToken("partner"), (req, res) => {
   res.json({
     valid: true,
     user: req.user,

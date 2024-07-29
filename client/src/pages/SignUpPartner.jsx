@@ -1,18 +1,20 @@
+import Banner from "components/Banner";
+import Footer from "components/Footer";
+import PartnerSignUp from "components/PartnerSignUp";
 import React from "react";
-import { Box, useMediaQuery } from "@mui/material";
 
 function SignUpPartner() {
-  const isSmallScreen = useMediaQuery("(max-width:600px)");
-
   return (
-    <Box
-      width={isSmallScreen ? "50%" : "93%"}
-      p="2rem"
-      m="2rem auto"
-      borderRadius="1.5rem"
-    >
-      partnerSignup
-    </Box>
+    <div>
+      <Banner />
+      <div>
+        <h1 className="center">Partner Sign Up</h1>
+        <div className="center">
+          <PartnerSignUp />
+        </div>
+      </div>
+      <Footer />
+    </div>
   );
 }
 

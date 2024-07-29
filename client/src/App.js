@@ -23,10 +23,10 @@ function App() {
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/signup" element={<SignUpPage />}></Route>
             <Route path="/profile" element={<ProfilePage />}></Route>
-            <Route path="/partner-login" element={<PartnerLogin />}></Route>
-            <Route path="/partner-signup" element={<PartnerSignUp />}></Route>
+            <Route path="/partnerlogin" element={<PartnerLogin />}></Route>
+            <Route path="/partnersignup" element={<PartnerSignUp />}></Route>
             <Route
-              path="/partner-profile"
+              path="/partnerprofile"
               element={<PartnerProfilePage />}
             ></Route>
             <Route path="/search" element={<SearchPage />}></Route>

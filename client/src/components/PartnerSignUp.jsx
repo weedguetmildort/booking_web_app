@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 
-function UserSignUp() {
+function PartnerSignUp() {
   const { login } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ function UserSignUp() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:5002/auth/api/check-token", {
+      fetch("http://localhost:5002/auth/api/check-token-partner", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,15 +71,14 @@ function UserSignUp() {
         ).toString();
 
         // Update the password value with the encrypted one
-        const encryptedValues = {
-          ...values,
-          password: encryptedPassword,
-          isPartner: "0",
-        };
+        const encryptedValues = { ...values, password: encryptedPassword };
 
         // Call to send the data to backend
         axios
-          .post("http://localhost:5002/auth/api/user-signup", encryptedValues)
+          .post(
+            "http://localhost:5002/auth/api/partner-signup",
+            encryptedValues
+          )
           .then((response) => {
             console.log("Response:", response.data);
             // Extract the token from the response data
@@ -91,7 +90,7 @@ function UserSignUp() {
             }
 
             // Redirect the user to profile page
-            navigate("/login");
+            navigate("/partnerprofile");
           })
           .catch((error) => {
             console.error("Error during signup:", error);
@@ -138,7 +137,7 @@ function UserSignUp() {
                   type="text"
                   {...formik.getFieldProps("zipCode")}
                   className="custom-border"
-                  placeholder="Zip Code"
+                  placeholder="Business Zip Code"
                   style={{ padding: "10px", margin: "5px" }}
                 />
                 {formik.touched.zipCode && formik.errors.zipCode ? (
@@ -230,4 +229,4 @@ function UserSignUp() {
   );
 }
 
-export default UserSignUp;
+export default PartnerSignUp;

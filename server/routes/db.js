@@ -15,11 +15,11 @@ const connection = mysql.createConnection({
 });
 
 // Might need to remove
-connection.connect((err) => {
-  if (err) {
-    console.log(err.message);
-  }
-});
+// connection.connect((err) => {
+//   if (err) {
+//     console.log(err.message);
+//   }
+// });
 
 // Test API call
 router.get("/api", (req, res) => {

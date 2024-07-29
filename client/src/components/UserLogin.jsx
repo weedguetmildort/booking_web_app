@@ -15,7 +15,7 @@ function UserLogin() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:5002/auth/api/check-token", {
+      fetch("http://localhost:5002/auth/api/check-token-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +57,10 @@ function UserLogin() {
         ).toString();
 
         // Update the password value with the encrypted one
-        const encryptedValues = { ...values, password: encryptedPassword };
+        const encryptedValues = {
+          ...values,
+          password: encryptedPassword,
+        };
 
         // Request to send data to backend
         axios
