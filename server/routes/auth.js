@@ -6,9 +6,6 @@ const { requiredScopes } = require("express-oauth2-jwt-bearer");
 const {
   generateToken,
   verifyToken,
-  checkToken,
-  generateState,
-  validateState,
 } = require("../middlewares/stateValidation");
 const CryptoJS = require("crypto-js");
 
@@ -29,38 +26,34 @@ const decryptPassword = (encryptedPassword) => {
   return bytes.toString(CryptoJS.enc.Utf8);
 };
 
+const decryptPasswordDb = (encryptedPassword) => {
+  const secretkey = process.env.REACT_DB_SECRET_KEY;
+  const bytes = CryptoJS.AES.decrypt(encryptedPassword, secretkey);
+  return bytes.toString(CryptoJS.enc.Utf8);
+};
+
 const router = express.Router();
 
 // Signup
-router.post("/api/user-signup", async (req, res) => {
+router.post("/api/userSignup", async (req, res) => {
   try {
-    const {
-      email,
-      password,
-      firstName,
-      lastName,
-      username,
-      zipCode,
-      isPartner,
-    } = req.body;
+    const { email, password, firstName, lastName, zipCode, isPartner } =
+      req.body;
 
-    const decryptedPassword = decryptPassword(password);
     const encryptedPassword = encryptPassword(decryptedPassword);
 
     // Create new user object
     const newUser = {
-      username,
-      encryptedPassword,
-      firstName,
-      lastName,
-      email,
-      isPartner,
-      zipCode,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      zip: zipCode,
+      password: encryptedPassword,
     };
 
     // Save user to the database via another POST request
     const response = await axios.post(
-      "http://localhost:5002/db/api/insertuser",
+      "http://localhost:5002/db/api/insertUser",
       newUser
     );
 
@@ -88,18 +81,16 @@ router.post("/api/user-signup", async (req, res) => {
 });
 
 // Login
-router.post("/api/user-login", async (req, res) => {
+router.post("/api/userLogin", async (req, res) => {
   // Simulating user login
-  const { username, password } = req.body;
-
+  const { email, password } = req.body;
   const decryptedPassword = decryptPassword(password);
-  const encryptedPassword = encryptPassword(decryptedPassword);
 
   try {
     // Make an axios call to get user data by username
     const response = await axios.post(
-      "http://localhost:5002/db/api/getUserByUsername",
-      { username }
+      "http://localhost:5002/db/api/getUserByEmail",
+      { email }
     );
 
     if (!response.data.data || response.data.data.length === 0) {
@@ -108,28 +99,25 @@ router.post("/api/user-login", async (req, res) => {
 
     const user = response.data.data[0];
     const storedPassword = user.password;
+    const decryptedStoredPassword = decryptPasswordDb(storedPassword);
 
-    if (encryptedPassword === storedPassword) {
-      return res.status(401).json({ message: "Invalid credentials" });
+    if (decryptedPassword === decryptedStoredPassword) {
+      const currUser = {
+        id: user.uid,
+        role: "user",
+        firstName: user.firstname,
+        lastName: user.lastname,
+        zip: user.zip,
+      };
+
+      // Generate a JWT token
+      const token = generateToken(currUser);
+
+      // Return the user data and token
+      res.status(201).json({ user: currUser, token: token });
+    } else {
+      return res.status(403).json({ message: "Invalid credentials" });
     }
-
-    const currUser = {
-      id: user.uid,
-      username: user.username,
-      role: "user",
-      firstname: user.firstname,
-      lastname: user.lastname,
-      zip: user.zip,
-    };
-
-    // Generate a JWT token
-    const token = generateToken(currUser);
-
-    // Return the user data and token
-    res.json({
-      user: currUser,
-      token: token,
-    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "An error occurred during login" });
@@ -137,7 +125,7 @@ router.post("/api/user-login", async (req, res) => {
 });
 
 // Check user token
-router.post("/api/check-token-user", verifyToken("user"), (req, res) => {
+router.post("/api/checkTokenUser", verifyToken("user"), (req, res) => {
   res.json({
     valid: true,
     user: req.user,
@@ -145,7 +133,7 @@ router.post("/api/check-token-user", verifyToken("user"), (req, res) => {
 });
 
 // Check partner token
-router.post("/api/check-token-partner", verifyToken("partner"), (req, res) => {
+router.post("/api/checkTokenPartner", verifyToken("partner"), (req, res) => {
   res.json({
     valid: true,
     user: req.user,

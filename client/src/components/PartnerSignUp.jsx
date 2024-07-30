@@ -15,17 +15,20 @@ function PartnerSignUp() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:5002/auth/api/check-token-partner", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.valid) {
-            login(data.user, token); // Update the user state with the logged-in user
+      axios
+        .post(
+          "http://localhost:5002/auth/api/checkTokenUser",
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data.valid) {
+            // login(data.user, token); // Update the user state with the logged-in user
             navigate("/profile"); // Redirect to the profile page
           }
         })

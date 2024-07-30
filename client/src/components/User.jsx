@@ -1,30 +1,31 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
-import { UserContext } from "../UserContext";
 import UserLoginButton from "./UserLoginButton";
 import UserSignupButton from "./UserSignupButton";
 import UserLogoutButton from "./UserLogoutButton";
+import UserProfileButton from "./UserProfileButton";
+import { UserContext } from "../UserContext";
+import { useNavigate } from "react-router-dom";
 
 function User() {
-  const navigate = useNavigate();
-  const { logout } = useContext(UserContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { logout } = useContext(UserContext);
+  const navigate = useNavigate();
   let content;
-
-  const handleProfile = () => {
-    // Redirect to login page after logging out
-    navigate("/profile");
-  };
 
   useEffect(() => {
     // Check if the user is already logged in
     const token = localStorage.getItem("token");
 
+    // if (token === null) {
+    //   logout();
+    //   navigate("/");
+    // }
+
     if (token) {
       setIsLoggedIn(true);
     }
-  }, []);
+  }, [logout, navigate]);
 
   if (!isLoggedIn) {
     content = (
@@ -36,15 +37,7 @@ function User() {
   } else {
     content = (
       <FlexBetween>
-        <h3
-          onClick={handleProfile}
-          style={{
-            paddingRight: "10px",
-            cursor: "pointer",
-          }}
-        >
-          Profile
-        </h3>
+        <UserProfileButton />
         <UserLogoutButton />
       </FlexBetween>
     );

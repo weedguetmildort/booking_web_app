@@ -18,8 +18,8 @@ function UserProfile() {
   }, [currUser, navigate]);
 
   const [initialValues] = useState({
-    firstName: currUser.firstname,
-    lastName: currUser.lastname,
+    firstName: currUser.firstName,
+    lastName: currUser.lastName,
     zip: currUser.zip,
   });
 
@@ -34,7 +34,7 @@ function UserProfile() {
       onSubmit={(values, { setSubmitting }) => {
         // Call to send the data to backend
         axios
-          .post("http://localhost:5002/db/api/updateuser", {
+          .post("http://localhost:5002/db/api/updateUser", {
             ...values,
             uID: currUser.id,
           })

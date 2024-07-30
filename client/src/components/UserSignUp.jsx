@@ -15,17 +15,21 @@ function UserSignUp() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:5002/auth/api/check-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.valid) {
-            login(data.user, token); // Update the user state with the logged-in user
+      axios
+        .post(
+          "http://localhost:5002/auth/api/checkTokenUser",
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.valid) {
+            // login(data.user, token); // Update the user state with the logged-in user
             navigate("/profile"); // Redirect to the profile page
           }
         })
@@ -41,7 +45,6 @@ function UserSignUp() {
         firstName: "",
         lastName: "",
         email: "",
-        username: "",
         zipCode: "",
         password: "",
       }}
@@ -55,9 +58,6 @@ function UserSignUp() {
         email: Yup.string().email("Invalid email address").required("Required"),
         zipCode: Yup.string()
           .matches(/^[0-9]{5}$/, "Must be a valid zip code")
-          .required("Required"),
-        username: Yup.string()
-          .max(15, "Must be 15 characters or less")
           .required("Required"),
         password: Yup.string()
           .min(8, "Password must be at least 8 characters")
@@ -79,16 +79,16 @@ function UserSignUp() {
 
         // Call to send the data to backend
         axios
-          .post("http://localhost:5002/auth/api/user-signup", encryptedValues)
+          .post("http://localhost:5002/auth/api/userSignup", encryptedValues)
           .then((response) => {
             console.log("Response:", response.data);
             // Extract the token from the response data
-            const { token } = response.data;
+            // const { token } = response.data;
 
             // Store token in local storage
-            if (token) {
-              localStorage.setItem("authToken", token);
-            }
+            // if (token) {
+            //   localStorage.setItem("authToken", token);
+            // }
 
             // Redirect the user to profile page
             navigate("/login");
@@ -160,20 +160,6 @@ function UserSignUp() {
                 ) : null}
               </div>
 
-              <div className="field">
-                <input
-                  id="username"
-                  type="username"
-                  {...formik.getFieldProps("username")}
-                  className="custom-border"
-                  placeholder="Username"
-                  style={{ padding: "10px", margin: "5px" }}
-                />
-                {formik.touched.username && formik.errors.username ? (
-                  <div>{formik.errors.username}</div>
-                ) : null}
-              </div>
-
               <div>
                 <div>
                   <div>
@@ -212,7 +198,7 @@ function UserSignUp() {
             </div>
           </div>
 
-          <div>
+          <div className="center">
             <button
               type="submit"
               style={{

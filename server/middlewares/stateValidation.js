@@ -1,6 +1,7 @@
+require("dotenv").config({ path: "../.env" });
+
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
 
 const secretkey = process.env.JWT_SECRET;
 
@@ -9,11 +10,7 @@ function generateToken(user) {
   // The user object could contain fields like id, email, etc.
   const payload = {
     id: user.id,
-    username: user.username,
     role: user.role,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    zip: user.zip,
   };
 
   // Options for the token
