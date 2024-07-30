@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import axios from "axios";
 
-function UserProfile() {
+function UserProfilePassword() {
   const { logout } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -130,9 +130,9 @@ function UserProfile() {
                 margin: "5px",
                 cursor: "pointer",
               }}
-              onClick={() => navigate("/userpassword")}
+              onClick={() => navigate("/profile")}
             >
-              Change Password
+              Go Back
             </button>
           </div>
         </form>
@@ -141,4 +141,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default UserProfilePassword;

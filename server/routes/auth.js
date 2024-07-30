@@ -40,6 +40,7 @@ router.post("/api/userSignup", async (req, res) => {
     const { email, password, firstName, lastName, zipCode, isPartner } =
       req.body;
 
+    const decryptedPassword = decryptPassword(password);
     const encryptedPassword = encryptPassword(decryptedPassword);
 
     // Create new user object
