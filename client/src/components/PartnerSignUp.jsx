@@ -44,7 +44,6 @@ function PartnerSignUp() {
         firstName: "",
         lastName: "",
         email: "",
-        username: "",
         zipCode: "",
         password: "",
         businessName: "",
@@ -65,12 +64,27 @@ function PartnerSignUp() {
         zipCode: Yup.string()
           .matches(/^[0-9]{5}$/, "Must be a valid zip code")
           .required("Required"),
-        username: Yup.string()
+        businessName: Yup.string()
           .max(15, "Must be 15 characters or less")
           .required("Required"),
         password: Yup.string()
           .min(8, "Password must be at least 8 characters")
           .required("Password is required"),
+        address: Yup.string()
+          .max(15, "Must be 15 characters or less")
+          .required("Required"),
+        aboutUs: Yup.string()
+          .max(30, "Must be 15 characters or less")
+          .required("Required"),
+        city: Yup.string()
+          .max(15, "Must be 15 characters or less")
+          .required("Required"),
+        state: Yup.string()
+          .max(15, "Must be 15 characters or less")
+          .required("Required"),
+        category: Yup.string()
+          .max(15, "Must be 15 characters or less")
+          .required("Required"),
       })}
       onSubmit={(values, { setSubmitting }) => {
         // Encrypt the password
@@ -139,19 +153,71 @@ function PartnerSignUp() {
             ) : null}
           </div>
 
+          <div className="field">
+            <input
+              id="address"
+              type="text"
+              {...formik.getFieldProps("address")}
+              className="custom-border"
+              placeholder="Address"
+              style={{ padding: "10px", margin: "5px" }}
+            />
+            {formik.touched.address && formik.errors.address ? (
+              <div>{formik.errors.address}</div>
+            ) : null}
+
+            <input
+              id="city"
+              type="text"
+              {...formik.getFieldProps("city")}
+              className="custom-border"
+              placeholder="City"
+              style={{ padding: "10px", margin: "5px" }}
+            />
+            {formik.touched.city && formik.errors.city ? (
+              <div>{formik.errors.city}</div>
+            ) : null}
+          </div>
+
+          <div className="field">
+            <input
+              id="businessName"
+              type="text"
+              {...formik.getFieldProps("businessName")}
+              className="custom-border"
+              placeholder="Business Name"
+              style={{ padding: "10px", margin: "5px" }}
+            />
+            {formik.touched.businessName && formik.errors.businessName ? (
+              <div>{formik.errors.businessName}</div>
+            ) : null}
+
+            <input
+              id="zipCode"
+              type="text"
+              {...formik.getFieldProps("zipCode")}
+              className="custom-border"
+              placeholder="Business Zip Code"
+              style={{ padding: "10px", margin: "5px" }}
+            />
+            {formik.touched.zipCode && formik.errors.zipCode ? (
+              <div>{formik.errors.zipCode}</div>
+            ) : null}
+          </div>
+
           <div className="container">
             <div>
               <div className="field">
                 <input
-                  id="zipCode"
+                  id="category"
                   type="text"
-                  {...formik.getFieldProps("zipCode")}
+                  {...formik.getFieldProps("category")}
                   className="custom-border"
-                  placeholder="Business Zip Code"
+                  placeholder="Category"
                   style={{ padding: "10px", margin: "5px" }}
                 />
-                {formik.touched.zipCode && formik.errors.zipCode ? (
-                  <div>{formik.errors.zipCode}</div>
+                {formik.touched.category && formik.errors.category ? (
+                  <div>{formik.errors.category}</div>
                 ) : null}
               </div>
 
@@ -170,21 +236,31 @@ function PartnerSignUp() {
               </div>
 
               <div>
-                <div>
-                  <div>
-                    <input
-                      id="password"
-                      type="password"
-                      {...formik.getFieldProps("password")}
-                      className="custom-border"
-                      placeholder="Password"
-                      style={{ padding: "10px", margin: "5px" }}
-                    />
-                    {formik.touched.password && formik.errors.password ? (
-                      <div>{formik.errors.password}</div>
-                    ) : null}
-                  </div>
-                </div>
+                <input
+                  id="password"
+                  type="password"
+                  {...formik.getFieldProps("password")}
+                  className="custom-border"
+                  placeholder="Password"
+                  style={{ padding: "10px", margin: "5px" }}
+                />
+                {formik.touched.password && formik.errors.password ? (
+                  <div>{formik.errors.password}</div>
+                ) : null}
+              </div>
+
+              <div className="field">
+                <input
+                  id="aboutUs"
+                  type="text"
+                  {...formik.getFieldProps("aboutUs")}
+                  className="custom-border"
+                  placeholder="About Us"
+                  style={{ padding: "10px", margin: "5px" }}
+                />
+                {formik.touched.aboutUs && formik.errors.aboutUs ? (
+                  <div>{formik.errors.aboutUs}</div>
+                ) : null}
               </div>
             </div>
             <div>
