@@ -6,7 +6,7 @@ import { UserContext } from "../UserContext";
 import axios from "axios";
 import CryptoJS from "crypto-js";
 
-function UserProfilePassword() {
+function PartnerProfilePassword() {
   const { logout } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -119,4 +119,4 @@ function UserProfilePassword() {
   );
 }
 
-export default UserProfilePassword;
+export default PartnerProfilePassword;

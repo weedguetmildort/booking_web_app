@@ -47,6 +47,12 @@ function PartnerSignUp() {
         username: "",
         zipCode: "",
         password: "",
+        businessName: "",
+        category: "",
+        address: "",
+        state: "",
+        city: "",
+        aboutUs: "",
       }}
       validationSchema={Yup.object({
         firstName: Yup.string()
@@ -160,20 +166,6 @@ function PartnerSignUp() {
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div>{formik.errors.email}</div>
-                ) : null}
-              </div>
-
-              <div className="field">
-                <input
-                  id="username"
-                  type="username"
-                  {...formik.getFieldProps("username")}
-                  className="custom-border"
-                  placeholder="Username"
-                  style={{ padding: "10px", margin: "5px" }}
-                />
-                {formik.touched.username && formik.errors.username ? (
-                  <div>{formik.errors.username}</div>
                 ) : null}
               </div>
 
