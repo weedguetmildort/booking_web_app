@@ -13,6 +13,22 @@ class Booking {
         this.bookingEndTime = moment(bookingStartTime).add(bookingDuration, 'm').toDate();
     }
 
+    getBookingDate() {
+        return this.bookingDate;
+    }
+
+    getBookingStartTime() {
+        return this.bookingStartTime;
+    }
+
+    getBookingDuration() {
+        return this.bookingDuration;
+    }
+
+    getBookingEndTime() {
+        return this.bookingEndTime;
+    }
+    
 }
 
 export default Booking;
