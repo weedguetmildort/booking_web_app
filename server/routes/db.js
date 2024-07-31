@@ -309,7 +309,7 @@ router.post("/api/updateBookingTime", (req, res) => {
 // Get bookings for a partner by pID starting on given date
 router.post("/api/getFutureBookings", (req, res) => {
   var pID = req.body.pID;
-  var startDate = req.body.startDate;
+  var startTime = req.body.startTime;
 
   const db = dbService.getDbServiceInstance();
   const result = db.getFutureBookings(pID, startTime);

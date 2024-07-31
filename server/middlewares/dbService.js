@@ -411,7 +411,7 @@ class DbService {
                 SELECT b.bID, b.starttime, s.duration \
                 FROM bookings b \
                 JOIN services s ON b.sid = s.sid \
-                WHERE b.pid = ? AND status in ('pending', 'approved') AND DATE(b.starttime) > ?;";
+                WHERE b.pid = ? AND status in ('pending', 'approved') AND b.starttime > ?;";
                 console.log(query);
         connection.query(query, [pID, startTime], (err, results) => {
           if (err) reject(new Error(err.message));
