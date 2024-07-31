@@ -345,15 +345,52 @@ class DbService {
     }
   }
 
-  async getFutureBookings(pID) {
+  async insertService(pID, name, duration, cost) {
     try {
       const response = await new Promise((resolve, reject) => {
         const query =
-          "\
-                SELECT b.starttime, s.duration \
-                FROM bookings b \
-                JOIN services s ON b.sid = s.sid \
-                WHERE pid = ? AND status in ('pending', 'approved') AND DATE(b.starttime) > DATE(sysdate);";
+          "INSERT INTO hoursofoperation (pID, name, duration, cost) \
+                VALUES(?, ?, ?, ?)";
+        connection.query(query, [pID, name, duration, cost], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return "success : true";
+    } catch (error) {
+      console.log(error);
+      return "success : false";
+    }
+  }
+
+  async updateService(sID, name, duration, cost, description) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "UPDATE services \
+                SET name = ?, duration = ?, cost = ?, description = ? \
+                WHERE sid = ?";
+        connection.query(query, [name, duration, cost, description, sID], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return "success : true";
+    } catch (error) {
+      console.log(error);
+      return "success : false";
+    }
+  }
+
+    async getServices(pID) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "SELECT sid, name, duration, cost, description \
+                FROM services \
+                WHERE pid = ?";
         connection.query(query, [pID], (err, results) => {
           if (err) reject(new Error(err.message));
           resolve(results);
@@ -366,15 +403,116 @@ class DbService {
     }
   }
 
+  async getFutureBookings(pID, startTime) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "\
+                SELECT b.bID, b.starttime, s.duration \
+                FROM bookings b \
+                JOIN services s ON b.sid = s.sid \
+                WHERE b.pid = ? AND status in ('pending', 'approved') AND DATE(b.starttime) > ?;";
+                console.log(query);
+        connection.query(query, [pID, startTime], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+    async insertBooking(uID, pID, sID, startTime) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "INSERT INTO bookings (uID, pID, sID, startTime, status) \
+                VALUES(?, ?, ?, ?, 'pending')";
+        connection.query(query, [uID, pID, sID, startTime], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return "success : true";
+    } catch (error) {
+      console.log(error);
+      return "success : false";
+    }
+  }
+
+  async updateBookingStatus(bID, status) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "UPDATE bookings \
+                SET status = ? \
+                WHERE bid = ?";
+        connection.query(query, [status, bID], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return "success : true";
+    } catch (error) {
+      console.log(error);
+      return "success : false";
+    }
+  }
+
+  async updateBookingDiscount(bID, discount) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "UPDATE bookings \
+                SET discount = ? \
+                WHERE bid = ?";
+        connection.query(query, [discount, bID], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return "success : true";
+    } catch (error) {
+      console.log(error);
+      return "success : false";
+    }
+  }
+
+  async updateBookingTime(bID, startTime) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "UPDATE bookings \
+                SET starttime = ? \
+                WHERE bid = ?";
+        connection.query(query, [startTime, bID], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return "success : true";
+    } catch (error) {
+      console.log(error);
+      return "success : false";
+    }
+  }
+
   async getAllBookings(pID) {
     try {
       const response = await new Promise((resolve, reject) => {
         const query =
           "\
-                SELECT b.starttime, s.duration, b.status \
+                SELECT b.bID, b.starttime, s.duration, b.status \
                 FROM bookings b \
                 JOIN services s ON b.sid = s.sid \
-                WHERE pid = ?";
+                WHERE b.pid = ?";
         connection.query(query, [pID], (err, results) => {
           if (err) reject(new Error(err.message));
           resolve(results);

@@ -210,11 +210,109 @@ router.get("/api/getHours/:pID", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-// Get future bookings for calendar
-router.get("/api/getFutureBookings/:pID", (req, res) => {
+// Insert Service
+router.post("/api/insertService", (req, res) => {
+  var pID = req.body.pID;
+  var name = req.body.name;
+  var duration = req.body.duration;
+  var cost = req.body.cost;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.insertService(pID, name, duration, cost);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Update service
+router.post("/api/updateService", (req, res) => {
+  var sID = req.body.sID;
+  var name = req.body.name;
+  var duration = req.body.duration;
+  var cost = req.body.cost;
+  var description = req.body.description;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.updateService(sID, name, duration, cost, description);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Get services available for partner
+router.get("/api/getServices/:pID", (req, res) => {
   var pID = req.params.pID;
   const db = dbService.getDbServiceInstance();
-  const result = db.getFutureBookings(pID);
+  const result = db.getServices(pID);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Insert Booking
+router.post("/api/insertBooking", (req, res) => {
+  var uID = req.body.uID;
+  var pID = req.body.pID;
+  var sID = req.body.sID;
+  var startTime = req.body.startTime;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.insertBooking(uID, pID, sID, startTime);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Update booking status
+router.post("/api/updateBookingStatus", (req, res) => {
+  var bID = req.body.bID;
+  var status = req.body.status;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.updateBookingStatus(bID, status);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Update booking discount
+router.post("/api/updateBookingDiscount", (req, res) => {
+  var bID = req.body.bID;
+  var discount = req.body.discount;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.updateBookingDiscount(bID, discount);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Update booking time
+router.post("/api/updateBookingTime", (req, res) => {
+  var bID = req.body.bID;
+  var startTime = req.body.startTime;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.updateBookingtime(bID, startTime);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Get bookings for a partner by pID starting on given date
+router.post("/api/getFutureBookings", (req, res) => {
+  var pID = req.body.pID;
+  var startDate = req.body.startDate;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.getFutureBookings(pID, startTime);
 
   result
     .then((data) => res.json({ data: data }))
@@ -224,6 +322,7 @@ router.get("/api/getFutureBookings/:pID", (req, res) => {
 // Get all bookings for partner
 router.get("/api/getAllBookings/:pID", (req, res) => {
   var pID = req.params.pID;
+
   const db = dbService.getDbServiceInstance();
   const result = db.getAllBookings(pID);
 
