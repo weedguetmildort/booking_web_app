@@ -166,6 +166,30 @@ class DbService {
     }
   }
 
+  async updatePassword(uID, password) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "UPDATE Users \
+          SET password = ? \
+          WHERE uID = ?";
+        connection.query(
+          query,
+          [password, uID],
+          (err, results) => {
+            if (err) reject(new Error(err.message));
+            resolve(results);
+          }
+        );
+      });
+      console.log(response);
+      return "success : true";
+    } catch (error) {
+      console.log(error);
+      return "success : false";
+    }
+  }
+
   async insertPartner(
     businessName,
     category,

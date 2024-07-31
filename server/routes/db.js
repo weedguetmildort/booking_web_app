@@ -26,8 +26,8 @@ connection.connect((err) => {
 //
 //
 // Fetch user by UID
-router.get("/api/getUserByUid/:uid", (req, res) => {
-  var uid = req.params.uid;
+router.get("/api/getUserByUid/:uID", (req, res) => {
+  var uid = req.params.uID;
   const db = dbService.getDbServiceInstance();
   const result = db.getUserById(uid);
 
@@ -47,8 +47,8 @@ router.post("/api/getUserByEmail", (req, res) => {
 });
 
 // Is this user a partner by uid
-router.get("/api/isPartner/:uid", (req, res) => {
-  var uid = req.params.uid;
+router.get("/api/isPartner/:uID", (req, res) => {
+  var uid = req.params.uID;
   const db = dbService.getDbServiceInstance();
   const result = db.isPartner(uid);
 
@@ -58,8 +58,8 @@ router.get("/api/isPartner/:uid", (req, res) => {
 });
 
 // Get partner info by uid
-router.get("/api/getPartnerByUid/:uid", (req, res) => {
-  var uid = req.params.uid;
+router.get("/api/getPartnerByUid/:uID", (req, res) => {
+  var uid = req.params.uID;
   const db = dbService.getDbServiceInstance();
   const result = db.getPartnerByUid(uid);
 
@@ -87,12 +87,25 @@ router.post("/api/insertUser", (req, res) => {
 // Update User
 router.post("/api/updateUser", (req, res) => {
   var uID = req.body.uID;
-  var firstName = req.body.firstName;
-  var lastName = req.body.lastName;
+  var firstName = req.body.firstname;
+  var lastName = req.body.lastname;
   var zip = req.body.zip;
 
   const db = dbService.getDbServiceInstance();
   const result = db.updateUser(uID, firstName, lastName, zip);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Update Password
+router.post("/api/updatePassword", (req, res) => {
+  var uID = req.body.uID;
+  var password = req.body.password;
+
+  const db = dbService.getDbServiceInstance();
+  const result = db.updatePassword(uID, password);
 
   result
     .then((data) => res.json({ data: data }))
@@ -127,8 +140,8 @@ router.post("/api/insertPartner", (req, res) => {
 
 // Classify a user as a partner account, either admin or employee
 router.post("/api/makeUserPartner", (req, res) => {
-  var uid = req.body.uid;
-  var pid = req.body.pid;
+  var uid = req.body.uID;
+  var pid = req.body.pID;
   var isAdmin = req.body.isAdmin; // BOOL must be sent as 0 or 1 with no quotes in JSON e.g. "isAdmim" : 1 or "isAdmim" : 0
 
   const db = dbService.getDbServiceInstance();
