@@ -1,26 +1,20 @@
-import Booking from "./Booking";
+import Booking from "./Booking.js";
 
-class BookingCardInfo extends Booking {
+class BookingCardUserInfo extends Booking {
     
     serviceName: String;
-    serviceCost: number;
     serviceDescription: String;
     businessName: String;
 
-    constructor(bookingStartTime: Date, bookingDuration: number, serviceName: String, serviceCost: number, serviceDescription: String, businessName: String) {
-        super(bookingStartTime, bookingDuration);
+    constructor(bookingID: number, bookingStartTime: Date, bookingDuration: number, serviceName: String, serviceDescription: String, businessName: String) {
+        super(bookingID, bookingStartTime, bookingDuration);
         this.serviceName = serviceName;
-        this.serviceCost = serviceCost;
         this.serviceDescription = serviceDescription;
         this.businessName = businessName;
     }
 
     getServiceName() {
         return this.serviceName;
-    }
-
-    getServiceCost() {
-        return this.serviceCost;
     }
 
     getServiceDescription() {
@@ -33,4 +27,4 @@ class BookingCardInfo extends Booking {
 
 }
 
-export default BookingCardInfo;
+export default BookingCardUserInfo;
