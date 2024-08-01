@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../client/.env" });
 
 const express = require("express");
 const router = express.Router();
@@ -36,11 +36,31 @@ router.get("/api/getUserByUid/:uID", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-// Fetch user by authID
+// Fetch user by email
 router.post("/api/getUserByEmail", (req, res) => {
   var email = req.body.email;
   const db = dbService.getDbServiceInstance();
   const result = db.getUserByEmail(email);
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Fetch partner by email
+router.post("/api/getPartnerByEmail", (req, res) => {
+  var email = req.body.email;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getPartnerByEmail(email);
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Fetch partner admin credentials
+router.post("/api/getPartnerAdmin", (req, res) => {
+  var uid = req.body.uid;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getPartnerAdmin(uid);
   result
     .then((data) => res.json({ data: data }))
     .catch((err) => console.log(err));
@@ -121,6 +141,7 @@ router.post("/api/insertPartner", (req, res) => {
   var city = req.body.city;
   var state = req.body.state;
   var zip = req.body.zip;
+  var aboutUs = req.body.aboutUs;
 
   const db = dbService.getDbServiceInstance();
   const result = db.insertPartner(
@@ -130,7 +151,8 @@ router.post("/api/insertPartner", (req, res) => {
     address,
     city,
     state,
-    zip
+    zip,
+    aboutUs
   );
 
   result

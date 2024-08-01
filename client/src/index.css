@@ -91,6 +91,14 @@ body {
   color: #000000;
 }
 
+.custom-select {
+  width: 193px;
+}
+
+.custom-box {
+  width: 370px;
+}
+
 .center {
   display: flex;
   align-items: center;

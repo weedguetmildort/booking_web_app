@@ -63,22 +63,43 @@ class DbService {
     }
   }
 
-  // async getUserByUsername(username) {
-  //   try {
-  //     const response = await new Promise((resolve, reject) => {
-  //       const query =
-  //         "SELECT uid, username, password, firstname, lastname, zip FROM users WHERE username = ?";
-  //       connection.query(query, [username], (err, results) => {
-  //         if (err) reject(new Error(err.message));
-  //         resolve(results);
-  //       });
-  //     });
-  //     console.log(response);
-  //     return response;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  async getPartnerByEmail(email) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "SELECT pid, zip \
+                FROM partners \
+                WHERE email = ?";
+        connection.query(query, [email], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getPartnerAdmin(uid) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "SELECT pid, isAdmin \
+                FROM ispartner \
+                WHERE uid = ?";
+        connection.query(query, [uid], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async isPartner(uid) {
     try {
@@ -173,14 +194,10 @@ class DbService {
           "UPDATE Users \
           SET password = ? \
           WHERE uID = ?";
-        connection.query(
-          query,
-          [password, uID],
-          (err, results) => {
-            if (err) reject(new Error(err.message));
-            resolve(results);
-          }
-        );
+        connection.query(query, [password, uID], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
       });
       console.log(response);
       return "success : true";
@@ -197,16 +214,17 @@ class DbService {
     address,
     city,
     state,
-    zip
+    zip,
+    aboutUs
   ) {
     try {
       const response = await new Promise((resolve, reject) => {
         const query =
-          "INSERT INTO partners (businessName, category, email, address, city, state, zip) \
-                VALUES(?,?,?,?,?,?,?)";
+          "INSERT INTO partners (businessName, category, email, address, city, state, zip, aboutUs) \
+                VALUES(?,?,?,?,?,?,?,?)";
         connection.query(
           query,
-          [businessName, category, email, address, city, state, zip],
+          [businessName, category, email, address, city, state, zip, aboutUs],
           (err, results) => {
             if (err) reject(new Error(err.message));
             resolve(results);
@@ -371,10 +389,14 @@ class DbService {
           "UPDATE services \
                 SET name = ?, duration = ?, cost = ?, description = ? \
                 WHERE sid = ?";
-        connection.query(query, [name, duration, cost, description, sID], (err, results) => {
-          if (err) reject(new Error(err.message));
-          resolve(results);
-        });
+        connection.query(
+          query,
+          [name, duration, cost, description, sID],
+          (err, results) => {
+            if (err) reject(new Error(err.message));
+            resolve(results);
+          }
+        );
       });
       console.log(response);
       return "success : true";
@@ -384,7 +406,7 @@ class DbService {
     }
   }
 
-    async getServices(pID) {
+  async getServices(pID) {
     try {
       const response = await new Promise((resolve, reject) => {
         const query =
@@ -412,7 +434,7 @@ class DbService {
                 FROM bookings b \
                 JOIN services s ON b.sid = s.sid \
                 WHERE b.pid = ? AND status in ('pending', 'approved') AND b.starttime > ?;";
-                console.log(query);
+        console.log(query);
         connection.query(query, [pID, startTime], (err, results) => {
           if (err) reject(new Error(err.message));
           resolve(results);
@@ -425,7 +447,7 @@ class DbService {
     }
   }
 
-    async insertBooking(uID, pID, sID, startTime) {
+  async insertBooking(uID, pID, sID, startTime) {
     try {
       const response = await new Promise((resolve, reject) => {
         const query =

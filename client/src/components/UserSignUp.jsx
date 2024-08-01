@@ -74,7 +74,6 @@ function UserSignUp() {
         const encryptedValues = {
           ...values,
           password: encryptedPassword,
-          isPartner: "0",
         };
 
         // Call to send the data to backend

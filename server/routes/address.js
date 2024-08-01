@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../client/.env" });
 
 const express = require("express");
 
@@ -28,6 +28,7 @@ router.post("/api/checkAddress", async (req, res) => {
 
     res.json({
       data: {
+        status: response.data.result.verdict.hasUnconfirmedComponents,
         street:
           response.data.result.uspsData.standardizedAddress.firstAddressLine,
         city: response.data.result.uspsData.standardizedAddress.city,

@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from "react";
-import { Formik } from "formik";
+import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import axios from "axios";
+import { states } from "../assets/locationData";
 
 function PartnerSignUp() {
   const { login } = useContext(UserContext);
@@ -38,6 +39,65 @@ function PartnerSignUp() {
     }
   }, [login, navigate]);
 
+  // Encrypter
+  const encryptPassword = (password) => {
+    const secretkey = process.env.REACT_APP_SECRET_KEY;
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      password,
+      secretkey
+    ).toString();
+    return encryptedPassword;
+  };
+
+  // const validateAddress = async (values) => {
+  //   try {
+  //     const response = await fetch(
+  //       "http://localhost:5002/address/api/checkAddress",
+  //       {
+  //         method: "POST",
+  //         headers: { "Content-Type": "application/json" },
+  //         body: JSON.stringify(values),
+  //       }
+  //     );
+  //     const result = await response.json();
+  //     return result.data.status
+  //       ? {}
+  //       : {
+  //           street: result.data.street,
+  //           city: result.data.city,
+  //           state: result.data.state,
+  //           zip: result.data.zip,
+  //         };
+  //   } catch (error) {
+  //     console.error("Error validating address:", error);
+  //     return { address: "Address validation error." };
+  //   }
+  // };
+
+  const validateAddress = async (values) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5002/address/api/checkAddress",
+        values,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const result = response.data;
+      return result.data.status
+        ? {}
+        : {
+            street: result.data.street,
+            city: result.data.city,
+            state: result.data.state,
+            zip: result.data.zip,
+          };
+    } catch (error) {
+      console.error("Error validating address:", error);
+      return { address: "Address validation error." };
+    }
+  };
+
   return (
     <Formik
       initialValues={{
@@ -52,6 +112,7 @@ function PartnerSignUp() {
         state: "",
         city: "",
         aboutUs: "",
+        isAdmin: false,
       }}
       validationSchema={Yup.object({
         firstName: Yup.string()
@@ -71,7 +132,7 @@ function PartnerSignUp() {
           .min(8, "Password must be at least 8 characters")
           .required("Password is required"),
         address: Yup.string()
-          .max(15, "Must be 15 characters or less")
+          .max(25, "Must be 25 characters or less")
           .required("Required"),
         aboutUs: Yup.string()
           .max(30, "Must be 15 characters or less")
@@ -86,43 +147,63 @@ function PartnerSignUp() {
           .max(15, "Must be 15 characters or less")
           .required("Required"),
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        // Encrypt the password
-        const encryptedPassword = CryptoJS.AES.encrypt(
-          values.password,
-          process.env.REACT_APP_SECRET_KEY
-        ).toString();
-
-        // Update the password value with the encrypted one
-        const encryptedValues = {
-          ...values,
-          password: encryptedPassword,
-          isPartner: "1",
+      onSubmit={async (values, { setSubmitting, setErrors }) => {
+        const addressToBeValidated = {
+          street: values.address,
+          city: values.city,
+          state: values.state,
+          zip: values.zipCode,
         };
 
-        // Call to send the data to backend
-        axios
-          .post("http://localhost:5002/auth/api/user-signup", encryptedValues)
-          .then((response) => {
-            console.log("Response:", response.data);
-            // Extract the token from the response data
-            const { token } = response.data;
+        // Validate address with API
+        const validatedAddress = await validateAddress(addressToBeValidated);
 
-            // Store token in local storage
-            if (token) {
-              localStorage.setItem("authToken", token);
-            }
+        if (Object.keys(validatedAddress).length === 0) {
+          // Address is invalid, set errors
+          setErrors(validatedAddress);
+        } else {
+          // Address is valid, proceed with form submission
 
-            // Redirect the user to profile page
-            navigate("/partnerlogin");
-          })
-          .catch((error) => {
-            console.error("Error during signup:", error);
-            // Handle error: TO BE IMPLEMENTED
-          })
-          .finally(() => {
-            setSubmitting(false);
-          });
+          // Encrypt the password -- MAJOR PROBLEMS
+          const encryptedPassword = await encryptPassword(values.password);
+
+          // Update the password value with the encrypted one
+          const encryptedValues = {
+            ...values,
+            password: encryptedPassword,
+            address: validatedAddress.street,
+            state: validatedAddress.state,
+            city: validatedAddress.city,
+            zipCode: validatedAddress.zip,
+          };
+
+          // // Call to send the data to backend
+          axios
+            .post(
+              "http://localhost:5002/auth/api/partnerSignup",
+              encryptedValues
+            )
+            .then((response) => {
+              console.log("Response:", response.data);
+              // Extract the token from the response data
+              // const { token } = response.data;
+
+              // Store token in local storage
+              // if (token) {
+              //   localStorage.setItem("authToken", token);
+              // }
+
+              // Redirect the user to profile page
+              navigate("/partnerlogin");
+            })
+            .catch((error) => {
+              console.error("Error during signup:", error);
+              // Handle error: TO BE IMPLEMENTED
+            })
+            .finally(() => {
+              setSubmitting(false);
+            });
+        }
       }}
     >
       {(formik) => (
@@ -161,6 +242,8 @@ function PartnerSignUp() {
               className="custom-border"
               placeholder="Address"
               style={{ padding: "10px", margin: "5px" }}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
             />
             {formik.touched.address && formik.errors.address ? (
               <div>{formik.errors.address}</div>
@@ -173,6 +256,8 @@ function PartnerSignUp() {
               className="custom-border"
               placeholder="City"
               style={{ padding: "10px", margin: "5px" }}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
             />
             {formik.touched.city && formik.errors.city ? (
               <div>{formik.errors.city}</div>
@@ -180,17 +265,25 @@ function PartnerSignUp() {
           </div>
 
           <div className="field">
-            <input
-              id="businessName"
-              type="text"
-              {...formik.getFieldProps("businessName")}
-              className="custom-border"
-              placeholder="Business Name"
+            <Field
+              as="select"
+              name="state"
+              onChange={(e) => {
+                const selectedState = e.target.value;
+                formik.setFieldValue("state", selectedState);
+              }}
               style={{ padding: "10px", margin: "5px" }}
-            />
-            {formik.touched.businessName && formik.errors.businessName ? (
-              <div>{formik.errors.businessName}</div>
-            ) : null}
+              className="custom-border custom-select"
+              onBlur={formik.handleBlur}
+            >
+              <option value="">Select State</option>
+              {states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </Field>
+            <ErrorMessage name="state" component="div" />
 
             <input
               id="zipCode"
@@ -199,6 +292,8 @@ function PartnerSignUp() {
               className="custom-border"
               placeholder="Business Zip Code"
               style={{ padding: "10px", margin: "5px" }}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
             />
             {formik.touched.zipCode && formik.errors.zipCode ? (
               <div>{formik.errors.zipCode}</div>
@@ -207,6 +302,20 @@ function PartnerSignUp() {
 
           <div className="container">
             <div>
+              <div className="field">
+                <input
+                  id="businessName"
+                  type="text"
+                  {...formik.getFieldProps("businessName")}
+                  className="custom-border"
+                  placeholder="Business Name"
+                  style={{ padding: "10px", margin: "5px" }}
+                />
+                {formik.touched.businessName && formik.errors.businessName ? (
+                  <div>{formik.errors.businessName}</div>
+                ) : null}
+              </div>
+
               <div className="field">
                 <input
                   id="category"
@@ -243,23 +352,11 @@ function PartnerSignUp() {
                   className="custom-border"
                   placeholder="Password"
                   style={{ padding: "10px", margin: "5px" }}
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
                 />
                 {formik.touched.password && formik.errors.password ? (
                   <div>{formik.errors.password}</div>
-                ) : null}
-              </div>
-
-              <div className="field">
-                <input
-                  id="aboutUs"
-                  type="text"
-                  {...formik.getFieldProps("aboutUs")}
-                  className="custom-border"
-                  placeholder="About Us"
-                  style={{ padding: "10px", margin: "5px" }}
-                />
-                {formik.touched.aboutUs && formik.errors.aboutUs ? (
-                  <div>{formik.errors.aboutUs}</div>
                 ) : null}
               </div>
             </div>
@@ -282,8 +379,28 @@ function PartnerSignUp() {
               </p>
             </div>
           </div>
+          <div className="field">
+            <input
+              id="aboutUs"
+              type="text"
+              {...formik.getFieldProps("aboutUs")}
+              className="custom-border custom-box"
+              placeholder="About Us"
+              style={{ padding: "10px", margin: "5px" }}
+            />
+            {formik.touched.aboutUs && formik.errors.aboutUs ? (
+              <div>{formik.errors.aboutUs}</div>
+            ) : null}
+          </div>
 
           <div>
+            <label>
+              <Field type="checkbox" name="isAdmin" />
+              Administrator
+            </label>
+          </div>
+
+          <div className="center">
             <button
               type="submit"
               style={{

@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../client/.env" });
 const express = require("express");
 const axios = require("axios");
 const querystring = require("querystring");
@@ -37,8 +37,7 @@ const router = express.Router();
 // Signup
 router.post("/api/userSignup", async (req, res) => {
   try {
-    const { email, password, firstName, lastName, zipCode, isPartner } =
-      req.body;
+    const { email, password, firstName, lastName, zipCode } = req.body;
 
     const decryptedPassword = decryptPassword(password);
     const encryptedPassword = encryptPassword(decryptedPassword);
@@ -59,18 +58,18 @@ router.post("/api/userSignup", async (req, res) => {
     );
 
     if (response.status === 201) {
-      const savedUser = response.data;
+      // const savedUser = response.data;
 
       // Generate a token for the new user
-      const token = generateToken(savedUser);
+      // const token = generateToken(savedUser);
 
       res.status(201).json({
         message: "User created successfully",
-        token,
-        user: {
-          id: savedUser.id,
-          email: savedUser.email,
-        },
+        // token,
+        // user: {
+        //   id: savedUser.id,
+        //   email: savedUser.email,
+        // },
       });
     } else {
       res.status(response.status).json(response.data);
@@ -176,266 +175,170 @@ router.get(
   }
 );
 
-// router.get("/login", generateState, (req, res) => {
-//   const authUrl =
-//     `https://${process.env.AUTH0_DOMAIN}/authorize?` +
-//     querystring.stringify({
-//       response_type: "code",
-//       client_id: process.env.AUTH0_CLIENT_ID,
-//       connection: process.env.AUTH0_CONNECTION,
-//       redirect_uri: process.env.AUTH0_CALLBACK_URL,
-//       scope: "openid profile email",
-//       state: req.state, // Use the generated state
-//     });
+// Signup
+router.post("/api/partnerSignup", async (req, res) => {
+  try {
+    const {
+      email,
+      password,
+      firstName,
+      lastName,
+      zipCode,
+      isAdmin,
+      businessName,
+      category,
+      address,
+      state,
+      city,
+      aboutUs,
+    } = req.body;
 
-//   res.redirect(authUrl);
-// });
+    var adminValue = 0;
 
-// router.get("/callback", validateState, async (req, res) => {
-//   const { code } = req.query;
+    const decryptedPassword = decryptPassword(password);
+    const encryptedPassword = encryptPassword(decryptedPassword);
 
-//   try {
-//     const tokenResponse = await axios.post(
-//       `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
-//       {
-//         grant_type: "authorization_code",
-//         client_id: process.env.AUTH0_CLIENT_ID,
-//         client_secret: process.env.AUTH0_CLIENT_SECRET,
-//         code: code,
-//         redirect_uri: process.env.AUTH0_CALLBACK_URL,
-//       }
-//     );
+    // Create new user object
+    const newUser = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      zip: zipCode,
+      password: encryptedPassword,
+    };
 
-//     const { access_token } = tokenResponse.data;
+    const newPartner = {
+      businessName: businessName,
+      category: category,
+      email: email,
+      address: address,
+      state: state,
+      zip: zipCode,
+      city: city,
+      aboutUs: aboutUs,
+    };
 
-//     const userResponse = await axios.get(
-//       `https://${process.env.AUTH0_DOMAIN}/userinfo`,
-//       {
-//         headers: {
-//           Authorization: `Bearer ${access_token}`,
-//         },
-//       }
-//     );
+    // Save user to the database via another POST request
+    const response1 = await axios.post(
+      "http://localhost:5002/db/api/insertUser",
+      newUser
+    );
 
-//     const user = userResponse.data;
+    const result1 = response1.status;
 
-//     // Save user information in session or database, then redirect
-//     // req.session.user = user; // if using session
-//     res.json(user); // For now, just return the user information
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Authentication failed");
-//   }
-// });
+    const response2 = await axios.post(
+      "http://localhost:5002/db/api/insertPartner",
+      newPartner
+    );
 
-// Used for sure calls
+    const result2 = response2.status;
 
-// NEW API CALLS
-// Sign Up -- Might move to modular auth file after testing
-// router.post("/signup", async (req, res) => {
-//   const {
-//     client_id,
-//     email,
-//     password,
-//     connection,
-//     username,
-//     given_name,
-//     family_name,
-//     name,
-//     nickname,
-//     picture,
-//     user_metadata,
-//   } = req.body;
+    const response3 = await axios.post(
+      "http://localhost:5002/db/api/getUserByEmail",
+      { email }
+    );
 
-//   try {
-//     const response = await axios.post(
-//       `https://dev-o5ogeizt5ue5oi0r.us.auth0.com/dbconnections/signup`,
-//       {
-//         client_id: client_id,
-//         email: email,
-//         password: password,
-//         connection: connection,
-//         username: username,
-//         given_name: given_name,
-//         family_name: family_name,
-//         name: name,
-//         nickname: nickname,
-//         picture: picture,
-//         user_metadata: user_metadata,
-//       },
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
+    const result3 = response3.data.data[0];
 
-//     res.json({
-//       message: "User successfully signed up!",
-//       data: response.data,
-//     });
-//   } catch (error) {
-//     if (error.response) {
-//       // The request was made and the server responded with a status code
-//       // that falls out of the range of 2xx
-//       res.status(error.response.status).json({
-//         message: "Error signing up user",
-//         error: error.response.data,
-//       });
-//     } else if (error.request) {
-//       // The request was made but no response was received
-//       res.status(500).json({
-//         message: "No response received from the server",
-//         error: error.message,
-//       });
-//     } else {
-//       // Something happened in setting up the request that triggered an Error
-//       res.status(500).json({
-//         message: "Error in setting up the request",
-//         error: error.message,
-//       });
-//     }
-//   }
-// });
+    const response4 = await axios.post(
+      "http://localhost:5002/db/api/getPartnerByEmail",
+      { email }
+    );
 
-// router.post("/quick-login", async (req, res) => {
-//   const { email, password } = req.body;
-//   const decryptedPassword = decryptPassword(password);
+    const result4 = response4.data.data[0];
 
-//   // const { email, password } = req.body;
+    if (isAdmin) {
+      adminValue = 1;
+    }
 
-//   if (!email || !password) {
-//     return res.status(400).json({ error: "Email and password are required" });
-//   }
+    const response5 = await axios.post(
+      "http://localhost:5002/db/api/makeUserPartner",
+      {
+        uID: result3.uid,
+        pID: result4.pid,
+        isAdmin: adminValue,
+      }
+    );
 
-//   try {
-//     const response = await axios.post(
-//       `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
-//       {
-//         grant_type: "password",
-//         username: email,
-//         password: decryptedPassword,
-//         audience: process.env.AUTH0_AUDIENCE,
-//         scope: "openid profile email",
-//         client_id: process.env.AUTH0_CLIENT_ID,
-//         client_secret: process.env.AUTH0_CLIENT_SECRET,
-//         connection: process.env.AUTH0_CONNECTION,
-//       }
-//     );
+    const result5 = response5.status;
 
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error(error.response.data);
-//     res.status(500).json({ error: "Failed to authenticate" });
-//   }
-// });
+    if (result1 === 201 && result2 === 201 && result5 === 201) {
+      res.status(201).json({
+        message: "Partner creation is successfull",
+      });
+    } else {
+      res
+        .status(result1, result2, result5)
+        .json(response1.data, response2.data, response5.data);
+    }
+  } catch (error) {
+    console.error("Error during signup:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
-// // Routes for Insomnia
-// router.post("/insomnia-quick-login", async (req, res) => {
-//   const { email, password } = req.body;
+// Partner Login
+router.post("/api/partnerLogin", async (req, res) => {
+  // Simulating user login
+  const { email, password } = req.body;
+  const decryptedPassword = decryptPassword(password);
 
-//   if (!email || !password) {
-//     return res.status(400).json({ error: "Email and password are required" });
-//   }
+  try {
+    // Make an axios call to get user data by username
+    const response1 = await axios.post(
+      "http://localhost:5002/db/api/getUserByEmail",
+      { email }
+    );
 
-//   try {
-//     const response = await axios.post(
-//       `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
-//       {
-//         grant_type: "password",
-//         username: email,
-//         password: password,
-//         audience: process.env.AUTH0_AUDIENCE,
-//         scope: "read",
-//         client_id: process.env.AUTH0_CLIENT_ID,
-//         client_secret: process.env.AUTH0_CLIENT_SECRET,
-//         connection: process.env.AUTH0_CONNECTION,
-//       }
-//     );
+    if (!response1.data.data || response1.data.data.length === 0) {
+      return res.status(404).json({ message: "Invalid credentials" });
+    }
 
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error(error.response.data);
-//     res.status(500).json({ error: "Failed to authenticate" });
-//   }
-// });
+    const user = response1.data.data[0];
+    const uid = user.uid;
+    const storedPassword = user.password;
+    const decryptedStoredPassword = decryptPasswordDb(storedPassword);
 
-// router.get("/insomnia-quick-login", async (req, res) => {
-//   const { email, password } = req.body;
-//   const decryptedPassword = decryptPassword(password);
+    const response2 = await axios.post(
+      "http://localhost:5002/db/api/getPartnerByEmail",
+      { email }
+    );
 
-//   // const { email, password } = req.body;
+    if (!response2.data.data || response2.data.data.length === 0) {
+      return res.status(404).json({ message: "Not a partner" });
+    }
 
-//   if (!email || !password) {
-//     return res.status(400).json({ error: "Email and password are required" });
-//   }
+    const partner = response2.data.data[0];
+    const pid = partner.pid;
 
-//   try {
-//     const response = await axios.post(
-//       `https://${process.env.AUTH0_DOMAIN}/oauth/token`,
-//       {
-//         grant_type: "password",
-//         username: email,
-//         password: decryptedPassword,
-//         audience: process.env.AUTH0_AUDIENCE,
-//         scope: "read:messages",
-//         client_id: process.env.AUTH0_CLIENT_ID,
-//         client_secret: process.env.AUTH0_CLIENT_SECRET,
-//         connection: process.env.AUTH0_CONNECTION,
-//       }
-//     );
+    const response3 = await axios.post(
+      "http://localhost:5002/db/api/getPartnerAdmin",
+      { uid }
+    );
 
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error(error.response.data);
-//     res.status(500).json({ error: "Failed to authenticate" });
-//   }
-// });
+    const admin = response3.data.data[0];
+
+    if (decryptedPassword === decryptedStoredPassword && admin.pid === pid) {
+      const currUser = {
+        id: user.uid,
+        role: "partner",
+        firstName: user.firstname,
+        lastName: user.lastname,
+        zip: user.zip,
+      };
+
+      // Generate a JWT token
+      const token = generateToken(currUser);
+
+      // Return the user data and token
+      res.status(201).json({ user: currUser, token: token });
+    } else {
+      return res.status(403).json({ message: "Invalid credentials" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred during login" });
+  }
+});
 
 module.exports = router;
-
-//   try {
-//     const response = await axios.post(
-//       `http://localhost:5002/api/post/insertuser`,
-//       {
-//         email: email,
-//         password: values.encryptedPassword,
-//         username: user_name,
-//         firstname: first_name,
-//         lastname: last_name,
-//         zip: zip_code,
-//         isPartner: "0",
-//       },
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-
-//     res.json({
-//       message: "User successfully signed up!",
-//       data: response.data,
-//     });
-//   } catch (error) {
-//     if (error.response) {
-//       // The request was made and the server responded with a status code
-//       // that falls out of the range of 2xx
-//       res.status(error.response.status).json({
-//         message: "Error signing up user",
-//         error: error.response.data,
-//       });
-//     } else if (error.request) {
-//       // The request was made but no response was received
-//       res.status(500).json({
-//         message: "No response received from the server",
-//         error: error.message,
-//       });
-//     } else {
-//       // Something happened in setting up the request that triggered an Error
-//       res.status(500).json({
-//         message: "Error in setting up the request",
-//         error: error.message,
-//       });
-//     }
-//   }

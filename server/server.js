@@ -3,15 +3,14 @@ const express = require("express");
 const cors = require("cors");
 
 // CUSTOM REQUIRED IMPORTS
-const dotenv = require("dotenv");
 const routes = require("./routes");
 const app = express();
 
 // REQUIRED CONFIGS
-dotenv.config();
+require("dotenv").config({ path: "../client/.env" });
 
 // PORT SETUP
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.SERVER_PORT || 8080;
 
 // PARSERS AND NETWORK CONFIGS
 app.use(cors());
