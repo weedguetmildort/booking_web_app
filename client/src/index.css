@@ -99,6 +99,10 @@ body {
   width: 370px;
 }
 
+.custom-box-2 {
+  width: 380px;
+}
+
 .center {
   display: flex;
   align-items: center;

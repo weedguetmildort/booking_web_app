@@ -162,19 +162,6 @@ router.put("/api/user-profile", verifyToken("user"), (req, res) => {
   );
 });
 
-// Scope examples from previous implementation
-router.get(
-  "/api/private-scoped",
-  verifyToken,
-  requiredScopes("read:messages"),
-  (req, res) => {
-    res.json({
-      message:
-        "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.",
-    });
-  }
-);
-
 // Signup
 router.post("/api/partnerSignup", async (req, res) => {
   try {
@@ -340,5 +327,40 @@ router.post("/api/partnerLogin", async (req, res) => {
     res.status(500).json({ error: "An error occurred during login" });
   }
 });
+
+// Check if partner is adminLogin
+router.post("/api/partnerIsAdmin", async (req, res) => {
+  // Simulating user login
+  const { uid } = req.body;
+
+  try {
+    const response = await axios.post(
+      "http://localhost:5002/db/api/getPartnerAdmin",
+      { uid }
+    );
+
+    const admin = response.data.data[0];
+
+    const check = admin.isAdmin;
+
+    res.status(201).json(check);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "An error occurred during login" });
+  }
+});
+
+// Scope examples from previous implementation
+router.get(
+  "/api/private-scoped",
+  verifyToken,
+  requiredScopes("read:messages"),
+  (req, res) => {
+    res.json({
+      message:
+        "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this.",
+    });
+  }
+);
 
 module.exports = router;
