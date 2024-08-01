@@ -9,6 +9,7 @@ import PartnerLogin from "pages/LoginPartner";
 import PartnerSignUp from "pages/SignUpPartner";
 import PartnerProfilePage from "pages/ProfilePartner";
 import SearchPage from "pages/Search";
+import Business from "pages/Business";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./UserContext";
 
@@ -32,6 +33,7 @@ function App() {
               element={<PartnerProfilePage />}
             ></Route>
             <Route path="/search" element={<SearchPage />}></Route>
+            <Route path="/business" element={<Business />}></Route>
           </Routes>
         </Router>
       </UserProvider>
