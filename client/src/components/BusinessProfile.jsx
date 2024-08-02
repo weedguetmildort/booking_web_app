@@ -10,6 +10,14 @@ function BusinessProfile() {
   const { logout } = useContext(UserContext);
   const navigate = useNavigate();
 
+  var businessName = "";
+  var category = "";
+  var address = "";
+  var city = "";
+  var state = "";
+  var zipCode = "";
+  var aboutUs = "";
+
   const currUser = JSON.parse(localStorage.getItem("user"));
 
   // Check credentials before pulling business info
@@ -48,9 +56,9 @@ function BusinessProfile() {
         aboutUs: storedBusiness.aboutUs,
       };
 
-      console.log(currBusiness);
+      //   console.log(currBusiness);
 
-      return currBusiness;
+      return storedBusiness;
     } catch (error) {
       console.error("Error validating user", error);
       return { address: "User validation error." };
@@ -65,13 +73,9 @@ function BusinessProfile() {
     }
   }, [currUser, navigate]);
 
-  initializeValues(currUser).then((result) => {
-    console.log("Result outside function:", result);
-  });
+  const currBusiness = initializeValues(currUser);
 
-  //   const currBusiness = initializeValues(currUser);
-
-  //   console.log(currBusiness.category);
+  console.log(currBusiness);
 
   // Initialize business info
   const [initialValues] = useState({
