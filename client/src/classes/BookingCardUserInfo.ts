@@ -1,4 +1,4 @@
-import Booking from "./Booking.js";
+import Booking from "./Booking.ts";
 
 class BookingCardUserInfo extends Booking {
     

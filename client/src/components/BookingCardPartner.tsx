@@ -7,20 +7,52 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import axios from "axios";
+import { render } from "react-dom";
 
 
-function BookingCardPartner(info: { bookingID, bookingDate, bookingStartTime, bookingDuration, bookingEndTime, serviceName, serviceDescription, businessName }) {
+function BookingCardPartner(info: { bookingID, bookingDate, bookingStartTime, bookingDuration, bookingEndTime, serviceName, userFullName, userEmail }) {
 
     const [renderCancel, setRenderCancel] = useState(false);
-    const message = "Are you sure you want to cancel?"
-    const confirmCancelButton = (<Button size="small" onClick={confirmCancel}>Yes</Button>);
-    const cancelCancelButton = (<Button size="small" onClick={cancelCancel}>No</Button>);
+    const [renderReschedule, setRenderReschedule] = useState(false);
+    const [message, setMessage] = useState("Are you sure you want to cancel this appointment?");
+    const confirmButton = (<Button size="small" onClick={confirm}>Yes</Button>);
+    const resetOptionsButton = (<Button size="small" onClick={resetOptions}>No</Button>);
     const [cancelled, setCancelled] = useState(false);
-    const [failedCancel, setFailedCancel] = useState(false);
-    const [failedCancelMessage, setFailedCancelMessage] = useState(<div></div>);
+    const [failed, setFailed] = useState(false);
+    const [failedMessage, setFailedMessage] = useState(<div></div>);
 
-    function buttonClicked() {
-        setRenderCancel(true)
+    useEffect(() => {
+        setMessage("Are you sure you want to cancel this appointment?");
+        setRenderReschedule(false);
+    }, [renderCancel])
+
+    useEffect(() => {
+        setMessage("Are you sure you want to reschedule this appointment?");
+        setRenderCancel(false);
+    }, [renderReschedule])
+
+
+    function cancelButtonClicked() {
+        setRenderCancel(!renderCancel);
+        if (renderCancel === true || renderReschedule === true) {
+            resetOptions();
+        }
+    }
+
+    function rescheduleButtonClicked() {
+        setRenderReschedule(!renderReschedule);
+        if (renderReschedule === true || renderCancel === true) {
+            resetOptions();
+        }
+    }
+
+    function confirm() {
+        if (renderCancel) {
+            confirmCancel();
+        }
+        else if (renderReschedule) {
+            confirmReschedule();
+        }
     }
 
     function confirmCancel() {
@@ -35,30 +67,32 @@ function BookingCardPartner(info: { bookingID, bookingDate, bookingStartTime, bo
             })
             .catch(error => {
                 console.error('Error:', error);
-                setFailedCancel(true);
+                setFailed(true);
                 if (error.response) {
-                    setFailedCancelMessage(<Typography color={red[500]} >{"Failed to post cancellation. Status code: " + error.response.status}</Typography>);
+                    setFailedMessage(<Typography color={red[500]} >{"Failed to post cancellation. Status code: " + error.response.status}</Typography>);
                 }
                 else {
-                    setFailedCancelMessage(<Typography sx={{ fontSize: 10 }} color={red[500]} >{"Failed to post cancellation, there was no response."}</Typography>);
+                    setFailedMessage(<Typography sx={{ fontSize: 10 }} color={red[500]} >{"Failed to post cancellation, there was no response."}</Typography>);
                 }
                 setCancelled(false);
             });
 
     }
 
-    function cancelCancel() {
+    function confirmReschedule() {
+        
+    }
+
+    function resetOptions() {
         setRenderCancel(false);
-        setFailedCancel(false);
+        setRenderReschedule(false);
+        setFailed(false);
     }
 
     if (!cancelled) {
         return (
             <Card style={{ width: "500px" }} variant="outlined">
                 <CardContent>
-                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        {info.businessName}
-                    </Typography>
                     <Typography variant="h5" component="div">
                         {info.serviceName}
                     </Typography>
@@ -68,19 +102,25 @@ function BookingCardPartner(info: { bookingID, bookingDate, bookingStartTime, bo
                     <Typography sx={{ mb: 1.5, fontSize: 14 }} color="text.secondary">
                         for {info.bookingDuration} minutes
                     </Typography>
-                    <Typography noWrap={false} variant="body2" style={{ display: "inline-block", whiteSpace: "pre-line" }} >
-                        {info.serviceDescription + " "}
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    <Typography>
+                        User information:
+                    </Typography>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                        {info.userFullName}
+                        <br/>
+                        {info.userEmail}
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small" onClick={buttonClicked}>Cancel appointment</Button>
+                    <Button size="small" onClick={cancelButtonClicked}>Cancel</Button>
+                    <Button size="small" onClick={rescheduleButtonClicked}>Reschedule</Button>
                 </CardActions>
-                {renderCancel &&
+                {(renderCancel || renderReschedule) &&
                     (<CardContent>
                         {message}
-                        {confirmCancelButton} {renderCancel && cancelCancelButton}
-                        {failedCancel && failedCancelMessage}
+                        <div></div>
+                        {confirmButton} {resetOptionsButton}
+                        {failed && failedMessage}
                     </CardContent>)
                 }
             </Card>
@@ -91,7 +131,7 @@ function BookingCardPartner(info: { bookingID, bookingDate, bookingStartTime, bo
             <Card style={{ width: "500px" }} variant="outlined">
                 <CardContent>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary">
-                        "{info.serviceName}" with {info.businessName} on {info.bookingDate.toDateString()} at {info.bookingStartTime.toTimeString()} was cancelled.
+                        "{info.serviceName}" with {info.userFullName} on {info.bookingDate.toDateString()} at {info.bookingStartTime.toTimeString()} was cancelled.
                     </Typography>
                 </CardContent>
             </Card>

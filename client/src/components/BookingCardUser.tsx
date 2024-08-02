@@ -9,10 +9,10 @@ import { red } from '@mui/material/colors';
 import axios from "axios";
 
 
-function BookingCard(info: { bookingID, bookingDate, bookingStartTime, bookingDuration, bookingEndTime, serviceName, serviceDescription, businessName } ) {    
+function BookingCardUser(info: { bookingID, bookingDate, bookingStartTime, bookingDuration, bookingEndTime, serviceName, serviceDescription, businessName } ) {    
     
     const [renderCancel, setRenderCancel] = useState(false);
-    const message = "Are you sure you want to cancel?"
+    const message = "Are you sure you want to cancel this appointment?"
     const confirmCancelButton = (<Button size="small" onClick={confirmCancel}>Yes</Button>);
     const cancelCancelButton = (<Button size="small" onClick={cancelCancel}>No</Button>);
     const [cancelled, setCancelled] = useState(false);
@@ -99,4 +99,4 @@ function BookingCard(info: { bookingID, bookingDate, bookingStartTime, bookingDu
     }
 }
 
-export default BookingCard;
+export default BookingCardUser;

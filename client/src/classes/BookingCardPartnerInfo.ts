@@ -1,17 +1,15 @@
-import Booking from "./Booking.js";
+import Booking from "./Booking.ts";
 
 class BookingCardUserInfo extends Booking {
 
     serviceName: String;
-    serviceDescription: String;
     userFirstName: String;
     userLastName: String;
     userEmail: String;
 
-    constructor(bookingID: number, bookingStartTime: Date, bookingDuration: number, serviceName: String, serviceDescription: String, userFirstName: String, userLastName: String, userEmail: String) {
+    constructor(bookingID: number, bookingStartTime: Date, bookingDuration: number, serviceName: String, userFirstName: String, userLastName: String, userEmail: String) {
         super(bookingID, bookingStartTime, bookingDuration);
         this.serviceName = serviceName;
-        this.serviceDescription = serviceDescription;
         this.userFirstName = userFirstName;
         this.userLastName = userLastName;
         this.userEmail = userEmail;
@@ -19,10 +17,6 @@ class BookingCardUserInfo extends Booking {
 
     getServiceName() {
         return this.serviceName;
-    }
-
-    getServiceDescription() {
-        return this.serviceDescription;
     }
 
     getUserFullName() {

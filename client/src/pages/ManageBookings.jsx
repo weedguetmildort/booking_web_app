@@ -4,8 +4,8 @@ import Banner from "components/Banner";
 import Footer from "components/Footer";
 import BookingCardUser from "components/BookingCardUser.tsx";
 import BookingCardPartner from "components/BookingCardPartner.tsx";
-import BookingCardUserInfo from "classes/BookingCardUserInfo";
-import BookingCardPartnerInfo from "classes/BookingCardPartnerInfo"
+import BookingCardUserInfo from "classes/BookingCardUserInfo.ts";
+import BookingCardPartnerInfo from "classes/BookingCardPartnerInfo.ts"
 
 const provider = true;
 
@@ -27,13 +27,13 @@ function ManageBookings() {
         // get json and load infos
         // if partner, us pID to query bookings, if user, use uID to query bookings
 
-        if (!partner) {
+        if (!provider) {
             tempBookingCardInfos.push(new BookingCardUserInfo(123456789, new Date(Date.UTC(2024, 7, 1, 14, 30)), 30, "Clean windows", "Cleans your windows with professional grade cleaning materials and tools.", "Riley's Window Services")); // 9:30 am local time
             tempBookingCardInfos.push(new BookingCardUserInfo(987654321, new Date(Date.UTC(2024, 7, 5, 16)), 60, "Repair faucet", "Repairs your faucet.", "Kyle's Plumbing")); // 11:00 am local time
         }
         else {
-            tempBookingCardInfos.push(new BookingCardParterInfo(123456788, new Date(Date.UTC(2024, 7, 1, 14, 30)), 30, "Clean windows", "Cleans your windows with professional grade cleaning materials and tools.", "Riley's Window Services")); // 9:30 am local time
-            tempBookingCardInfos.push(new BookingCardParterInfo(987654328, new Date(Date.UTC(2024, 7, 5, 16)), 60, "Repair faucet", "Repairs your faucet.", "Kyle's Plumbing")); // 11:00 am local time
+            tempBookingCardInfos.push(new BookingCardPartnerInfo(123456788, new Date(Date.UTC(2024, 7, 1, 14, 30)), 30, "Clean windows", "Firsty", "Lasty", "firstlasty@gmail.com")); // 9:30 am local time
+            tempBookingCardInfos.push(new BookingCardPartnerInfo(987654328, new Date(Date.UTC(2024, 7, 5, 16)), 60, "Repair faucet", "Dave", "Guy", "daveguy@yahoo.com")); // 11:00 am local time
         }
 
     }
@@ -80,8 +80,8 @@ function ManageBookings() {
                                             bookingDuration={info.getBookingDuration()}
                                             bookingEndTime={info.getBookingEndTime()}
                                             serviceName={info.getServiceName()}
-                                            serviceDescription={info.getServiceDescription()}
-                                            businessName={info.getBusinessName()}
+                                            userFullName={info.getUserFullName()}
+                                            userEmail={info.getUserEmail()}
                                         />
                                         <br />
                                     </div>
