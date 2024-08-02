@@ -298,6 +298,9 @@ router.post("/api/partnerLogin", async (req, res) => {
     const partner = response2.data.data[0];
     const pid = partner.pid;
 
+    console.log(partner);
+    console.log("broke");
+
     const response3 = await axios.post(
       "http://localhost:5002/db/api/getPartnerAdmin",
       { uid }
@@ -313,6 +316,12 @@ router.post("/api/partnerLogin", async (req, res) => {
         firstName: user.firstname,
         lastName: user.lastname,
         zip: user.zip,
+        businessName: partner.businessName,
+        category: partner.category,
+        address: partner.address,
+        city: partner.city,
+        state: partner.state,
+        aboutUs: partner.aboutUs,
       };
 
       // Generate a JWT token

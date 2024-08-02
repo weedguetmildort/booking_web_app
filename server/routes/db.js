@@ -191,10 +191,21 @@ router.post("/api/updatePartner", (req, res) => {
   var address = req.body.address;
   var city = req.body.city;
   var state = req.body.state;
-  var zip = req.body.zip;
+  var zip = req.body.zipCode;
+  var category = req.body.category;
+  var aboutUs = req.body.aboutUs;
 
   const db = dbService.getDbServiceInstance();
-  const result = db.updatePartner(pID, businessName, address, city, state, zip);
+  const result = db.updatePartner(
+    pID,
+    businessName,
+    address,
+    city,
+    state,
+    zip,
+    category,
+    aboutUs
+  );
 
   result
     .then((data) => res.json({ data: data }))

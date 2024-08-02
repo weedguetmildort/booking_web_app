@@ -9,14 +9,7 @@ import { states } from "../assets/locationData";
 function BusinessProfile() {
   const { logout } = useContext(UserContext);
   const navigate = useNavigate();
-
-  var businessName = "";
-  var category = "";
-  var address = "";
-  var city = "";
-  var state = "";
-  var zipCode = "";
-  var aboutUs = "";
+  const [businessData, setBusinessData] = useState(null);
 
   const currUser = JSON.parse(localStorage.getItem("user"));
 
@@ -37,34 +30,6 @@ function BusinessProfile() {
     }
   };
 
-  const initializeValues = async (user) => {
-    try {
-      const pid = user.pid;
-      const response = await axios.post(
-        "http://localhost:5002/db/api/getBusinessByPID",
-        { pid }
-      );
-
-      const storedBusiness = response.data.data[0];
-      const currBusiness = {
-        businessName: storedBusiness.businessName,
-        category: storedBusiness.category,
-        address: storedBusiness.address,
-        city: storedBusiness.city,
-        state: storedBusiness.state,
-        zipCode: storedBusiness.zip,
-        aboutUs: storedBusiness.aboutUs,
-      };
-
-      //   console.log(currBusiness);
-
-      return storedBusiness;
-    } catch (error) {
-      console.error("Error validating user", error);
-      return { address: "User validation error." };
-    }
-  };
-
   useEffect(() => {
     if (!currUser) {
       navigate("/partnerlogin");
@@ -73,19 +38,15 @@ function BusinessProfile() {
     }
   }, [currUser, navigate]);
 
-  const currBusiness = initializeValues(currUser);
-
-  console.log(currBusiness);
-
   // Initialize business info
   const [initialValues] = useState({
-    businessName: "",
-    category: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    aboutUs: "",
+    businessName: currUser.businessName,
+    category: currUser.category,
+    address: currUser.address,
+    city: currUser.city,
+    state: currUser.state,
+    zipCode: currUser.zip,
+    aboutUs: currUser.aboutUs,
   });
 
   const validateAddress = async (values) => {
@@ -155,9 +116,9 @@ function BusinessProfile() {
         } else {
           // Call to send the data to backend
           axios
-            .post("http://localhost:5002/db/api/updateUser", {
+            .post("http://localhost:5002/db/api/updatePartner", {
               ...values,
-              uID: currUser.id,
+              pID: currUser.pid,
             })
             .then((response) => {
               console.log("Response:", response.data);

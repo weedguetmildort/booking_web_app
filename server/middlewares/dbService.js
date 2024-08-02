@@ -67,7 +67,7 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query =
-          "SELECT pid, zip \
+          "SELECT pid, businessName, category, address, city, state, zip, aboutUs \
                 FROM partners \
                 WHERE email = ?";
         connection.query(query, [email], (err, results) => {
@@ -277,16 +277,25 @@ class DbService {
     }
   }
 
-  async updatePartner(pID, businessName, address, city, state, zip) {
+  async updatePartner(
+    pID,
+    businessName,
+    address,
+    city,
+    state,
+    zip,
+    category,
+    aboutUs
+  ) {
     try {
       const response = await new Promise((resolve, reject) => {
         const query =
           "UPDATE Partners \
-                SET businessname = ?, address = ?, city = ?, state = ?, zip = ? \
+                SET businessname = ?, address = ?, city = ?, state = ?, zip = ?, category = ?, aboutUs = ? \
                 WHERE pID = ?";
         connection.query(
           query,
-          [businessName, address, city, state, zip, pID],
+          [businessName, address, city, state, zip, category, aboutUs, pID],
           (err, results) => {
             if (err) reject(new Error(err.message));
             resolve(results);
