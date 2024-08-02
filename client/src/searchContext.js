@@ -3,7 +3,7 @@ import React, { createContext, useState, useEffect } from "react";
 // Create a context for search
 export const SearchContext = createContext();
 
-export const UserProvider = ({ children }) => {
+export const SearchProvider = ({ children }) => {
   const [search, setSearch] = useState(null);
 
   // Load the user state from local storage
