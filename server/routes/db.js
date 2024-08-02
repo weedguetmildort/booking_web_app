@@ -56,6 +56,16 @@ router.post("/api/getPartnerByEmail", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+// Fetch partner by email
+router.post("/api/getBusinessByPID", (req, res) => {
+  var pid = req.body.pid;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getBusinessByPID(pid);
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
 // Fetch partner admin credentials
 router.post("/api/getPartnerAdmin", (req, res) => {
   var uid = req.body.uid;

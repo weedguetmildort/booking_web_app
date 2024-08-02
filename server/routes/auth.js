@@ -308,6 +308,7 @@ router.post("/api/partnerLogin", async (req, res) => {
     if (decryptedPassword === decryptedStoredPassword && admin.pid === pid) {
       const currUser = {
         id: user.uid,
+        pid: pid,
         role: "partner",
         firstName: user.firstname,
         lastName: user.lastname,

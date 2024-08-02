@@ -82,6 +82,25 @@ class DbService {
     }
   }
 
+  async getBusinessByPID(pid) {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query =
+          "SELECT businessName, category, address, city, state, zip, aboutUs \
+                FROM partners \
+                WHERE pid = ?";
+        connection.query(query, [pid], (err, results) => {
+          if (err) reject(new Error(err.message));
+          resolve(results);
+        });
+      });
+      console.log(response);
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async getPartnerAdmin(uid) {
     try {
       const response = await new Promise((resolve, reject) => {

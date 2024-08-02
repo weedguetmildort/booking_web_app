@@ -7,7 +7,6 @@ import axios from "axios";
 import { states } from "../assets/locationData";
 
 function BusinessProfile() {
-  var adminCheck = 0;
   const { logout } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -30,15 +29,49 @@ function BusinessProfile() {
     }
   };
 
+  const initializeValues = async (user) => {
+    try {
+      const pid = user.pid;
+      const response = await axios.post(
+        "http://localhost:5002/db/api/getBusinessByPID",
+        { pid }
+      );
+
+      const storedBusiness = response.data.data[0];
+      const currBusiness = {
+        businessName: storedBusiness.businessName,
+        category: storedBusiness.category,
+        address: storedBusiness.address,
+        city: storedBusiness.city,
+        state: storedBusiness.state,
+        zipCode: storedBusiness.zip,
+        aboutUs: storedBusiness.aboutUs,
+      };
+
+      console.log(currBusiness);
+
+      return currBusiness;
+    } catch (error) {
+      console.error("Error validating user", error);
+      return { address: "User validation error." };
+    }
+  };
+
   useEffect(() => {
     if (!currUser) {
       navigate("/partnerlogin");
+    } else {
+      validateAdmin(currUser);
     }
-
-    validateAdmin(currUser);
   }, [currUser, navigate]);
 
-  //   console.log(adminCheck);
+  initializeValues(currUser).then((result) => {
+    console.log("Result outside function:", result);
+  });
+
+  //   const currBusiness = initializeValues(currUser);
+
+  //   console.log(currBusiness.category);
 
   // Initialize business info
   const [initialValues] = useState({
@@ -142,7 +175,7 @@ function BusinessProfile() {
     >
       {(formik) => (
         <form onSubmit={formik.handleSubmit}>
-          <h3 className="center">User ID: {currUser.id}</h3>
+          <h3 className="center">User PID: {currUser.pid}</h3>
           <div className="container field">
             <div>
               <h3>Address</h3>
