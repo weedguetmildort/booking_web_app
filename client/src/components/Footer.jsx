@@ -1,11 +1,36 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
+  const navigate = useNavigate();
   return (
-    <div className="footer flex flex-row gap-3">
-      <Link to="/contact" className="custom-button">Contact Us</Link>
-      <Link to="/about" className="custom-button">About</Link>
+
+
+    <div
+      className="footer"
+      style={{
+        display: "flex",
+      }}
+    >
+      <p
+        onClick={() => navigate("/Contact")}
+        style={{
+          paddingRight: "10px",
+          cursor: "pointer",
+        }}
+      >
+        Contact Us
+      </p>
+      <p
+        onClick={() => navigate("/About")}
+        style={{
+          paddingRight: "10px",
+          cursor: "pointer",
+        }}
+      >
+        About
+      </p>
+
     </div>
   );
 }

@@ -1,0 +1,109 @@
+{
+	"info": {
+		"_postman_id": "b58af03a-ba26-4c6c-b261-4d33e0f4d998",
+		"name": "Booking_App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "36971649"
+	},
+	"item": [
+		{
+			"name": "http://localhost:5002/api/getuserbyuid/2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5002/api/getuserbyuid/2"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5002/api/getuserbyauthid",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authid\": \"559789877874ebnetkbne\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5002/api/getuserbyauthid"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5002/api/isPartner/1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5002/api/isPartner/1"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5002/api/getpartnerbyuid/2",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:5002/api/getpartnerbyuid/2"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5002/api/insertuser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authID\": \"b6tre1b65rt1b56\",\r\n    \"firstName\": \"test\",    \r\n    \"lastName\": \"tester\",\r\n    \"email\": \"test@test.com\",\r\n    \"zip\": \"11111\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5002/api/insertuser"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5002/api/insertpartner",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"businessName\": \"HNM Construction\",    \r\n    \"category\": \"Contractor\",\r\n    \"email\": \"support@HNM.com\",\r\n    \"address\": \"123 1st St\",\r\n    \"city\": \"Nokomis\",\r\n    \"state\": \"FL\",\r\n    \"zip\": \"34275\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5002/api/insertpartner"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:5002/api/makeuserpartner",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"uid\": \"14\",    \r\n    \"pid\": \"2\",\r\n    \"isAdmin\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:5002/api/makeuserpartner"
+			},
+			"response": []
+		}
+	]
+}

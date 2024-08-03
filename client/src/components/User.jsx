@@ -1,15 +1,49 @@
-import React from "react";
-import { FaRegUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import FlexBetween from "components/FlexBetween";
+import UserLoginButton from "./UserLoginButton";
+import UserSignupButton from "./UserSignupButton";
+import UserLogoutButton from "./UserLogoutButton";
+import UserProfileButton from "./UserProfileButton";
+import { UserContext } from "../UserContext";
+import { useNavigate } from "react-router-dom";
 
 function User() {
-  return (
-    <div className="flex flex-row gap-3">
-      <Link to="/login">Login</Link>
-      <Link to="/signup"> Sign Up</Link>
-      <FaRegUserCircle />
-    </div>
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { logout } = useContext(UserContext);
+  const navigate = useNavigate();
+  let content;
+
+  useEffect(() => {
+    // Check if the user is already logged in
+    const token = localStorage.getItem("token");
+
+    // if (token === null) {
+    //   logout();
+    //   navigate("/");
+    // }
+
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, [logout, navigate]);
+
+  if (!isLoggedIn) {
+    content = (
+      <FlexBetween>
+        <UserLoginButton />
+        <UserSignupButton />
+      </FlexBetween>
+    );
+  } else {
+    content = (
+      <FlexBetween>
+        <UserProfileButton />
+        <UserLogoutButton />
+      </FlexBetween>
+    );
+  }
+
+  return <div>{content}</div>;
 }
 
 export default User;

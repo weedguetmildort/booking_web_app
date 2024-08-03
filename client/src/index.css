@@ -1,31 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap");
 
-.nav {
-  background-color: #03072c;
-  color: azure;
-  justify-content: center;
-  padding-left: 10%;
-  padding-right: 10%;
-}
-
-.banner {
-  background-color: #03072c;
-  color: azure;
-  justify-content: center;
-}
-
-.logo {
-}
-
-.footer {
-  background-color: #6ab4f0;
-  color: #000000;
-  justify-content: center;
+html,
+#root,
+body,
+.app {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+  display: flex;
 }
 
 body {
+  /* Apply the linear gradient */
   background: linear-gradient(
     180deg,
     #03072c 7%,
@@ -33,10 +21,66 @@ body {
     #081378 41%,
     #6ab4f0 93%
   );
+
+  /* Ensure the background covers the entire body */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
   color: azure;
-  min-height: 100vh; /* Equivalent to min-h-screen */
-  display: flex; /* Equivalent to flex */
-  flex-direction: column; /* Equivalent to flex-col */
+  min-height: 100vh;
+
+  flex-direction: column;
+  font-family: "Lato", sans-serif;
+  font-size: 12;
+}
+
+/* Center content within .app */
+.app {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.section {
+  margin: 4em 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.spacer {
+  margin: 8em 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  justify-content: 0; /* Adjust alignment */
+  gap: 10px; /* Space between items */
+}
+
+.navbar {
+  background-color: #d9d9d9;
+  padding: 10px;
+  color: black;
+}
+
+.seethru {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.footer {
+  color: #000000;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .custom-border {
@@ -47,16 +91,14 @@ body {
   color: #000000;
 }
 
-.center {
-  display: flex; /* Equivalent to flex */
-  align-items: center; /* Equivalent to items-center */
-  justify-content: center; /* Equivalent to justify-center */
-  padding-top: 0.75rem; /* Equivalent to pt-3 */
+.custom-select {
+  width: 193px;
 }
 
-.field {
-  padding-right: 1rem;
+.custom-box {
+  width: 370px;
 }
+
 
 .custom-calendar {
   border-width: 2px;
@@ -82,11 +124,19 @@ body {
 #wrapper {
   width: 500px;
   overflow: hidden; /* add this to contain floated children */
+
+.custom-box-2 {
+  width: 380px;
+
 }
-#first {
-  width: 300px;
-  float: left; /* add this */
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1.75rem;
 }
-#second {
-  float: left; /* add this */
+
+.field {
+  padding-right: 1rem;
 }

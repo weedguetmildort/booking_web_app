@@ -6,8 +6,8 @@ import * as Yup from "yup";
 import CryptoJS from "crypto-js";
 import { UserContext } from "../UserContext";
 
-function UserLogin() {
-  const { login, logout } = useContext(UserContext);
+function PartnerLogin() {
+  const { login } = useContext(UserContext);
   const navigate = useNavigate();
 
   const encryptPassword = (password) => {
@@ -26,7 +26,7 @@ function UserLogin() {
     if (token) {
       axios
         .post(
-          "http://localhost:5002/auth/api/checkTokenUser",
+          "http://localhost:5002/auth/api/checkTokenPartner",
           {},
           {
             headers: {
@@ -39,7 +39,7 @@ function UserLogin() {
           console.log(response);
           if (response.data.valid) {
             // login(data.user, token); // Update the user state with the logged-in user
-            navigate("/profile"); // Redirect to the profile page
+            navigate("/partnerProfile"); // Redirect to the profile page
           }
         })
         .catch((error) => {
@@ -65,14 +65,11 @@ function UserLogin() {
         const encryptedPassword = encryptPassword(values.password);
 
         // Update the password value with the encrypted one
-        const encryptedValues = {
-          ...values,
-          password: encryptedPassword,
-        };
+        const encryptedValues = { ...values, password: encryptedPassword };
 
         // Request to send data to backend
         axios
-          .post("http://localhost:5002/auth/api/userLogin", encryptedValues)
+          .post("http://localhost:5002/auth/api/partnerLogin", encryptedValues)
           .then((response) => {
             // Extract token and user data from the response
             if (response.data) {
@@ -81,7 +78,7 @@ function UserLogin() {
               login(user, token);
 
               // Redirect to profile page
-              navigate("/Profile");
+              navigate("/partnerProfile");
             } else {
               console.error("Invalid login response:");
               // Handle invalid login response: TO BE IMPLEMENTED
@@ -148,4 +145,4 @@ function UserLogin() {
   );
 }
 
-export default UserLogin;
+export default PartnerLogin;
