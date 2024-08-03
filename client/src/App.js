@@ -12,10 +12,12 @@ import SearchPage from "pages/Search";
 import Business from "pages/Business";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./UserContext";
+import { SearchProvider } from "./SearchContext";
 
 function App() {
   return (
     <div>
+      <SearchProvider>
       <UserProvider>
         <Router>
           <Routes>
@@ -37,6 +39,7 @@ function App() {
           </Routes>
         </Router>
       </UserProvider>
+      </SearchProvider>
     </div>
   );
 }

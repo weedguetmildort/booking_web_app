@@ -29,8 +29,8 @@ export const SearchProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ search, loadSearch, clearSearch }}>
+    <SearchContext.Provider value={{ search, loadSearch, clearSearch }}>
       {children}
-    </UserContext.Provider>
+    </SearchContext.Provider>
   );
 };

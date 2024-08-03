@@ -113,3 +113,7 @@ body {
 .field {
   padding-right: 1rem;
 }
+
+ul {
+  list-style-type: none;
+}

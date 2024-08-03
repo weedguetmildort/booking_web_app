@@ -318,9 +318,17 @@ class DbService {
       const response = await new Promise((resolve, reject) => {
         const query =
           "\
-                SELECT p.pID, p.businessname, p.aboutus, p.address, p.state, p.zip, s.name as servicename \
-                FROM partners p JOIN services s on p.pID = s.pID \
-                WHERE p.businessname like ? or s.name like ?";
+          SELECT p.pID, p.businessname, p.aboutus, p.address, p.state, p.zip, GROUP_CONCAT(s.name SEPARATOR ', ') AS servicename \
+      FROM partners p \
+      INNER JOIN services s ON p.pID = s.pID \
+      WHERE p.pID IN ( \
+              SELECT DISTINCT p1.pID \
+              FROM partners p1 \
+              LEFT JOIN services s1 ON p1.pID = s1.pID \
+              WHERE p1.businessname LIKE ? \
+                 OR s1.name LIKE ? \
+          ) \
+      GROUP BY p.pID, p.businessname, p.aboutus, p.address, p.state, p.zip;";
         connection.query(query, [myReplace, myReplace], (err, results) => {
           if (err) reject(new Error(err.message));
           resolve(results);
