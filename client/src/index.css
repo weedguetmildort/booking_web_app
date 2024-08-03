@@ -99,8 +99,35 @@ body {
   width: 370px;
 }
 
+
+.custom-calendar {
+  border-width: 2px;
+  border-color: #d1d5db;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  color: #000000;
+}
+
+.custom-button {
+  background-color: #D9D9D9;
+  border: none;
+  color: #000000;
+  border-radius: 1rem;
+  padding: 10px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#wrapper {
+  width: 500px;
+  overflow: hidden; /* add this to contain floated children */
+
 .custom-box-2 {
   width: 380px;
+
 }
 
 .center {
