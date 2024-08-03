@@ -8,6 +8,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   return (
+
     <div
       className="navbar"
       style={{ paddingRight: "120px", paddingLeft: "120px" }}

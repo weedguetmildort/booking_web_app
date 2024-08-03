@@ -9,9 +9,15 @@ import PartnerLogin from "pages/LoginPartner";
 import PartnerSignUp from "pages/SignUpPartner";
 import PartnerProfilePage from "pages/ProfilePartner";
 import SearchPage from "pages/Search";
+
+import CallBackPage from "pages/Callback";
+import { Routes, Route } from "react-router-dom";
+import Calendar from "pages/BookingCalendar";
+
 import Business from "pages/Business";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserProvider } from "./UserContext";
+
 
 function App() {
   return (
@@ -34,6 +40,7 @@ function App() {
             ></Route>
             <Route path="/search" element={<SearchPage />}></Route>
             <Route path="/business" element={<Business />}></Route>
+            <Route path="/calendar" element={<Calendar />}></Route>
           </Routes>
         </Router>
       </UserProvider>

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 function Footer() {
   const navigate = useNavigate();
   return (
+
+
     <div
       className="footer"
       style={{
@@ -28,6 +30,7 @@ function Footer() {
       >
         About
       </p>
+
     </div>
   );
 }
