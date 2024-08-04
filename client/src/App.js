@@ -1,15 +1,14 @@
-import HomePage from "./pages/Home";
-import AboutPage from "./pages/About";
-import ContactPage from "./pages/Contact";
-import LoginPage from "./pages/LoginUser";
-import SignUpPage from "./pages/SignUpUser";
-import ProfilePage from "pages/ProfileUser";
-import UserPasswordPage from "pages/ProfileUserPassword";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Login from "./pages/LoginUser";
+import SignUp from "./pages/SignUpUser";
+import Profile from "pages/ProfileUser";
+import UserPassword from "pages/ProfileUserPassword";
 import PartnerLogin from "pages/LoginPartner";
 import PartnerSignUp from "pages/SignUpPartner";
-import PartnerProfilePage from "pages/ProfilePartner";
-import SearchPage from "pages/Search";
-import { Routes, Route } from "react-router-dom";
+import PartnerProfile from "pages/ProfilePartner";
+import Search from "pages/Search";
 import Calendar from "pages/BookingCalendar";
 import Business from "pages/Business";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -23,23 +22,20 @@ function App() {
         <UserProvider>
           <Router>
             <Routes>
-              <Route path="/" element={<HomePage />}></Route>
-              <Route path="/about" element={<AboutPage />}></Route>
-              <Route path="/contact" element={<ContactPage />}></Route>
-              <Route path="/login" element={<LoginPage />}></Route>
-              <Route path="/signup" element={<SignUpPage />}></Route>
-              <Route path="/profile" element={<ProfilePage />}></Route>
-              <Route
-                path="/userpassword"
-                element={<UserPasswordPage />}
-              ></Route>
+              <Route path="/" element={<Home />}></Route>
+              <Route path="/about" element={<About />}></Route>
+              <Route path="/contact" element={<Contact />}></Route>
+              <Route path="/login" element={<Login />}></Route>
+              <Route path="/signup" element={<SignUp />}></Route>
+              <Route path="/profile" element={<Profile />}></Route>
+              <Route path="/userpassword" element={<UserPassword />}></Route>
               <Route path="/partnerlogin" element={<PartnerLogin />}></Route>
               <Route path="/partnersignup" element={<PartnerSignUp />}></Route>
               <Route
                 path="/partnerprofile"
-                element={<PartnerProfilePage />}
+                element={<PartnerProfile />}
               ></Route>
-              <Route path="/search" element={<SearchPage />}></Route>
+              <Route path="/search" element={<Search />}></Route>
               <Route path="/business" element={<Business />}></Route>
               <Route path="/calendar" element={<Calendar />}></Route>
             </Routes>

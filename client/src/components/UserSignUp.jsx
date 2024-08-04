@@ -102,7 +102,7 @@ function UserSignUp() {
       }}
     >
       {(formik) => (
-        <form onSubmit={formik.switchRender}>
+        <form onSubmit={formik.handleSubmit}>
           <div className="field">
             <input
               id="firstName"

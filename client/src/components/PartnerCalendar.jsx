@@ -1,29 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Formik, Form } from "formik";
-import React, { useState } from "react";
+
 import * as Yup from "yup";
 
 function PartnerCalendar() {
-  let oldArray = [
-    [OPEN, CLOSE],
-    [OPEN, CLOSE],
-    [DATE1, DATE2],
-    [DATE1, DATE2],
-    [DATE1, DATE2],
-    [DATE1, DATE2],
-    [DATE1, DATE2],
-  ];
-  let newArray = [
-    [OPEN, CLOSE],
-    [OPEN, CLOSE],
-    [DATE1, DATE2],
-    [DATE1, DATE2],
-    [DATE1, DATE2],
-    [DATE1, DATE2],
-    [DATE1, DATE2],
-  ];
+  // let oldArray = [
+  //   [OPEN, CLOSE],
+  //   [OPEN, CLOSE],
+  //   [DATE1, DATE2],
+  //   [DATE1, DATE2],
+  //   [DATE1, DATE2],
+  //   [DATE1, DATE2],
+  //   [DATE1, DATE2],
+  // ];
+  // let newArray = [
+  //   [OPEN, CLOSE],
+  //   [OPEN, CLOSE],
+  //   [DATE1, DATE2],
+  //   [DATE1, DATE2],
+  //   [DATE1, DATE2],
+  //   [DATE1, DATE2],
+  //   [DATE1, DATE2],
+  // ];
 
   useState();
   function getHoursOfOperation() {
@@ -53,9 +53,7 @@ function PartnerCalendar() {
       }, 400);
     }}
   >
-    <input onChange={doChange} defaultText={array[0][0]}></input>
-    <input onChange={doChange} defaultText={array[0][0]}></input>
-    <input onChange={doChange} defaultText={array[0][1]}></input>
+    {/* <input onChange={doChange} defaultText={array[0][0]}></input>
     <input onChange={doChange} defaultText={array[0][0]}></input>
     <input onChange={doChange} defaultText={array[0][1]}></input>
     <input onChange={doChange} defaultText={array[0][0]}></input>
@@ -67,6 +65,8 @@ function PartnerCalendar() {
     <input onChange={doChange} defaultText={array[0][0]}></input>
     <input onChange={doChange} defaultText={array[0][1]}></input>
     <input onChange={doChange} defaultText={array[0][0]}></input>
+    <input onChange={doChange} defaultText={array[0][1]}></input>
+    <input onChange={doChange} defaultText={array[0][0]}></input> */}
   </Formik>;
 }
 
