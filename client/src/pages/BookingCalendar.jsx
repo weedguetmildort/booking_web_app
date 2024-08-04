@@ -6,20 +6,21 @@ import PartnerCalendar from "components/PartnerCalendar";
 import UserCalendar from "components/UserCalendar";
 
 function BookingCalendar() {
-    return (
-        <div>
-            <div>
-                <Banner />
-                <Navbar />
-                <body className="center">
-                    <div>Calendar</div>
-                    {/* <PartnerCalendar/> */}
-                    <UserCalendar/>
-                </body>
-            </div>
-            <Footer />
+  return (
+    <div>
+      <div>
+        <Banner />
+        <Navbar />
+        <div className="center">
+          <div>Calendar</div>
+          {/* <PartnerCalendar/> */}
+          {/* <UserCalendar/> */}
         </div>
-    );
+
+        <Footer />
+      </div>
+    </div>
+  );
 }
 
 export default BookingCalendar;
