@@ -8,6 +8,7 @@ import UserPassword from "pages/ProfileUserPassword";
 import PartnerLogin from "pages/LoginPartner";
 import PartnerSignUp from "pages/SignUpPartner";
 import PartnerProfile from "pages/ProfilePartner";
+import ManageBookings from "pages/ManageBookings";
 import Search from "pages/Search";
 import Calendar from "pages/BookingCalendar";
 import Business from "pages/Business";
@@ -38,6 +39,7 @@ function App() {
               <Route path="/search" element={<Search />}></Route>
               <Route path="/business" element={<Business />}></Route>
               <Route path="/calendar" element={<Calendar />}></Route>
+              <Route path="/manage-bookings" element={<ManageBookings />}></Route>
             </Routes>
           </Router>
         </UserProvider>

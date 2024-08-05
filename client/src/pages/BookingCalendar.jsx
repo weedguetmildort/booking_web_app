@@ -14,7 +14,7 @@ function BookingCalendar() {
         <div className="center">
           <div>Calendar</div>
           {/* <PartnerCalendar/> */}
-          {/* <UserCalendar/> */}
+          <UserCalendar/>
         </div>
 
         <Footer />
