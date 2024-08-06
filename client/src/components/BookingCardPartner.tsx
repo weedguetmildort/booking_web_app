@@ -68,9 +68,12 @@ function BookingCardPartner(info: { userID, partnerID, bookingID, bookingDate, b
     }
 
     function confirmCancel() {
-        axios.post('http://localhost:5002/api/cancelBooking', {
-            bookingID: info.bookingID
-        })
+
+        try {
+
+            axios.post('http://localhost:5002/api/cancelBooking', {
+                bookingID: info.bookingID
+            })
             .then(res => {
                 console.log(typeof res);
                 console.log('Response:', res.data);
@@ -81,13 +84,18 @@ function BookingCardPartner(info: { userID, partnerID, bookingID, bookingDate, b
                 console.error('Error:', error);
                 setFailed(true);
                 if (error.response) {
-                    setFailedMessage(<Typography color={red[500]} >{"Failed to post cancellation. Status code: " + error.response.status}</Typography>);
+                    setFailedMessage(<Typography color={red[500]} >{"Error when posting cancellation. Error:" + error + "Status code: " + error.response.status}</Typography>);
                 }
                 else {
                     setFailedMessage(<Typography sx={{ fontSize: 10 }} color={red[500]} >{"Failed to post cancellation, there was no response."}</Typography>);
                 }
                 setCancelled(false);
             });
+
+        } catch (error) {
+            console.error("Error when posting cancellation:", error);
+            return { address: "Address validation error." };
+        }
 
     }
 
@@ -166,7 +174,16 @@ function BookingCardPartner(info: { userID, partnerID, bookingID, bookingDate, b
                         {/* <Calendar/> */}
                         <RescheduleCalendar
                             reschedule={submitReschedule}
-                            info={info}
+                            userID={info.userID}
+                            partnerID={info.partnerID}
+                            bookingID={info.bookingID}
+                            bookingDate={info.bookingDate}
+                            bookingStartTime={info.bookingStartTime}
+                            bookingDuration={info.bookingDuration}
+                            bookingEndTime={info.bookingEndTime}
+                            serviceName={info.serviceName}
+                            userFullName={info.userFullName}
+                            userEmail={info.userEmail}
                         />
 
 

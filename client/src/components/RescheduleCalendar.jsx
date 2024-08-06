@@ -7,8 +7,9 @@ import moment from "moment";
 import Dropdown from 'react-dropdown';
 import 'react-calendar/dist/Calendar.css';
 import 'react-dropdown/style.css';
+import axios from "axios";
 
-function RescheduleCalendar({ reschedule, info: { userID, partnerID, bookingID, bookingDate, bookingStartTime, bookingDuration, bookingEndTime, serviceName, userFullName, userEmail } }) {
+function RescheduleCalendar({ reschedule, userID, partnerID, bookingID, bookingDate, bookingStartTime, bookingDuration, bookingEndTime, serviceName, userFullName, userEmail }) {
     console.log("func exec");
 
     const today = new Date();
@@ -99,6 +100,23 @@ function RescheduleCalendar({ reschedule, info: { userID, partnerID, bookingID, 
         const getHoursOfOperation = async () => { // this needs input of pID
 
         };
+
+        const cancelBooking = async () => {
+            axios.post('http://localhost:5002/api/cancelBooking', {
+                bookingID: bookingID
+            })
+                .then(res => {
+                    console.log(typeof res);
+                    console.log('Response:', res.data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (error.response) {
+                    }
+                    else {
+                    }
+                });
+        }
 
         // after query backend api and accepting the json, make Booking objects
         // if you encounter new booking date, then create a new BookingDay and put it in the allBookingDays map
@@ -333,45 +351,6 @@ function RescheduleCalendar({ reschedule, info: { userID, partnerID, bookingID, 
         setRenderSubmitMessageStatus(true);
 
         setSelectedTimeDate(selectedAvailableTimes.find(aTime => isSameTime(aTime.toLocaleTimeString('en-US', { hour: "numeric", minute: "2-digit" }), selectedTime.value)));
-
-        // axios.post('http://localhost:5002/api/cancelBooking', {
-        //     bookingID: info.bookingID
-        // })
-        //     .then(res => {
-        //         console.log(typeof res);
-        //         console.log('Response:', res.data);
-        //         setCancelled(true);
-
-        //     })
-        //     .catch(error => {
-        //         console.error('Error:', error);
-        //         setFailed(true);
-        //         if (error.response) {
-        //             setFailedMessage(<Typography color={red[500]} >{"Failed to post cancellation. Status code: " + error.response.status}</Typography>);
-        //         }
-        //         else {
-        //             setFailedMessage(<Typography sx={{ fontSize: 10 }} color={red[500]} >{"Failed to post cancellation, there was no response."}</Typography>);
-        //         }
-        //     });
-
-        // axios.post('http://localhost:5002/api/createBooking', {
-        //     bookingID: info.bookingID, 
-        // })
-        //     .then(res => {
-        //         console.log(typeof res);
-        //         console.log('Response:', res.data);
-        //     })
-        //     .catch(error => {
-        //         console.error('Error:', error);
-        //         setFailed(true);
-        //         if (error.response) {
-        //             setFailedMessage(<Typography color={red[500]} >{"Failed to post cancellation. Status code: " + error.response.status}</Typography>);
-        //         }
-        //         else {
-        //             setFailedMessage(<Typography sx={{ fontSize: 10 }} color={red[500]} >{"Failed to post cancellation, there was no response."}</Typography>);
-        //         }
-        //         setCancelled(false);
-        //     });
 
 
         setSubmitMessage("Success!");

@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import { differenceInCalendarDays } from 'date-fns';
-import Booking from "classes/Booking.ts";
+import { differenceInCalendarDays, milliseconds } from 'date-fns';
+import BookingLightweight from "classes/BookingLightweight.ts";
 import BookingDay from "classes/BookingDay.ts";
 import moment from "moment";
 import Dropdown from 'react-dropdown';
 import 'react-calendar/dist/Calendar.css';
 import 'react-dropdown/style.css';
+import axios from "axios";
+
+
+// temp
+const partnerID1 = 2;
 
 function UserCalendar() {
   console.log("func exec");
@@ -20,7 +25,7 @@ function UserCalendar() {
   const thisServiceDuration = 60;
 
   let availableDates = []; // must be array of toDateString strings
-  let hoursOfOperation = [];
+  const [hoursOfOperation, setHoursOfOperation] = useState([]);
   let disabledDates = []; // temp value
   let disabledHoursOfOperation = [];
   let defaultOption = -1;
@@ -35,8 +40,110 @@ function UserCalendar() {
   const [renderPicker, setRenderPicker] = useState(true);
   const [selectedAvailableTimes, setSelectedAvailableTimes] = useState([]);
   const [renderSubmitMessageStatus, setRenderSubmitMessageStatus] = useState(false);
+  const [failMessage, setFailMessage] = useState("");
 
   const [submitMessage, setSubmitMessage] = useState("Loading...");
+
+
+
+  useEffect(() => {
+    const getHoursOfOperation = async (partnerID) => {
+      try {
+        const response = await axios.get(`http://localhost:5002/db/api/getHours/${partnerID}`);
+        console.log('Response:', response);
+        return response;
+      } catch (error) {
+        console.error('Error:', error);
+        if (error.response) {
+          console.log('Error Response:', error.response);
+        }
+      }
+    }
+
+    const prepHoursOfOperation = async () => {
+      const response = await getHoursOfOperation(partnerID1).then(result => result.data);
+      console.log(response);
+
+      if (response.data.length !== 0) {
+        let tempHoursOfOperation = [-1, -1, -1, -1, -1, -1, -1];
+
+        for (let i = 0; i < tempHoursOfOperation.length; i++) {
+          for (let j = 0; j < response.data.length; j++) {
+            if (response.data[j].day === i) {
+              tempHoursOfOperation[i] = [response.data[j].open, response.data[j].close];
+            }
+          }
+        }
+
+        for (let dow = 0; dow < tempHoursOfOperation.length; dow++) {
+          if (tempHoursOfOperation[dow] === -1) {
+            disabledHoursOfOperation.push(dow);
+          }
+        }
+
+        setHoursOfOperation(tempHoursOfOperation);
+      }
+      else {
+        console.log("response data was empty!");
+      }
+    }
+
+    prepHoursOfOperation();
+
+  }, [])
+
+
+
+  useEffect(() => {
+    function parseUTCString(dateTimeString) {
+
+      let year = parseInt(dateTimeString.substring(0,4));
+      let month = parseInt(dateTimeString.substring(5,7));
+      let day = parseInt(dateTimeString.substring(8,10));
+      let hour = parseInt(dateTimeString.substring(11,13));
+      let minute = parseInt(dateTimeString.substring(14,16));
+      let second = parseInt(dateTimeString.substring(17,19));
+      let millisecond = parseInt(dateTimeString.substring(20,23));
+
+      return new Date(Date.UTC(year, month, day, hour, minute, second, millisecond));
+    }
+
+    const getAllBookings = async (partnerID, startTime) => {
+      try {
+        const response = await axios.post('http://localhost:5002/db/api/getFutureBookings', { pID: partnerID, startTime: startTime });
+        console.log('Response:', response);
+        return response;
+      } catch (error) {
+        console.error('Error:', error);
+        if (error.response) {
+          console.log('Error Response:', error.response);
+        }
+      }
+    }
+
+    const prepBookings = async () => {
+      const response = await getAllBookings(partnerID1, getTomorrowTime()).then(result => result.data);
+      console.log('BOOKINGS');
+      console.log(response.data);
+
+      if (response.data.length !== 0) {
+
+        const tempAllBookings = response.data.map((object) => new BookingLightweight(object.bID, parseUTCString(object.starttime), object.duration));
+
+        for (let i = 0; i < tempAllBookings.length; i++) {
+
+        }
+
+      }
+      else {
+        console.log("response data was empty!");
+      }
+
+    }
+
+    prepBookings();
+  }, [])
+
 
 
   const enableOKButton = () => {
@@ -48,6 +155,8 @@ function UserCalendar() {
     setSubmitDisabled(false);
   };
 
+
+
   function minutesDiff(dateTimeValue2, dateTimeValue1) {
     // https://www.tutorialspoint.com/how-to-calculate-minutes-between-two-dates-in-javascript
     let differenceValue = (dateTimeValue2.getTime() - dateTimeValue1.getTime()) / 1000;
@@ -55,95 +164,42 @@ function UserCalendar() {
     return Math.abs(Math.round(differenceValue));
   }
 
-  function prepHoursOfOperation() {
-    // accept the json and load the hours of operation in an array
-    // iterate over every day and push the open and the close
+  function formatDateToUTC(date) {
+    function pad(num, size) {
+      let s = String(num);
+      while (s.length < size) s = "0" + s;
+      return s;
+    };
 
-    // temp
-    hoursOfOperation.push([-1]); // sun disabled
-    for (let i = 0; i < 5; i++) { // mon thru fri have times 9am-5pm
-      hoursOfOperation.push([9, 17]);
-    }
-    hoursOfOperation.push([-1]); // sat disabled
+    const year = date.getUTCFullYear();
+    const month = pad(date.getUTCMonth(), 2);
+    const day = pad(date.getUTCDate(), 2);
+    const hours = pad(date.getUTCHours(), 2);
+    const minutes = pad(date.getUTCMinutes(), 2);
+    const seconds = pad(date.getUTCSeconds(), 2);
+    const milliseconds = pad(date.getUTCMilliseconds(), 3);
 
-    for (let dow = 0; dow < hoursOfOperation.length; dow++) {
-      if (hoursOfOperation[dow][0] === -1) {
-        disabledHoursOfOperation.push(dow);
-      }
-    }
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
-  function prepareBookings() {
 
-    const getBookings = async () => {
-      try {
+  function getTomorrowTime() {
+    const today = new Date()
+    console.log(today.getUTCMonth());
 
-        const response = await fetch(`http://localhost:5002/api/bookings`, {
-          method: "GET",
-        }).then((res) => res.json());
+    const tomorrow = new Date(moment(today).add(1, 'd'));
+    tomorrow.setHours(0, 0, 0, 0);
+    console.log(tomorrow);
+    const tomorrowTime = formatDateToUTC(tomorrow);
+    console.log(tomorrowTime);
+    return tomorrowTime;
+  }
 
-        // save the above in some variable
 
-        console.log("Status: " + response.status);
-
-        if (response.ok) {
-          return true;
-        } else {
-          return false;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const getHoursOfOperation = async () => { // this needs input of pID
-
-    };
+  function calculateCalendar() {
 
     // after query backend api and accepting the json, make Booking objects
     // if you encounter new booking date, then create a new BookingDay and put it in the allBookingDays map
-
-    // temporary test data, the dates in database will all be UTC
-
-    const duration1 = 30;
-    const duration2 = 60;
-
-    const the8thBook1 = new Date(Date.UTC(2024, 7, 8, 14)); // 9 am // new Date(year, monthIndex, day, hours, minutes, seconds, milliseconds)
-    const the8thBook2 = new Date(Date.UTC(2024, 7, 8, 16)); // 11 am
-
-    // two bookings on the 30th, one on the 31st, and a fully booked date on aug 1
-
-    const the3rdBook1 = new Date("2024-08-13T17:00:00.000Z"); // noon in our timezone, 5pm in UTC 
-
-    let the5 = new Date("2024-08-05T17:00:00.000Z");
-
-    const the8thBookingDay = new BookingDay(the8thBook1);
-    const the3rdBookingDay = new BookingDay(the3rdBook1);
-    const the5BookingDay = new BookingDay(the5);
-
-
-    the8thBookingDay.insertBooking(new Booking(12345678, 84720475, 37593629, the8thBook1, duration1));
-    the8thBookingDay.insertBooking(new Booking(22345678, 47385739, 47294739, the8thBook2, duration2));
-
-    the3rdBookingDay.insertBooking(new Booking(32345678, 57482930, 83749302, the3rdBook1, duration1));
-
-    // a fully booked day
-    the5BookingDay.insertBooking(new Booking(23456789, 23545645, 45676878, new Date("2024-08-05T14:00:00.000Z"), duration2));
-    the5BookingDay.insertBooking(new Booking(23456789, 56764447, 45464567, new Date("2024-08-05T15:00:00.000Z"), duration2));
-    the5BookingDay.insertBooking(new Booking(63456789, 34562442, 56576634, new Date("2024-08-05T16:00:00.000Z"), duration2));
-    the5BookingDay.insertBooking(new Booking(72456789, 44345234, 23433544, new Date("2024-08-05T17:00:00.000Z"), duration2));
-    the5BookingDay.insertBooking(new Booking(82356789, 34123564, 23454645, new Date("2024-08-05T18:00:00.000Z"), duration2));
-    the5BookingDay.insertBooking(new Booking(92346789, 23412564, 54657543, new Date("2024-08-05T19:00:00.000Z"), duration2));
-    the5BookingDay.insertBooking(new Booking(10345789, 67222224, 65234632, new Date("2024-08-05T20:00:00.000Z"), duration2));
-    the5BookingDay.insertBooking(new Booking(11345689, 83244546, 13424654, new Date("2024-08-05T21:00:00.000Z"), duration2));
-
-    let testBookings = the8thBookingDay.getBookings();
-
-    allBookingDays.set(the8thBookingDay.date.toDateString(), the8thBookingDay);
-    allBookingDays.set(the3rdBookingDay.date.toDateString(), the3rdBookingDay);
-    allBookingDays.set(the5BookingDay.date.toDateString(), the5BookingDay);
-
-    prepHoursOfOperation();
     // enact algorithm, which will fill the availableTimes array of all BookingDays in allBookingDays map
     // also gives us disabledDates array
 
@@ -159,16 +215,18 @@ function UserCalendar() {
       const date = new Date(value.date);
       const dow = date.getDay();
 
-      const dayHours = hoursOfOperation[dow];
+      const dayMinutes = hoursOfOperation[dow];
+
+      console.log("HOURS OF OPERATION: ");
+      console.log(hoursOfOperation);
 
       // dayOpens and dayCloses should be in local time
       let dayOpens = new Date();
       let dayCloses = new Date();
 
-      if (dayHours[0] !== -1) {
-
-        dayOpens = new Date(date.getFullYear(), date.getMonth(), date.getDate(), dayHours[0]);
-        dayCloses = new Date(date.getFullYear(), date.getMonth(), date.getDate(), dayHours[1]);
+      if (dayMinutes[0] !== -1) {
+        dayOpens = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, dayMinutes[0]);
+        dayCloses = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, dayMinutes[1]); 
       }
 
       // actual alg
@@ -249,6 +307,8 @@ function UserCalendar() {
 
   }
 
+
+
   function loadTimes() {
 
     if (disabledDates.includes(selectedDate)) { // days with bookings with no slots
@@ -288,6 +348,8 @@ function UserCalendar() {
     setSelectedAvailableTimes(tempSelectedAvailableTimes);
   }
 
+
+
   function isSameDay(a, b) {
     // from react-calendar recipe docs
     return differenceInCalendarDays(a, b) === 0;
@@ -297,6 +359,8 @@ function UserCalendar() {
     // from react-calendar recipe docs
     return a === b;
   }
+
+
 
   function tileDisabled({ date, view }) {
     // from react-calendar recipe docs, modified
@@ -311,6 +375,7 @@ function UserCalendar() {
       return disabledDates.find(dDate => isSameDay(dDate, date));
     }
   }
+
 
   function handleDateChange(nextDate) {
     setDate(nextDate);
@@ -342,12 +407,15 @@ function UserCalendar() {
     // based on the success of the post function, display a success or 
   }
 
-  prepareBookings();
+
+
+  console.log("AHH");
   const arrayDataItems = selectedAvailableTimes.map((time) => time.toLocaleTimeString('en-US', { hour: "numeric", minute: "2-digit" }));
   console.log(arrayDataItems);
 
 
 
+  
   if (renderPicker && !renderSubmitMessageStatus) {
     return (
       <div>
