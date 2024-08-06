@@ -11,7 +11,9 @@ import axios from "axios";
 
 
 // temp
-const partnerID1 = 2;
+const userID = 1;
+const partnerID = 2;
+const serviceID = 2;
 
 function UserCalendar() {
   console.log("func exec");
@@ -20,16 +22,16 @@ function UserCalendar() {
   const tomorrow = moment(today).add(1, 'd').toDate();
   // following values are temp
   const twentySeventh = new Date(2024, 6, 27); // month zero indexed
-  const allBookingDays = new Map(); // key: date in toDateString, value: corresponding BookingDay
+  const [allBookingDays, setAllBookingDays] = useState(new Map()); // key: date in toDateString, value: corresponding BookingDay
 
   const thisServiceDuration = 60;
 
   let availableDates = []; // must be array of toDateString strings
   const [hoursOfOperation, setHoursOfOperation] = useState([]);
-  let disabledDates = []; // temp value
-  let disabledHoursOfOperation = [];
+  let disabledDates = []; 
+  disabledDates.push(today);
+  const [disabledHoursOfOperation, setDisabledHoursOfOperation] = useState([]);
   let defaultOption = -1;
-  let tempSelectedAvailableTimes = [];
 
   const [isOKDisabled, setOKDisabled] = useState(true);
   const [isSubmitDisabled, setSubmitDisabled] = useState(true);
@@ -40,6 +42,7 @@ function UserCalendar() {
   const [renderPicker, setRenderPicker] = useState(true);
   const [selectedAvailableTimes, setSelectedAvailableTimes] = useState([]);
   const [renderSubmitMessageStatus, setRenderSubmitMessageStatus] = useState(false);
+  const [renderSubmitStatus, setRenderSubmitStatus] = useState(false);
   const [failMessage, setFailMessage] = useState("");
 
   const [submitMessage, setSubmitMessage] = useState("Loading...");
@@ -61,11 +64,13 @@ function UserCalendar() {
     }
 
     const prepHoursOfOperation = async () => {
-      const response = await getHoursOfOperation(partnerID1).then(result => result.data);
+      setHoursOfOperation([]);
+      const response = await getHoursOfOperation(partnerID).then(result => result.data);
       console.log(response);
 
       if (response.data.length !== 0) {
         let tempHoursOfOperation = [-1, -1, -1, -1, -1, -1, -1];
+        let tempDisabledHoursOfOperation = [];
 
         for (let i = 0; i < tempHoursOfOperation.length; i++) {
           for (let j = 0; j < response.data.length; j++) {
@@ -77,18 +82,20 @@ function UserCalendar() {
 
         for (let dow = 0; dow < tempHoursOfOperation.length; dow++) {
           if (tempHoursOfOperation[dow] === -1) {
-            disabledHoursOfOperation.push(dow);
+            tempDisabledHoursOfOperation.push(dow);
           }
         }
 
+        setDisabledHoursOfOperation(tempDisabledHoursOfOperation);
         setHoursOfOperation(tempHoursOfOperation);
       }
       else {
         console.log("response data was empty!");
       }
     }
-
-    prepHoursOfOperation();
+    if (hoursOfOperation.length === 0) {
+      prepHoursOfOperation();
+    }
 
   }, [])
 
@@ -122,17 +129,33 @@ function UserCalendar() {
     }
 
     const prepBookings = async () => {
-      const response = await getAllBookings(partnerID1, getTomorrowTime()).then(result => result.data);
-      console.log('BOOKINGS');
-      console.log(response.data);
+      setAllBookingDays(new Map());
+      const response = await getAllBookings(partnerID, getTomorrowTime()).then(result => result.data);
 
       if (response.data.length !== 0) {
 
         const tempAllBookings = response.data.map((object) => new BookingLightweight(object.bID, parseUTCString(object.starttime), object.duration));
+        
+        let tempAllBookingDays = new Map();
 
-        for (let i = 0; i < tempAllBookings.length; i++) {
+        let newBookingDay = new BookingDay(tempAllBookings[0].getBookingDate());
+        newBookingDay.insertBooking(tempAllBookings[0]);
 
+        tempAllBookingDays.set(tempAllBookings[0].toDateString(), newBookingDay);
+
+        for (let i = 1; i < tempAllBookings.length; i++) {
+
+          if (tempAllBookings[i].toDateString() === newBookingDay.getDate().toDateString()) { // if same
+            newBookingDay.insertBooking(tempAllBookings[i]);
+          }
+          else { // if new date encountered 
+            newBookingDay = new BookingDay(tempAllBookings[i].getBookingDate());
+            newBookingDay.insertBooking(tempAllBookings[i]);
+            tempAllBookingDays.set(newBookingDay.getDate().toDateString(), newBookingDay);
+          }
         }
+
+        setAllBookingDays(tempAllBookingDays);
 
       }
       else {
@@ -141,7 +164,9 @@ function UserCalendar() {
 
     }
 
-    prepBookings();
+    if (allBookingDays.size === 0) {
+      prepBookings();
+    }
   }, [])
 
 
@@ -161,7 +186,7 @@ function UserCalendar() {
     // https://www.tutorialspoint.com/how-to-calculate-minutes-between-two-dates-in-javascript
     let differenceValue = (dateTimeValue2.getTime() - dateTimeValue1.getTime()) / 1000;
     differenceValue /= 60;
-    return Math.abs(Math.round(differenceValue));
+    return Math.round(differenceValue);
   }
 
   function formatDateToUTC(date) {
@@ -184,103 +209,97 @@ function UserCalendar() {
 
 
   function getTomorrowTime() {
-    const today = new Date()
-    console.log(today.getUTCMonth());
-
+    const today = new Date();
     const tomorrow = new Date(moment(today).add(1, 'd'));
     tomorrow.setHours(0, 0, 0, 0);
-    console.log(tomorrow);
     const tomorrowTime = formatDateToUTC(tomorrow);
-    console.log(tomorrowTime);
     return tomorrowTime;
   }
 
 
+  function calculateOpenAndClose (bookingDay) {
+    const date = new Date(bookingDay.getDate());
+    const dow = date.getDay();
+
+    // first find the day of the week of this BookingDay and the corresponding open/close times
+
+    const dayMinutes = hoursOfOperation[dow];
+
+    // dayOpens and dayCloses should be in local time
+    let dayOpens = new Date(null);
+    let dayCloses = new Date(null);
+
+    if (dayMinutes !== -1) {
+      dayOpens = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, dayMinutes[0]);
+      dayCloses = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, dayMinutes[1]);
+    }
+
+    return [dayOpens, dayCloses];
+  }
+
+  function calculateTimes(thisBookingDay, endingTimeToCheck, timeToCheck) {
+    let gap = minutesDiff(endingTimeToCheck, timeToCheck);
+    while (gap >= thisServiceDuration) {
+      if (gap < 0) {
+        throw new Error('gap is NOT supposed to be negative. somthing went wrong, likely a booking itself is invalid');
+      }
+      // console.log(timeToCheck);
+      thisBookingDay.insertAvailableTime(timeToCheck);
+      timeToCheck = new Date(moment(timeToCheck).add(thisServiceDuration, 'minutes'));
+      gap = minutesDiff(endingTimeToCheck, timeToCheck);
+    }
+    return thisBookingDay;
+  }
+
   function calculateCalendar() {
 
-    // after query backend api and accepting the json, make Booking objects
-    // if you encounter new booking date, then create a new BookingDay and put it in the allBookingDays map
-    // enact algorithm, which will fill the availableTimes array of all BookingDays in allBookingDays map
-    // also gives us disabledDates array
-
-    // atp we can now work in the local time
-
     for (let [key, value] of allBookingDays) {
-      // first find the day of the week of this BookingDay and the corresponding open/close times
-      console.log("value");
-      console.log(value);
-
+      value.clearTimes();
       let thisDayBookings = value.getBookings();
 
-      const date = new Date(value.date);
-      const dow = date.getDay();
 
-      const dayMinutes = hoursOfOperation[dow];
-
-      console.log("HOURS OF OPERATION: ");
-      console.log(hoursOfOperation);
-
-      // dayOpens and dayCloses should be in local time
-      let dayOpens = new Date();
-      let dayCloses = new Date();
-
-      if (dayMinutes[0] !== -1) {
-        dayOpens = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, dayMinutes[0]);
-        dayCloses = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, dayMinutes[1]); 
+      if (value.getDate() < today) {
+        throw new Error('A booking is before today, which should not happen.');
       }
 
-      // actual alg
+      // console.log("doing");
+      // console.log(thisDayBookings);
+
+      
+      const [dayOpens, dayCloses] = calculateOpenAndClose(value);
+
+      if (dayOpens < today || dayCloses < today) {
+        throw new Error('Invalid hours of operation recieved!. You may have an invalid booking that doesnt line up with the usual hours of operation.');
+      }
+
+      // console.log([dayOpens, dayCloses]);
 
       // first, just the space between START and first booking is evaluated
-
 
       let firstBooking = new Date(null);
       if (thisDayBookings !== undefined || thisDayBookings.length != 0) {
         firstBooking = new Date(thisDayBookings[0].bookingDate);
       }
       else {
-        console.log('if a booking day was made there should be at least 1 booking, check your loading code')
+        throw new Error('if a booking day was made there should be at least 1 booking, check your loading code');
       }
 
-      console.log('e');
-      let timeToCheck = dayOpens;
-      let gap = minutesDiff(firstBooking, dayOpens);
-      while (gap >= thisServiceDuration) {
-        console.log(timeToCheck);
-        value.insertAvailableTime(timeToCheck);
-        timeToCheck = new Date(moment(timeToCheck).add(thisServiceDuration, 'minutes'));
-        gap = minutesDiff(firstBooking, timeToCheck);
-      }
+      value = calculateTimes(value, firstBooking, dayOpens);
 
       // // next, the spacing between bookings. the end of first booking and the start of the one next.
-      console.log('ee');
 
       for (let i = 0; i < thisDayBookings.length - 1; i++) {
 
         let timeToCheck = thisDayBookings[i].bookingEndTime;
         let endingTimeToCheck = thisDayBookings[i + 1].bookingStartTime;
-
-        let gap = minutesDiff(endingTimeToCheck, timeToCheck);
-
-        while (gap >= thisServiceDuration) {
-          console.log(timeToCheck);
-          value.insertAvailableTime(timeToCheck);
-          timeToCheck = new Date(moment(timeToCheck).add(thisServiceDuration, 'minutes'));
-          gap = minutesDiff(endingTimeToCheck, timeToCheck);
-        }
+        value = calculateTimes(value, endingTimeToCheck, timeToCheck);
 
       }
 
-      // // lastly, the gap between the day's end time and the latest bookings end time is evaluated
-      console.log('eee');
+      // // // lastly, the gap between the day's end time and the latest bookings end time is evaluated
 
-      timeToCheck = thisDayBookings[thisDayBookings.length - 1].bookingEndTime;
-      gap = minutesDiff(dayCloses, timeToCheck);
-      while (gap >= thisServiceDuration) {
-        value.insertAvailableTime(timeToCheck);
-        timeToCheck = new Date(moment(timeToCheck).add(thisServiceDuration, 'minutes'));
-        gap = minutesDiff(dayCloses, timeToCheck);
-      }
+      let timeToCheck = thisDayBookings[thisDayBookings.length - 1].getBookingEndTime();
+      value = calculateTimes(value, dayCloses, timeToCheck);
 
 
       let thisAvailableTimes = value.getAvailableTimes();
@@ -298,21 +317,20 @@ function UserCalendar() {
       //     console.log(thisAvailableTimes[i])
       // }
 
-      console.log("disabledDates");
-      for (let i = 0; i < disabledDates.length; i++) {
-        console.log(disabledDates.at(i));
-      }
+      // console.log("disabledDates");
+      // for (let i = 0; i < disabledDates.length; i++) {
+      //   console.log(disabledDates.at(i));
+      // }
 
     }
 
   }
 
-
-
   function loadTimes() {
+    let tempSelectedAvailableTimes = [];
 
-    if (disabledDates.includes(selectedDate)) { // days with bookings with no slots
-      console.log("the selected date... wasnt supposed to be selectable.");
+    if (disabledDates.includes(selectedDate) || disabledHoursOfOperation.includes(selectedDate)) { // days with bookings with no slots
+      throw new Error("the selected date... wasnt supposed to be selectable.");
     }
     else if (availableDates.includes(selectedDate.toDateString())) { // days with bookings that still have slots
       let selectedBookingDay = allBookingDays.get(selectedDate.toDateString());
@@ -322,17 +340,15 @@ function UserCalendar() {
     else { // days without bookings. the available times will be all between open and close
 
       const dow = selectedDate.getDay();
-      const dayHours = hoursOfOperation[dow];
+      const dayMinutes = hoursOfOperation[dow];
 
-      // dayOpens and dayCloses should be in local time
-      let dayOpens = new Date();
-      let dayCloses = new Date();
+      let dayOpens = new Date(null);
+      let dayCloses = new Date(null);
 
-      if (dayHours[0] !== -1) {
-        dayOpens = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), dayHours[0]);
-        dayCloses = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), dayHours[1]);
+      if (dayMinutes !== -1) {
+        dayOpens = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 0, dayMinutes[0]);
+        dayCloses = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 0, dayMinutes[1]);
       }
-
       let timeToCheck = dayOpens;
       let endingTimeToCheck = dayCloses;
 
@@ -359,8 +375,6 @@ function UserCalendar() {
     // from react-calendar recipe docs
     return a === b;
   }
-
-
 
   function tileDisabled({ date, view }) {
     // from react-calendar recipe docs, modified
@@ -395,11 +409,30 @@ function UserCalendar() {
 
   function handleSubmit() {
     setRenderPicker(false);
-    setRenderSubmitMessageStatus(true);
+    setRenderSubmitStatus(true);
 
-    setSelectedTimeDate(selectedAvailableTimes.find(aTime => isSameTime(aTime.toLocaleTimeString('en-US', { hour: "numeric", minute: "2-digit" }), selectedTime.value)));
+    let startTime = selectedAvailableTimes.find((aTime) => isSameTime(aTime.toLocaleTimeString('en-US', { hour: "numeric", minute: "2-digit" }), selectedTime.value));
+    setSelectedTimeDate(startTime);
 
-    setSubmitMessage("Success!");
+    console.log('DUDE....................');
+    console.log(startTime);
+
+
+    try {
+      const response = axios.post('http://localhost:5002/db/api/insertBooking', { uID: userID, pID: partnerID, sID: serviceID, startTime: formatDateToUTC(startTime) });
+      console.log('Response:', response);
+      setSubmitMessage("Success!");
+      setRenderSubmitMessageStatus(true);
+      return response;
+    } catch (error) {
+      console.error('Error:', error);
+      if (error.response) {
+        console.log('Error Response:', error.response);
+      }
+    }
+
+  
+
 
     // get time slot selected
     // post to database to insert booking, need uID (userID), pID (partnerID), sID (serviceID). bID will be auto generated in db (?)
@@ -407,13 +440,8 @@ function UserCalendar() {
     // based on the success of the post function, display a success or 
   }
 
-
-
-  console.log("AHH");
+  calculateCalendar();
   const arrayDataItems = selectedAvailableTimes.map((time) => time.toLocaleTimeString('en-US', { hour: "numeric", minute: "2-digit" }));
-  console.log(arrayDataItems);
-
-
 
   
   if (renderPicker && !renderSubmitMessageStatus) {
@@ -434,11 +462,11 @@ function UserCalendar() {
       </div>
     );
   }
-  else if (!renderPicker && renderSubmitMessageStatus) {
+  else if (!renderPicker && renderSubmitStatus) {
     return (
       <div className="flex flex-row gap-3">
         {submitMessage} <br />
-        {selectedTimeDate.toLocaleString()}
+        {(renderSubmitMessageStatus) && selectedTimeDate.toLocaleString()}
       </div>
     );
   }

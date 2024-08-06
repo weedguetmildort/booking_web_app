@@ -22,11 +22,12 @@ class BookingDay {
     }
 
     insertAvailableTime(time: Date) {
+
         if (time.toDateString() === this.date.toDateString()) {
             this.availableTimes.push(time);
         }
         else {
-            console.log("inserting available time failed");
+            // console.log("inserting available time failed");
         }
     }
 
@@ -36,6 +37,14 @@ class BookingDay {
 
     getAvailableTimes() {
         return this.availableTimes;
+    }
+
+    getDate() {
+        return this.date;
+    }
+
+    clearTimes() {
+        this.availableTimes = [];
     }
 
 }
