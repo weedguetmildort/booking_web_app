@@ -117,8 +117,8 @@ router.post("/api/insertUser", (req, res) => {
 // Update User
 router.post("/api/updateUser", (req, res) => {
   var uID = req.body.uID;
-  var firstName = req.body.firstname;
-  var lastName = req.body.lastname;
+  var firstName = req.body.firstName;
+  var lastName = req.body.lastName;
   var zip = req.body.zip;
 
   const db = dbService.getDbServiceInstance();
