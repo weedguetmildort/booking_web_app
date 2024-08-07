@@ -12,11 +12,12 @@ function BookingCalendar() {
       <div>
         <Banner />
         <Navbar />
-        <div className="center">Calendar</div>
-        <div className="center">
-          {/* <PartnerCalendar/> */}
-          <UserCalendar/>
-          {/* <Test/> */}
+        <div>
+          <h1 className="center">Calendar</h1>
+          <div className="center">{/* <PartnerCalendar/> */}</div>
+          <div className="center">
+            <UserCalendar />
+          </div>
         </div>
 
         <Footer />
