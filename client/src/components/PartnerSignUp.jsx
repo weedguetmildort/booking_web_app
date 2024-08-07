@@ -113,6 +113,10 @@ function PartnerSignUp() {
         city: "",
         aboutUs: "",
         isAdmin: false,
+        serviceName: "",
+        duration: "",
+        cost: "",
+        description: "",
       }}
       validationSchema={Yup.object({
         firstName: Yup.string()
@@ -146,6 +150,19 @@ function PartnerSignUp() {
         category: Yup.string()
           .max(15, "Must be 15 characters or less")
           .required("Required"),
+        serviceName: Yup.string()
+          .max(15, "Must be 15 characters or less")
+          .required("Required"),
+        description: Yup.string()
+          .max(30, "Must be 15 characters or less")
+          .required("Required"),
+        cost: Yup.number()
+          .typeError("Must be a number")
+          .required("Float is required"),
+        duration: Yup.number()
+          .typeError("Must be a number")
+          .integer("Must be an integer")
+          .required("Integer is required"),
       })}
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         const addressToBeValidated = {
@@ -398,6 +415,72 @@ function PartnerSignUp() {
               <Field type="checkbox" name="isAdmin" />
               Administrator
             </label>
+          </div>
+
+          <h3 className="center">Service Provided</h3>
+
+          <div className="container field">
+            <div>
+              <input
+                id="duration"
+                type="text"
+                {...formik.getFieldProps("duration")}
+                className="custom-border"
+                placeholder="Duration"
+                style={{ padding: "10px", margin: "5px" }}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              {formik.touched.duration && formik.errors.duration ? (
+                <div>{formik.errors.duration}</div>
+              ) : null}
+            </div>
+
+            <div>
+              <input
+                id="cost"
+                type="text"
+                {...formik.getFieldProps("cost")}
+                className="custom-border"
+                placeholder="Cost"
+                style={{ padding: "10px", margin: "5px" }}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              {formik.touched.cost && formik.errors.cost ? (
+                <div>{formik.errors.cost}</div>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="container field">
+            <div>
+              <input
+                id="serviceName"
+                type="text"
+                {...formik.getFieldProps("serviceName")}
+                className="custom-border"
+                placeholder="Service Name"
+                style={{ padding: "10px", margin: "5px" }}
+              />
+              {formik.touched.serviceName && formik.errors.serviceName ? (
+                <div>{formik.errors.serviceName}</div>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="field">
+            <input
+              id="description"
+              type="text"
+              {...formik.getFieldProps("description")}
+              className="custom-border custom-box-2"
+              placeholder="Service Description"
+              style={{ padding: "10px", margin: "5px" }}
+            />
+            {formik.touched.description && formik.errors.description ? (
+              <div>{formik.errors.description}</div>
+            ) : null}
           </div>
 
           <div className="center">

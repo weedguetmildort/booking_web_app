@@ -4,7 +4,7 @@ class BookingDay {
     date: Date;
     bookings: Booking[];
     availableTimes: Date[];
-    
+
 
     constructor(date: Date) {
         this.date = date;
@@ -17,16 +17,17 @@ class BookingDay {
             this.bookings.push(booking);
         }
         else {
-            console.log(booking.bookingDate.toISOString()+ " not pushed!")
+            console.log(booking.bookingDate.toISOString() + " not pushed!")
         }
     }
 
     insertAvailableTime(time: Date) {
-        if (time.toDateString() === this.date.toDateString() ) {
+
+        if (time.toDateString() === this.date.toDateString()) {
             this.availableTimes.push(time);
         }
         else {
-            console.log("inserting available time failed");
+            // console.log("inserting available time failed");
         }
     }
 
@@ -36,6 +37,14 @@ class BookingDay {
 
     getAvailableTimes() {
         return this.availableTimes;
+    }
+
+    getDate() {
+        return this.date;
+    }
+
+    clearTimes() {
+        this.availableTimes = [];
     }
 
 }

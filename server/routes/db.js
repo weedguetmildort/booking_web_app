@@ -56,7 +56,7 @@ router.post("/api/getPartnerByEmail", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-// Fetch partner by email
+// Fetch partner by PID
 router.post("/api/getBusinessByPID", (req, res) => {
   var pid = req.body.pid;
   const db = dbService.getDbServiceInstance();
@@ -259,9 +259,10 @@ router.post("/api/insertService", (req, res) => {
   var name = req.body.name;
   var duration = req.body.duration;
   var cost = req.body.cost;
+  var description = req.body.description;
 
   const db = dbService.getDbServiceInstance();
-  const result = db.insertService(pID, name, duration, cost);
+  const result = db.insertService(pID, name, duration, cost, description);
 
   result
     .then((data) => res.json({ data: data }))
@@ -289,6 +290,17 @@ router.get("/api/getServices/:pID", (req, res) => {
   var pID = req.params.pID;
   const db = dbService.getDbServiceInstance();
   const result = db.getServices(pID);
+
+  result
+    .then((data) => res.json({ data: data }))
+    .catch((err) => console.log(err));
+});
+
+// Fetch partner by PID
+router.get("/api/getBusiness/:pID", (req, res) => {
+  var pID = req.params.pID;
+  const db = dbService.getDbServiceInstance();
+  const result = db.getBusinessByPID(pID);
 
   result
     .then((data) => res.json({ data: data }))

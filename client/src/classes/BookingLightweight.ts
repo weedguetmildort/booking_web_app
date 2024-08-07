@@ -1,17 +1,13 @@
 import moment from "moment";
-class Booking {
+class BookingLightweight {
     bookingDate: Date;
     bookingStartTime: Date;
     bookingEndTime: Date;
     bookingDuration: number; // in minutes
     bookingID: number;
-    userID: number;
-    partnerID: number;
 
-    constructor(userID: number, partnerID: number, bookingID: number, bookingStartTime: Date, bookingDuration: number) {
+    constructor(bookingID: number, bookingStartTime: Date, bookingDuration: number) {
         let bookingDate = bookingStartTime;
-        this.userID = userID;
-        this.partnerID = partnerID;
         this.bookingID = bookingID;
         this.bookingDate = bookingDate;
         this.bookingStartTime = bookingStartTime;
@@ -39,14 +35,6 @@ class Booking {
         return this.bookingEndTime;
     }
 
-    getUserID() {
-        return this.userID;
-    }
-
-    getPartnerID() {
-        return this.partnerID;
-    }
-
     toDateString() {
         return this.bookingDate.toDateString();
 
@@ -54,4 +42,4 @@ class Booking {
 
 }
 
-export default Booking;
+export default BookingLightweight;

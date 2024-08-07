@@ -15,6 +15,10 @@ function UserProfile() {
     if (!currUser) {
       navigate("/login");
     }
+
+    if (currUser.role === "partner") {
+      navigate("/partnerprofile");
+    }
   }, [currUser, navigate]);
 
   const [initialValues] = useState({

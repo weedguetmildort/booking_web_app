@@ -399,16 +399,20 @@ class DbService {
     }
   }
 
-  async insertService(pID, name, duration, cost) {
+  async insertService(pID, name, duration, cost, description) {
     try {
       const response = await new Promise((resolve, reject) => {
         const query =
-          "INSERT INTO hoursofoperation (pID, name, duration, cost) \
-                VALUES(?, ?, ?, ?)";
-        connection.query(query, [pID, name, duration, cost], (err, results) => {
-          if (err) reject(new Error(err.message));
-          resolve(results);
-        });
+          "INSERT INTO services (pID, name, duration, cost, description) \
+                VALUES(?, ?, ?, ?, ?)";
+        connection.query(
+          query,
+          [pID, name, duration, cost, description],
+          (err, results) => {
+            if (err) reject(new Error(err.message));
+            resolve(results);
+          }
+        );
       });
       console.log(response);
       return "success : true";

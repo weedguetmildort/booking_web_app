@@ -14,7 +14,7 @@ function Banner() {
           alt="Logo"
           onClick={() => navigate("/")}
           style={{
-            maxWidth: "7%",
+            maxWidth: "4%",
             height: "auto",
             display: "block",
             cursor: "pointer",
