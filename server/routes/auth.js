@@ -178,6 +178,10 @@ router.post("/api/partnerSignup", async (req, res) => {
       state,
       city,
       aboutUs,
+      serviceName,
+      duration,
+      cost,
+      description,
     } = req.body;
 
     var adminValue = 0;
@@ -249,14 +253,34 @@ router.post("/api/partnerSignup", async (req, res) => {
 
     const result5 = response5.status;
 
-    if (result1 === 201 && result2 === 201 && result5 === 201) {
+    const newService = {
+      pID: result4.pid,
+      name: serviceName,
+      duration: duration,
+      cost: cost,
+      description: description,
+    };
+
+    const response6 = await axios.post(
+      "http://localhost:5002/db/api/insertService",
+      newService
+    );
+
+    const result6 = response6.status;
+
+    if (
+      result1 === 201 &&
+      result2 === 201 &&
+      result5 === 201 &&
+      result6 === 201
+    ) {
       res.status(201).json({
         message: "Partner creation is successfull",
       });
     } else {
       res
-        .status(result1, result2, result5)
-        .json(response1.data, response2.data, response5.data);
+        .status(result1, result2, result5, result6)
+        .json(response1.data, response2.data, response5.data, response6.data);
     }
   } catch (error) {
     console.error("Error during signup:", error);
@@ -298,15 +322,18 @@ router.post("/api/partnerLogin", async (req, res) => {
     const partner = response2.data.data[0];
     const pid = partner.pid;
 
-    console.log(partner);
-    console.log("broke");
-
     const response3 = await axios.post(
       "http://localhost:5002/db/api/getPartnerAdmin",
       { uid }
     );
 
     const admin = response3.data.data[0];
+
+    const url = `http://localhost:5002/db/api/getServices/${pid}`;
+
+    const response4 = await axios.get(url);
+
+    const service = response4.data.data[0];
 
     if (decryptedPassword === decryptedStoredPassword && admin.pid === pid) {
       const currUser = {
@@ -322,6 +349,11 @@ router.post("/api/partnerLogin", async (req, res) => {
         city: partner.city,
         state: partner.state,
         aboutUs: partner.aboutUs,
+        sid: service.sid,
+        serviceName: service.name,
+        duration: service.duration,
+        cost: service.cost,
+        description: service.description,
       };
 
       // Generate a JWT token

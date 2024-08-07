@@ -40,20 +40,26 @@ function Home() {
             </div>
             <div className="seethru">
               <h3
+                className="center"
                 style={{
                   paddingLeft: "10px",
                   color: "black",
                 }}
               >
-                Popular services
+                Where you can find any services!
               </h3>
             </div>
             <div className="section">
               <FlexBetween>
-                <div></div>
                 <div>
                   <h2>Grow your business with us. Become a partner today.</h2>
                   <div>Become a partner</div>
+                  <button
+                    style={{ padding: "10px", margin: "5px" }}
+                    onClick={() => navigate("/partnersignup")}
+                  >
+                    Sign Up
+                  </button>
                 </div>
               </FlexBetween>
             </div>
@@ -67,16 +73,12 @@ function Home() {
                 >
                   Get free service cost information delivered to your inbox.
                 </h2>
-                <h2
-                  onClick={() => navigate("/SignUp")}
-                  style={{
-                    paddingLeft: "10px",
-                    cursor: "pointer",
-                    color: "black",
-                  }}
+                <button
+                  style={{ padding: "10px", margin: "5px" }}
+                  onClick={() => navigate("/signup")}
                 >
-                  Signup
-                </h2>
+                  Click Here
+                </button>
               </FlexBetween>
             </div>
             <div className="spacer"></div>

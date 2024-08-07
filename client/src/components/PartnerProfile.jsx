@@ -148,6 +148,18 @@ function UserProfile() {
             >
               Change Business Info
             </button>
+
+            <button
+              type="button"
+              style={{
+                padding: "10px",
+                margin: "5px",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate("/partnerservices")}
+            >
+              Change Services
+            </button>
           </div>
         </form>
       )}

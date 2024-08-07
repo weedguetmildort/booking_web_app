@@ -51,13 +51,10 @@ function App() {
                   element={<ManageBookings />}
                 ></Route>
                 <Route
-                  path="/businesslanding"
-                  element={<BusinessLanding />}
-                ></Route>
-                <Route
                   path="/partnerservices"
                   element={<PartnerServices />}
                 ></Route>
+                <Route path="/landing" element={<BusinessLanding />}></Route>
               </Routes>
             </Router>
           </UserProvider>

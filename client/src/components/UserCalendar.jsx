@@ -222,98 +222,65 @@ function UserCalendar() {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
   }
 
-  function prepareBookings() {
-    const getBookings = async () => {
-      //   try {
-      //     const response = await fetch(`http://localhost:5002/api/bookings`, {
-      //       method: "GET",
-      //     }).then((res) => res.json());
-      //     // save the above in some variable
-      //     console.log("Status: " + response.status);
-      //     if (response.ok) {
-      //       return true;
-      //     } else {
-      //       return false;
-      //     }
-      //   } catch (error) {
-      //     console.log(error);
-      //   }
-    };
+  function getTomorrowTime() {
+    const today = new Date();
+    const tomorrow = new Date(moment(today).add(1, "d"));
+    tomorrow.setHours(0, 0, 0, 0);
+    const tomorrowTime = formatDateToUTC(tomorrow);
+    return tomorrowTime;
+  }
 
-    // const getHoursOfOperation = async () => {
-    //   // this needs input of pID
-    // };
+  function calculateOpenAndClose(bookingDay) {
+    const date = new Date(bookingDay.getDate());
+    const dow = date.getDay();
 
-    // after query backend api and accepting the json, make Booking objects
-    // if you encounter new booking date, then create a new BookingDay and put it in the allBookingDays map
+    // first find the day of the week of this BookingDay and the corresponding open/close times
 
-    // temporary test data, the dates in database will all be UTC
+    const dayMinutes = hoursOfOperation[dow];
 
-    const duration1 = 30;
-    const duration2 = 60;
+    // dayOpens and dayCloses should be in local time
+    let dayOpens = new Date(null);
+    let dayCloses = new Date(null);
 
-    const the30thBook1 = new Date(Date.UTC(2024, 6, 30, 14)); // 9 am // new Date(year, monthIndex, day, hours, minutes, seconds, milliseconds)
-    const the30thBook2 = new Date(Date.UTC(2024, 6, 30, 16)); // 11 am
+    if (dayMinutes !== -1) {
+      dayOpens = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0,
+        dayMinutes[0]
+      );
+      dayCloses = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0,
+        dayMinutes[1]
+      );
+    }
 
-    // two bookings on the 30th, one on the 31st, and a fully booked date on aug 1
+    return [dayOpens, dayCloses];
+  }
 
-    const the31thBook1 = new Date("2024-07-31T17:00:00.000Z"); // noon in our timezone, 5pm in UTC
+  function calculateTimes(thisBookingDay, endingTimeToCheck, timeToCheck) {
+    let gap = minutesDiff(endingTimeToCheck, timeToCheck);
+    while (gap >= thisServiceDuration) {
+      if (gap < 0) {
+        throw new Error(
+          "gap is NOT supposed to be negative. somthing went wrong, likely a booking itself is invalid"
+        );
+      }
+      // console.log(timeToCheck);
+      thisBookingDay.insertAvailableTime(timeToCheck);
+      timeToCheck = new Date(
+        moment(timeToCheck).add(thisServiceDuration, "minutes")
+      );
+      gap = minutesDiff(endingTimeToCheck, timeToCheck);
+    }
+    return thisBookingDay;
+  }
 
-    let the1st = new Date("2024-08-01T17:00:00.000Z");
-
-    const the30thBookingDay = new BookingDay(the30thBook1);
-    const the31thBookingDay = new BookingDay(the31thBook1);
-    const the1stBookingDay = new BookingDay(the1st);
-
-    the30thBookingDay.insertBooking(new Booking(the30thBook1, duration1));
-    the30thBookingDay.insertBooking(new Booking(the30thBook2, duration2));
-
-    the31thBookingDay.insertBooking(new Booking(the31thBook1, duration1));
-
-    // a fully booked day
-    the1stBookingDay.insertBooking(
-      new Booking(new Date("2024-08-01T14:00:00.000Z"), duration2)
-    );
-    the1stBookingDay.insertBooking(
-      new Booking(new Date("2024-08-01T15:00:00.000Z"), duration2)
-    );
-    the1stBookingDay.insertBooking(
-      new Booking(new Date("2024-08-01T16:00:00.000Z"), duration2)
-    );
-    the1stBookingDay.insertBooking(
-      new Booking(new Date("2024-08-01T17:00:00.000Z"), duration2)
-    );
-    the1stBookingDay.insertBooking(
-      new Booking(new Date("2024-08-01T18:00:00.000Z"), duration2)
-    );
-    the1stBookingDay.insertBooking(
-      new Booking(new Date("2024-08-01T19:00:00.000Z"), duration2)
-    );
-    the1stBookingDay.insertBooking(
-      new Booking(new Date("2024-08-01T20:00:00.000Z"), duration2)
-    );
-    the1stBookingDay.insertBooking(
-      new Booking(new Date("2024-08-01T21:00:00.000Z"), duration2)
-    );
-
-    let testBookings = the30thBookingDay.getBookings();
-
-    allBookingDays.set(
-      the30thBookingDay.date.toDateString(),
-      the30thBookingDay
-    );
-    allBookingDays.set(
-      the31thBookingDay.date.toDateString(),
-      the31thBookingDay
-    );
-    allBookingDays.set(the1stBookingDay.date.toDateString(), the1stBookingDay);
-
-    prepHoursOfOperation();
-    // enact algorithm, which will fill the availableTimes array of all BookingDays in allBookingDays map
-    // also gives us disabledDates array
-
-    // atp we can now work in the local time
-
+  function calculateCalendar() {
     for (let [key, value] of allBookingDays) {
       value.clearTimes();
       let thisDayBookings = value.getBookings();
@@ -348,7 +315,7 @@ function UserCalendar() {
 
       value = calculateTimes(value, firstBooking, dayOpens);
 
-      //   // next, the spacing between bookings. the end of first booking and the start of the one next.
+      // // next, the spacing between bookings. the end of first booking and the start of the one next.
 
       for (let i = 0; i < thisDayBookings.length - 1; i++) {
         let timeToCheck = thisDayBookings[i].bookingEndTime;
@@ -356,20 +323,11 @@ function UserCalendar() {
         value = calculateTimes(value, endingTimeToCheck, timeToCheck);
       }
 
-      //   // lastly, the gap between the day's end time and the latest bookings end time is evaluated
+      // // // lastly, the gap between the day's end time and the latest bookings end time is evaluated
 
-      console.log(dayCloses);
-
-      timeToCheck = thisDayBookings[thisDayBookings.length - 1].bookingEndTime;
-      gap = minutesDiff(dayCloses, timeToCheck);
-      console.log("what is this?");
-      // while (gap >= thisServiceDuration) {
-      //   value.insertAvailableTime(timeToCheck);
-      //   timeToCheck = new Date(
-      //     moment(timeToCheck).add(thisServiceDuration, "minutes")
-      //   );
-      //   gap = minutesDiff(dayCloses, timeToCheck);
-      // }
+      let timeToCheck =
+        thisDayBookings[thisDayBookings.length - 1].getBookingEndTime();
+      value = calculateTimes(value, dayCloses, timeToCheck);
 
       let thisAvailableTimes = value.getAvailableTimes();
       if (thisAvailableTimes.length === 0) {
