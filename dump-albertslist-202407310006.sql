@@ -33,19 +33,20 @@ DROP TABLE IF EXISTS `bookings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bookings` (
-  `bID` bigint NOT NULL,
+  `bID` bigint NOT NULL AUTO_INCREMENT,
   `sID` bigint NOT NULL,
   `pID` bigint NOT NULL,
   `uID` bigint NOT NULL,
-  `Start` datetime NOT NULL,
+  `StartTime` varchar(26) NOT NULL,
+  `status` varchar(100) NOT NULL,
+  `discount` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`bID`),
   KEY `Bookings_users_FK` (`uID`),
   KEY `Bookings_partners_FK` (`pID`),
   KEY `Bookings_services_FK` (`sID`),
   CONSTRAINT `Bookings_partners_FK` FOREIGN KEY (`pID`) REFERENCES `partners` (`pID`),
-  CONSTRAINT `Bookings_services_FK` FOREIGN KEY (`sID`) REFERENCES `services` (`sID`),
   CONSTRAINT `Bookings_users_FK` FOREIGN KEY (`uID`) REFERENCES `users` (`uID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,6 +55,7 @@ CREATE TABLE `bookings` (
 
 LOCK TABLES `bookings` WRITE;
 /*!40000 ALTER TABLE `bookings` DISABLE KEYS */;
+INSERT INTO `bookings` VALUES (4,2,2,30,'2024-08-05 18:00:00','approved',NULL);
 /*!40000 ALTER TABLE `bookings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,6 +82,7 @@ CREATE TABLE `hoursofoperation` (
 
 LOCK TABLES `hoursofoperation` WRITE;
 /*!40000 ALTER TABLE `hoursofoperation` DISABLE KEYS */;
+INSERT INTO `hoursofoperation` VALUES (2,1,540,1110),(2,2,540,1110),(2,3,540,1110),(2,4,540,1110),(2,5,540,1110);
 /*!40000 ALTER TABLE `hoursofoperation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,7 +141,7 @@ CREATE TABLE `partners` (
 
 LOCK TABLES `partners` WRITE;
 /*!40000 ALTER TABLE `partners` DISABLE KEYS */;
-INSERT INTO `partners` VALUES (1,'Tech Shop','Computer','support@tech.com','555 Main St.','FL','32601','We are a company that specializes in repairing computers and stuff like that.','Gainesville'),(2,'HNM Construction','Contractor','support@HNM.com','123 1st St','FL','34275',NULL,'Nokomis');
+INSERT INTO `partners` VALUES (1,'Tech Shop','Computer','support@tech.com','555 Main St.','FL','32601','We are a company that specializes in repairing computers and stuff like that.','Gainesville'),(2,'HNM Construction','Contractor','support@HNM.com','123 1st St','FL','34275','Come get your construction needs taken care of at HNM!!!','Nokomis');
 /*!40000 ALTER TABLE `partners` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -154,11 +157,16 @@ CREATE TABLE `reviews` (
   `pID` bigint NOT NULL,
   `ReviewText` text,
   `Score` int NOT NULL,
+  `ResponseText` text,
+  `AddedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ResponseDate` datetime DEFAULT NULL,
+  `rID` bigint NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`rID`),
   KEY `Reviews_users_FK` (`uID`),
   KEY `Reviews_partners_FK` (`pID`),
   CONSTRAINT `Reviews_partners_FK` FOREIGN KEY (`pID`) REFERENCES `partners` (`pID`),
   CONSTRAINT `Reviews_users_FK` FOREIGN KEY (`uID`) REFERENCES `users` (`uID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -167,6 +175,7 @@ CREATE TABLE `reviews` (
 
 LOCK TABLES `reviews` WRITE;
 /*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
+INSERT INTO `reviews` VALUES (1,1,'Blah Blah',4,NULL,'2024-07-28 18:20:28',NULL,1);
 /*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -178,16 +187,16 @@ DROP TABLE IF EXISTS `services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `services` (
-  `sID` bigint NOT NULL,
+  `sID` bigint NOT NULL AUTO_INCREMENT,
   `pID` bigint NOT NULL,
   `Name` varchar(100) NOT NULL,
   `Duration` int NOT NULL,
-  `Cost` decimal(10,0) NOT NULL,
+  `Cost` decimal(10,2) NOT NULL,
   `Description` text,
   PRIMARY KEY (`sID`),
   KEY `Services_partners_FK` (`pID`),
   CONSTRAINT `Services_partners_FK` FOREIGN KEY (`pID`) REFERENCES `partners` (`pID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -196,6 +205,7 @@ CREATE TABLE `services` (
 
 LOCK TABLES `services` WRITE;
 /*!40000 ALTER TABLE `services` DISABLE KEYS */;
+INSERT INTO `services` VALUES (1,1,'Computer',60,150.00,'Computer Repair Services'),(2,2,'Construction',60,250.00,'General Construction');
 /*!40000 ALTER TABLE `services` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,14 +218,13 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `uID` bigint NOT NULL AUTO_INCREMENT,
-  `authID` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `FirstName` varchar(100) NOT NULL,
   `LastName` varchar(100) NOT NULL,
   `Email` varchar(100) NOT NULL,
   `ZIP` varchar(10) NOT NULL,
-  PRIMARY KEY (`uID`),
-  UNIQUE KEY `users_authID_IDX` (`authID`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `Password` varchar(100) NOT NULL,
+  PRIMARY KEY (`uID`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,7 +233,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'559789877874ebnetkbne','Reg','Ruser','reg.Ruser@albertslist.com','11111'),(2,'35135b1v3e5t1b3e5t1be','Par','Puser','Par.Puser@tech.com','22222'),(3,'531rv35wre1v56wr1e','Adm','Auser','Adm.Auser@tech.com','33333'),(14,'b6tre1b65rt1b56','test','tester','test@test.com','11111');
+INSERT INTO `users` VALUES (1,'Reg','Ruser','reg.Ruser@albertslist.com','11111','password'),(2,'Par','Puser','Par.Puser@tech.com','22222','i;juebvihyetbvibetrkhvbekhvtbekjht'),(3,'Adm','Auser','Adm.Auser@tech.com','33333','password'),(14,'test','tester','test@test.com','11111','password'),(30,'Imma','Tester','imma.tester@gmail.com','32601','U2FsdGVkX1/jy5m3b9VhPNZL+BKTR7l9PWGty+VfwDE=');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,4 +250,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-14  0:11:26
+-- Dump completed on 2024-07-31  0:06:53

@@ -1,31 +1,39 @@
 import React from "react";
 import logo from "../assets/images/logo.png";
-import LoginButton from "./LoginButton";
-import LogoutButton from "./LogoutButton";
-import SignUpButton from "./SignUpButton";
-import { Link } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
+import { Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Banner() {
+  const navigate = useNavigate();
   return (
-    <FlexBetween className="banner">
-      <Link to="/">
+    <FlexBetween>
+      <div className="container">
         <img
           src={logo}
           alt="Logo"
+          onClick={() => navigate("/")}
           style={{
-            maxWidth: "60%",
+            maxWidth: "4%",
             height: "auto",
             display: "block",
+            cursor: "pointer",
           }}
         />
-      </Link>
-      <Link to="/profile">PROFILE</Link>
-      <SignUpButton />
-      <LoginButton />
-      <LogoutButton />
-
-      <User />
+        <Typography
+          fontWeight="bold"
+          fontSize="clamp(2rem, 4rem, 4.5rem)"
+          color="azure"
+          onClick={() => navigate("/")}
+          sx={{
+            "&:hover": {
+              cursor: "pointer",
+            },
+          }}
+        >
+          Albert's List
+        </Typography>
+      </div>
     </FlexBetween>
   );
 }
